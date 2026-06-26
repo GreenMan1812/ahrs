@@ -1,0 +1,327 @@
+ARM GAS  /tmp/ccJ9AIul.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"arm_cmplx_conj_f32.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c"
+  19              		.section	.text.arm_cmplx_conj_f32,"ax",%progbits
+  20              		.align	1
+  21              		.global	arm_cmplx_conj_f32
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	arm_cmplx_conj_f32:
+  27              	.LVL0:
+  28              	.LFB117:
+   1:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** ﻿/* ----------------------------------------------------------------------
+   2:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****  * Project:      CMSIS DSP Library
+   3:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****  * Title:        arm_cmplx_conj_f32.c
+   4:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****  * Description:  Floating-point complex conjugate
+   5:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****  *
+   6:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****  * $Date:        23 April 2021
+   7:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****  * $Revision:    V1.9.0
+   8:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****  *
+   9:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****  * Target Processor: Cortex-M and Cortex-A cores
+  10:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****  * -------------------------------------------------------------------- */
+  11:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+  12:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** /*
+  13:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****  * Copyright (C) 2010-2021 ARM Limited or its affiliates. All rights reserved.
+  14:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****  *
+  15:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****  * SPDX-License-Identifier: Apache-2.0
+  16:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****  *
+  17:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+  18:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****  * not use this file except in compliance with the License.
+  19:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****  * You may obtain a copy of the License at
+  20:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****  *
+  21:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****  * www.apache.org/licenses/LICENSE-2.0
+  22:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****  *
+  23:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****  * Unless required by applicable law or agreed to in writing, software
+  24:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  25:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  26:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****  * See the License for the specific language governing permissions and
+  27:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****  * limitations under the License.
+  28:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****  */
+  29:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** #include "arm_compiler_specific.h"
+  30:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+ARM GAS  /tmp/ccJ9AIul.s 			page 2
+
+
+  31:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+  32:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** #include "dsp/complex_math_functions.h"
+  33:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+  34:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** /**
+  35:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   @ingroup groupCmplxMath
+  36:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****  */
+  37:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+  38:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** /**
+  39:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   @defgroup cmplx_conj Complex Conjugate
+  40:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+  41:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   Conjugates the elements of a complex data vector.
+  42:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+  43:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   The <code>pSrc</code> points to the source data and
+  44:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   <code>pDst</code> points to the destination data where the result should be written.
+  45:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   <code>numSamples</code> specifies the number of complex samples
+  46:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   and the data in each array is stored in an interleaved fashion
+  47:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   (real, imag, real, imag, ...).
+  48:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   Each array has a total of <code>2*numSamples</code> values.
+  49:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+  50:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   The underlying algorithm is used:
+  51:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   <pre>
+  52:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   for (n = 0; n < numSamples; n++) {
+  53:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****       pDst[(2*n)  ] =  pSrc[(2*n)  ];    // real part
+  54:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****       pDst[(2*n)+1] = -pSrc[(2*n)+1];    // imag part
+  55:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   }
+  56:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   </pre>
+  57:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+  58:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   There are separate functions for floating-point, Q15, and Q31 data types.
+  59:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****  */
+  60:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+  61:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** /**
+  62:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   @addtogroup cmplx_conj
+  63:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   @{
+  64:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****  */
+  65:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+  66:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** /**
+  67:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   @brief         Floating-point complex conjugate.
+  68:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   @param[in]     pSrc        points to the input vector
+  69:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   @param[out]    pDst        points to the output vector
+  70:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   @param[in]     numSamples  number of samples in each vector
+  71:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****  */
+  72:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+  73:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** #if defined(ARM_MATH_MVEF) && !defined(ARM_MATH_AUTOVECTORIZE)
+  74:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+  75:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** ARM_DSP_ATTRIBUTE void arm_cmplx_conj_f32(
+  76:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     const float32_t * pSrc,
+  77:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     float32_t * pDst,
+  78:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     uint32_t numSamples)
+  79:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** {
+  80:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     static const float32_t cmplx_conj_sign[4] = { 1.0f, -1.0f, 1.0f, -1.0f };
+  81:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     uint32_t blockSize = numSamples * CMPLX_DIM;   /* loop counters */
+  82:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     uint32_t blkCnt;
+  83:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     f32x4_t vecSrc;
+  84:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     f32x4_t vecSign;
+  85:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+  86:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     /*
+  87:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****      * load sign vector
+ARM GAS  /tmp/ccJ9AIul.s 			page 3
+
+
+  88:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****      */
+  89:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     vecSign = *(f32x4_t *) cmplx_conj_sign;
+  90:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+  91:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     /* Compute 4 real samples at a time */
+  92:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     blkCnt = blockSize >> 2U;
+  93:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+  94:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     while (blkCnt > 0U)
+  95:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     {
+  96:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****         vecSrc = vld1q(pSrc);
+  97:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****         vst1q(pDst,vmulq(vecSrc, vecSign));
+  98:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****         /*
+  99:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****          * Decrement the blkCnt loop counter
+ 100:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****          * Advance vector source and destination pointers
+ 101:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****          */
+ 102:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****         pSrc += 4;
+ 103:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****         pDst += 4;
+ 104:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****         blkCnt--;
+ 105:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     }
+ 106:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+ 107:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****      /* Tail */
+ 108:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     blkCnt = (blockSize & 0x3) >> 1;
+ 109:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+ 110:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     while (blkCnt > 0U)
+ 111:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     {
+ 112:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****       /* C[0] + jC[1] = A[0]+ j(-1)A[1] */
+ 113:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   
+ 114:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****       /* Calculate Complex Conjugate and store result in destination buffer. */
+ 115:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****       *pDst++ =  *pSrc++;
+ 116:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****       *pDst++ = -*pSrc++;
+ 117:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   
+ 118:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****       /* Decrement loop counter */
+ 119:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****       blkCnt--;
+ 120:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     }
+ 121:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+ 122:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** }
+ 123:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+ 124:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** #else
+ 125:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** ARM_DSP_ATTRIBUTE void arm_cmplx_conj_f32(
+ 126:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   const float32_t * pSrc,
+ 127:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****         float32_t * pDst,
+ 128:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****         uint32_t numSamples)
+ 129:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** {
+  29              		.loc 1 129 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+ 130:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****         uint32_t blkCnt;                               /* Loop counter */
+  33              		.loc 1 130 9 view .LVU1
+ 131:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+ 132:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** #if defined(ARM_MATH_NEON)
+ 133:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****    float32x4_t zero;
+ 134:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****    float32x4x2_t vec;
+ 135:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+ 136:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****    zero = vdupq_n_f32(0.0f);
+ 137:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+ 138:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****    /* Compute 4 outputs at a time */
+ 139:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****    blkCnt = numSamples >> 2U;
+ARM GAS  /tmp/ccJ9AIul.s 			page 4
+
+
+ 140:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+ 141:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****    while (blkCnt > 0U)
+ 142:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****    {
+ 143:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****      /* C[0]+jC[1] = A[0]+(-1)*jA[1] */
+ 144:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****      /* Calculate Complex Conjugate and then store the results in the destination buffer. */
+ 145:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****      vec = vld2q_f32(pSrc);
+ 146:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****      vec.val[1] = vsubq_f32(zero,vec.val[1]);
+ 147:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****      vst2q_f32(pDst,vec);
+ 148:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+ 149:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****      /* Increment pointers */
+ 150:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****      pSrc += 8;
+ 151:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****      pDst += 8;
+ 152:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****         
+ 153:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****      /* Decrement the loop counter */
+ 154:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****      blkCnt--;
+ 155:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****    }
+ 156:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+ 157:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****    /* Tail */
+ 158:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****    blkCnt = numSamples & 0x3;
+ 159:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+ 160:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** #else
+ 161:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** #if defined (ARM_MATH_LOOPUNROLL) && !defined(ARM_MATH_AUTOVECTORIZE)
+ 162:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+ 163:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   /* Loop unrolling: Compute 4 outputs at a time */
+ 164:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   blkCnt = numSamples >> 2U;
+ 165:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+ 166:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   while (blkCnt > 0U)
+ 167:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   {
+ 168:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     /* C[0] + jC[1] = A[0]+ j(-1)A[1] */
+ 169:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+ 170:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     /* Calculate Complex Conjugate and store result in destination buffer. */
+ 171:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     *pDst++ =  *pSrc++;
+ 172:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     *pDst++ = -*pSrc++;
+ 173:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+ 174:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     *pDst++ =  *pSrc++;
+ 175:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     *pDst++ = -*pSrc++;
+ 176:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+ 177:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     *pDst++ =  *pSrc++;
+ 178:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     *pDst++ = -*pSrc++;
+ 179:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+ 180:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     *pDst++ =  *pSrc++;
+ 181:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     *pDst++ = -*pSrc++;
+ 182:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+ 183:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     /* Decrement loop counter */
+ 184:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     blkCnt--;
+ 185:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   }
+ 186:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+ 187:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   /* Loop unrolling: Compute remaining outputs */
+ 188:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   blkCnt = numSamples % 0x4U;
+ 189:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+ 190:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** #else
+ 191:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+ 192:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   /* Initialize blkCnt with number of samples */
+ 193:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   blkCnt = numSamples;
+  34              		.loc 1 193 3 view .LVU2
+ 194:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+ 195:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** #endif /* #if defined (ARM_MATH_LOOPUNROLL) */
+ARM GAS  /tmp/ccJ9AIul.s 			page 5
+
+
+ 196:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** #endif /* #if defined (ARM_MATH_NEON) */
+ 197:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+ 198:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   while (blkCnt > 0U)
+  35              		.loc 1 198 3 view .LVU3
+  36              		.loc 1 198 17 view .LVU4
+  37 0000 92B1     		cbz	r2, .L7
+ 129:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****         uint32_t blkCnt;                               /* Loop counter */
+  38              		.loc 1 129 1 is_stmt 0 view .LVU5
+  39 0002 00B5     		push	{lr}
+  40              	.LCFI0:
+  41              		.cfi_def_cfa_offset 4
+  42              		.cfi_offset 14, -4
+  43              	.LVL1:
+  44              	.L3:
+ 199:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   {
+ 200:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     /* C[0] + jC[1] = A[0]+ j(-1)A[1] */
+ 201:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+ 202:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     /* Calculate Complex Conjugate and store result in destination buffer. */
+ 203:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     *pDst++ =  *pSrc++;
+  45              		.loc 1 203 5 is_stmt 1 view .LVU6
+  46              		.loc 1 203 16 is_stmt 0 view .LVU7
+  47 0004 0346     		mov	r3, r0
+  48 0006 53F808EB 		ldr	lr, [r3], #8	@ float
+  49              		.loc 1 203 13 view .LVU8
+  50 000a 8C46     		mov	ip, r1
+  51 000c 4CF808EB 		str	lr, [ip], #8	@ float
+ 204:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     *pDst++ = -*pSrc++;
+  52              		.loc 1 204 5 is_stmt 1 view .LVU9
+  53              	.LVL2:
+  54              		.loc 1 204 16 is_stmt 0 view .LVU10
+  55 0010 D0ED017A 		vldr.32	s15, [r0, #4]
+  56              	.LVL3:
+  57              		.loc 1 204 15 view .LVU11
+  58 0014 F1EE677A 		vneg.f32	s15, s15
+  59              		.loc 1 204 13 view .LVU12
+  60 0018 C1ED017A 		vstr.32	s15, [r1, #4]
+ 205:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+ 206:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     /* Decrement loop counter */
+ 207:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     blkCnt--;
+  61              		.loc 1 207 5 is_stmt 1 view .LVU13
+  62              		.loc 1 207 11 is_stmt 0 view .LVU14
+  63 001c 013A     		subs	r2, r2, #1
+  64              	.LVL4:
+ 204:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     *pDst++ = -*pSrc++;
+  65              		.loc 1 204 10 view .LVU15
+  66 001e 6146     		mov	r1, ip
+ 204:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****     *pDst++ = -*pSrc++;
+  67              		.loc 1 204 21 view .LVU16
+  68 0020 1846     		mov	r0, r3
+ 198:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   {
+  69              		.loc 1 198 17 is_stmt 1 view .LVU17
+  70 0022 002A     		cmp	r2, #0
+  71 0024 EED1     		bne	.L3
+ 208:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c ****   }
+ 209:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** 
+ 210:Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c **** }
+  72              		.loc 1 210 1 is_stmt 0 view .LVU18
+ARM GAS  /tmp/ccJ9AIul.s 			page 6
+
+
+  73 0026 00BD     		pop	{pc}
+  74              	.LVL5:
+  75              	.L7:
+  76              	.LCFI1:
+  77              		.cfi_def_cfa_offset 0
+  78              		.cfi_restore 14
+  79              		.loc 1 210 1 view .LVU19
+  80 0028 7047     		bx	lr
+  81              		.cfi_endproc
+  82              	.LFE117:
+  84              		.text
+  85              	.Letext0:
+  86              		.file 2 "/usr/arm-none-eabi/include/machine/_default_types.h"
+  87              		.file 3 "/usr/arm-none-eabi/include/sys/_stdint.h"
+  88              		.file 4 "Drivers/CMSIS_DSP/Include/arm_math_types.h"
+ARM GAS  /tmp/ccJ9AIul.s 			page 7
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 arm_cmplx_conj_f32.c
+     /tmp/ccJ9AIul.s:20     .text.arm_cmplx_conj_f32:00000000 $t
+     /tmp/ccJ9AIul.s:26     .text.arm_cmplx_conj_f32:00000000 arm_cmplx_conj_f32
+
+NO UNDEFINED SYMBOLS

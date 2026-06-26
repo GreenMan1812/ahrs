@@ -77,7 +77,21 @@ Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.c \
 Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c \
 Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.c \
 Core/Src/sysmem.c \
-Core/Src/syscalls.c
+Core/Src/syscalls.c \
+Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c \
+Drivers/CMSIS_DSP/Source/CommonTables/arm_common_tables.c \
+Drivers/CMSIS_DSP/Source/ComplexMathFunctions/arm_cmplx_conj_f32.c \
+Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c \
+Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c \
+Drivers/CMSIS_DSP/Source/FastMathFunctions/arm_cos_f32.c \
+Drivers/CMSIS_DSP/Source/FilteringFunctions/arm_fir_f32.c \
+Drivers/CMSIS_DSP/Source/InterpolationFunctions/arm_linear_interp_f32.c \
+Drivers/CMSIS_DSP/Source/MatrixFunctions/arm_mat_mult_f32.c \
+Drivers/CMSIS_DSP/Source/QuaternionMathFunctions/arm_quaternion_norm_f32.c \
+Drivers/CMSIS_DSP/Source/StatisticsFunctions/arm_mean_f32.c \
+Drivers/CMSIS_DSP/Source/SupportFunctions/arm_copy_f32.c \
+Drivers/CMSIS_DSP/Source/TransformFunctions/arm_cfft_f32.c \
+AHRS_Lib/ahrs.c
 
 # ASM sources
 ASM_SOURCES =  \
@@ -155,8 +169,10 @@ C_INCLUDES =  \
 -IMiddlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 \
 -IMiddlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1 \
 -IDrivers/CMSIS/Device/ST/STM32F7xx/Include \
--IDrivers/CMSIS/Include
-
+-IDrivers/CMSIS/Include\
+-IDrivers/CMSIS_DSP/Include\
+-IDrivers/CMSIS_DSP/Include/dsp\
+-IAHRS_Lib\
 
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections

@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccfJovk8.s 			page 1
+ARM GAS  /tmp/ccMZ4i07.s 			page 1
 
 
    1              		.cpu cortex-m7
@@ -26,7 +26,7 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccfJovk8.s 			page 1
   23              		.thumb
   24              		.thumb_func
   26              	HAL_MspInit:
-  27              	.LFB860:
+  27              	.LFB893:
    1:Core/Src/stm32f7xx_hal_msp.c **** /* USER CODE BEGIN Header */
    2:Core/Src/stm32f7xx_hal_msp.c **** /**
    3:Core/Src/stm32f7xx_hal_msp.c ****   ******************************************************************************
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccfJovk8.s 			page 1
   29:Core/Src/stm32f7xx_hal_msp.c **** /* USER CODE END TD */
   30:Core/Src/stm32f7xx_hal_msp.c **** 
   31:Core/Src/stm32f7xx_hal_msp.c **** /* Private define ------------------------------------------------------------*/
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccfJovk8.s 			page 2
+ARM GAS  /tmp/ccMZ4i07.s 			page 2
 
 
   32:Core/Src/stm32f7xx_hal_msp.c **** /* USER CODE BEGIN Define */
@@ -118,7 +118,7 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccfJovk8.s 			page 1
   44 0006 1A6C     		ldr	r2, [r3, #64]
   45 0008 42F08052 		orr	r2, r2, #268435456
   46 000c 1A64     		str	r2, [r3, #64]
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccfJovk8.s 			page 3
+ARM GAS  /tmp/ccMZ4i07.s 			page 3
 
 
   47              		.loc 1 69 3 view .LVU4
@@ -165,32 +165,32 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccfJovk8.s 			page 1
   78              	.LCFI2:
   79              		.cfi_def_cfa_offset 4
   80              		@ sp needed
-  81 0038 5DF804FB 		ldr	pc, [sp], #4
+  81 0038 00BD     		pop	{pc}
   82              	.L4:
-  83              		.align	2
+  83 003a 00BF     		.align	2
   84              	.L3:
   85 003c 00380240 		.word	1073887232
   86              		.cfi_endproc
-  87              	.LFE860:
+  87              	.LFE893:
   89              		.text
   90              	.Letext0:
   91              		.file 2 "Drivers/CMSIS/Device/ST/STM32F7xx/Include/stm32f767xx.h"
-  92              		.file 3 "C:\\ST\\STM32CubeIDE_1.19.0\\STM32CubeIDE\\plugins\\com.st.stm32cube.ide.mcu.externaltool
-  93              		.file 4 "C:\\ST\\STM32CubeIDE_1.19.0\\STM32CubeIDE\\plugins\\com.st.stm32cube.ide.mcu.externaltool
+  92              		.file 3 "/usr/arm-none-eabi/include/machine/_default_types.h"
+  93              		.file 4 "/usr/arm-none-eabi/include/sys/_stdint.h"
   94              		.file 5 "Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_ll_rcc.h"
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccfJovk8.s 			page 4
+ARM GAS  /tmp/ccMZ4i07.s 			page 4
 
 
   95              		.file 6 "Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_ll_dma.h"
   96              		.file 7 "Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_cortex.h"
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccfJovk8.s 			page 5
+ARM GAS  /tmp/ccMZ4i07.s 			page 5
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 stm32f7xx_hal_msp.c
-C:\Users\frees\AppData\Local\Temp\ccfJovk8.s:20     .text.HAL_MspInit:00000000 $t
-C:\Users\frees\AppData\Local\Temp\ccfJovk8.s:26     .text.HAL_MspInit:00000000 HAL_MspInit
-C:\Users\frees\AppData\Local\Temp\ccfJovk8.s:85     .text.HAL_MspInit:0000003c $d
+     /tmp/ccMZ4i07.s:20     .text.HAL_MspInit:00000000 $t
+     /tmp/ccMZ4i07.s:26     .text.HAL_MspInit:00000000 HAL_MspInit
+     /tmp/ccMZ4i07.s:85     .text.HAL_MspInit:0000003c $d
 
 UNDEFINED SYMBOLS
 HAL_NVIC_SetPriority

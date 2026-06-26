@@ -1,0 +1,574 @@
+ARM GAS  /tmp/cc4WyvXQ.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"arm_euclidean_distance_f32.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c"
+  19              		.section	.text.arm_euclidean_distance_f32,"ax",%progbits
+  20              		.align	1
+  21              		.global	arm_euclidean_distance_f32
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	arm_euclidean_distance_f32:
+  27              	.LVL0:
+  28              	.LFB117:
+   1:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** ﻿
+   2:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** 
+   3:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** /* ----------------------------------------------------------------------
+   4:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  * Project:      CMSIS DSP Library
+   5:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  * Title:        arm_euclidean_distance_f32.c
+   6:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  * Description:  Euclidean distance between two vectors
+   7:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  *
+   8:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  * $Date:        23 April 2021
+   9:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  * $Revision:    V1.9.0
+  10:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  *
+  11:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  * Target Processor: Cortex-M and Cortex-A cores
+  12:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  * -------------------------------------------------------------------- */
+  13:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** /*
+  14:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  * Copyright (C) 2010-2021 ARM Limited or its affiliates. All rights reserved.
+  15:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  *
+  16:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  * SPDX-License-Identifier: Apache-2.0
+  17:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  *
+  18:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+  19:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  * not use this file except in compliance with the License.
+  20:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  * You may obtain a copy of the License at
+  21:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  *
+  22:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  * www.apache.org/licenses/LICENSE-2.0
+  23:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  *
+  24:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  * Unless required by applicable law or agreed to in writing, software
+  25:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  26:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  27:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  * See the License for the specific language governing permissions and
+  28:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  * limitations under the License.
+  29:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  */
+  30:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** #include "arm_compiler_specific.h"
+ARM GAS  /tmp/cc4WyvXQ.s 			page 2
+
+
+  31:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** 
+  32:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** 
+  33:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** #include "dsp/distance_functions.h"
+  34:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** #include <limits.h>
+  35:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** #include <math.h>
+  36:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** 
+  37:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** 
+  38:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** 
+  39:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** /**
+  40:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****   @addtogroup Euclidean
+  41:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****   @{
+  42:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  */
+  43:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** 
+  44:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** 
+  45:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** /**
+  46:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  * @brief        Euclidean distance between two vectors
+  47:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  * @param[in]    pA         First vector
+  48:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  * @param[in]    pB         Second vector
+  49:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  * @param[in]    blockSize  vector length
+  50:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  * @return distance
+  51:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  *
+  52:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****  */
+  53:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** #if defined(ARM_MATH_MVEF) && !defined(ARM_MATH_AUTOVECTORIZE)
+  54:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** 
+  55:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** #include "arm_helium_utils.h"
+  56:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** #include "arm_vec_math.h"
+  57:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** ARM_DSP_ATTRIBUTE float32_t arm_euclidean_distance_f32(const float32_t *pA,const float32_t *pB, uin
+  58:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** {
+  59:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****     uint32_t        blkCnt;
+  60:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****     float32_t       tmp;
+  61:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****     f32x4_t         a, b, accumV, tempV;
+  62:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** 
+  63:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****     accumV = vdupq_n_f32(0.0f);
+  64:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** 
+  65:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****     blkCnt = blockSize >> 2;
+  66:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****     while (blkCnt > 0U) {
+  67:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****         a = vld1q(pA);
+  68:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****         b = vld1q(pB);
+  69:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** 
+  70:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****         tempV = vsubq(a, b);
+  71:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****         accumV = vfmaq(accumV, tempV, tempV);
+  72:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** 
+  73:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****         pA += 4;
+  74:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****         pB += 4;
+  75:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****         blkCnt--;
+  76:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****     }
+  77:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** 
+  78:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****     /*
+  79:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****      * tail
+  80:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****      * (will be merged thru tail predication)
+  81:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****      */
+  82:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****     blkCnt = blockSize & 3;
+  83:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****     if (blkCnt > 0U) {
+  84:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****         mve_pred16_t    p0 = vctp32q(blkCnt);
+  85:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** 
+  86:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****         a = vldrwq_z_f32(pA, p0);
+  87:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****         b = vldrwq_z_f32(pB, p0);
+ARM GAS  /tmp/cc4WyvXQ.s 			page 3
+
+
+  88:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** 
+  89:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****         tempV = vsubq(a, b);
+  90:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****         accumV = vfmaq_m(accumV, tempV, tempV, p0);
+  91:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****     }
+  92:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** 
+  93:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****     arm_sqrt_f32(vecAddAcrossF32Mve(accumV), &tmp);
+  94:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****     return (tmp);
+  95:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** }
+  96:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** #else
+  97:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** #if defined(ARM_MATH_NEON) 
+  98:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** 
+  99:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** #include "NEMath.h"
+ 100:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** 
+ 101:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** ARM_DSP_ATTRIBUTE float32_t arm_euclidean_distance_f32(const float32_t *pA,const float32_t *pB, uin
+ 102:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** {
+ 103:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****    float32_t accum=0.0f,tmp;
+ 104:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****    uint32_t blkCnt;
+ 105:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****    float32x4_t a,b,accumV;
+ 106:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****    float32x2_t accumV2;
+ 107:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** 
+ 108:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****    accumV = vdupq_n_f32(0.0f);
+ 109:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****    blkCnt = blockSize >> 2;
+ 110:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****    while(blkCnt > 0)
+ 111:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****    {
+ 112:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****         a = vld1q_f32(pA);
+ 113:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****         b = vld1q_f32(pB);
+ 114:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** 
+ 115:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****         a = vsubq_f32(a,b);
+ 116:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****         accumV = vmlaq_f32(accumV,a,a);
+ 117:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****         pA += 4;
+ 118:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****         pB += 4;
+ 119:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****         blkCnt --;
+ 120:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****    }
+ 121:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****    accumV2 = vpadd_f32(vget_low_f32(accumV),vget_high_f32(accumV));
+ 122:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****    accum = vget_lane_f32(accumV2, 0) + vget_lane_f32(accumV2, 1);
+ 123:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** 
+ 124:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****    blkCnt = blockSize & 3;
+ 125:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****    while(blkCnt > 0)
+ 126:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****    {
+ 127:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****       tmp = *pA++ - *pB++;
+ 128:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****       accum += ARM_SQ(tmp);
+ 129:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****       blkCnt --;
+ 130:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****    }
+ 131:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****    arm_sqrt_f32(accum,&tmp);
+ 132:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****    return(tmp);
+ 133:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** }
+ 134:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** 
+ 135:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** #else
+ 136:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** ARM_DSP_ATTRIBUTE float32_t arm_euclidean_distance_f32(const float32_t *pA,const float32_t *pB, uin
+ 137:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** {
+  29              		.loc 1 137 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+ 138:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****    float32_t accum=0.0f,tmp;
+  34              		.loc 1 138 4 view .LVU1
+ARM GAS  /tmp/cc4WyvXQ.s 			page 4
+
+
+ 139:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** 
+ 140:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****    while(blockSize > 0)
+  35              		.loc 1 140 4 view .LVU2
+ 138:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****    float32_t accum=0.0f,tmp;
+  36              		.loc 1 138 14 is_stmt 0 view .LVU3
+  37 0000 9FED0D0A 		vldr.32	s0, .L9
+  38              		.loc 1 140 9 view .LVU4
+  39 0004 0AE0     		b	.L2
+  40              	.LVL1:
+  41              	.L3:
+ 141:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****    {
+ 142:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****       tmp = *pA++ - *pB++;
+  42              		.loc 1 142 7 is_stmt 1 view .LVU5
+  43              		.loc 1 142 13 is_stmt 0 view .LVU6
+  44 0006 F0EC017A 		vldmia.32	r0!, {s15}
+  45              	.LVL2:
+  46              		.loc 1 142 21 view .LVU7
+  47 000a B1EC017A 		vldmia.32	r1!, {s14}
+  48              	.LVL3:
+  49              		.loc 1 142 19 view .LVU8
+  50 000e 77EEC77A 		vsub.f32	s15, s15, s14
+  51              	.LVL4:
+ 143:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****       accum += ARM_SQ(tmp);
+  52              		.loc 1 143 7 is_stmt 1 view .LVU9
+  53              		.loc 1 143 16 is_stmt 0 view .LVU10
+  54 0012 67EEA77A 		vmul.f32	s15, s15, s15
+  55              	.LVL5:
+  56              		.loc 1 143 13 view .LVU11
+  57 0016 30EE270A 		vadd.f32	s0, s0, s15
+  58              	.LVL6:
+ 144:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****       blockSize --;
+  59              		.loc 1 144 7 is_stmt 1 view .LVU12
+  60              		.loc 1 144 17 is_stmt 0 view .LVU13
+  61 001a 013A     		subs	r2, r2, #1
+  62              	.LVL7:
+  63              	.L2:
+ 140:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****    {
+  64              		.loc 1 140 20 is_stmt 1 view .LVU14
+  65 001c 002A     		cmp	r2, #0
+  66 001e F2D1     		bne	.L3
+ 145:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****    }
+ 146:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****    arm_sqrt_f32(accum,&tmp);
+  67              		.loc 1 146 4 view .LVU15
+  68              	.LVL8:
+  69              	.LBB4:
+  70              	.LBI4:
+  71              		.file 2 "Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h"
+   1:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** /******************************************************************************
+   2:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  * @file     fast_math_functions.h
+   3:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  * @brief    Public header file for CMSIS DSP Library
+   4:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  * @version  V1.10.0
+   5:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  * @date     08 July 2021
+   6:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  * Target Processor: Cortex-M and Cortex-A cores
+   7:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  ******************************************************************************/
+   8:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** /*
+   9:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  * Copyright (c) 2010-2020 Arm Limited or its affiliates. All rights reserved.
+  10:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  *
+ARM GAS  /tmp/cc4WyvXQ.s 			page 5
+
+
+  11:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  * SPDX-License-Identifier: Apache-2.0
+  12:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  *
+  13:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+  14:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  * not use this file except in compliance with the License.
+  15:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  * You may obtain a copy of the License at
+  16:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  *
+  17:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  * www.apache.org/licenses/LICENSE-2.0
+  18:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  *
+  19:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  * Unless required by applicable law or agreed to in writing, software
+  20:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  21:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  22:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  * See the License for the specific language governing permissions and
+  23:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  * limitations under the License.
+  24:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  */
+  25:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+  26:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  
+  27:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** #ifndef FAST_MATH_FUNCTIONS_H_
+  28:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** #define FAST_MATH_FUNCTIONS_H_
+  29:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+  30:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** #include "arm_math_types.h"
+  31:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** #include "arm_math_memory.h"
+  32:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+  33:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** #include "dsp/none.h"
+  34:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** #include "dsp/utils.h"
+  35:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+  36:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** #include "dsp/basic_math_functions.h"
+  37:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+  38:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+  39:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** #ifdef   __cplusplus
+  40:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** #include <cmath>  
+  41:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** extern "C"
+  42:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** {
+  43:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** #else
+  44:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** #include <math.h>
+  45:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** #endif
+  46:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+  47:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   /**
+  48:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * @brief Macros required for SINE and COSINE Fast math approximations
+  49:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    */
+  50:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+  51:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** #define FAST_MATH_TABLE_SIZE  512
+  52:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** #define FAST_MATH_Q31_SHIFT   (32 - 10)
+  53:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** #define FAST_MATH_Q15_SHIFT   (16 - 10)
+  54:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   
+  55:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** #ifndef PI
+  56:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   #define PI               3.14159265358979f
+  57:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** #endif
+  58:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+  59:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** #ifndef PI_F64 
+  60:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   #define PI_F64 3.14159265358979323846
+  61:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** #endif
+  62:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+  63:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+  64:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+  65:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** /**
+  66:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  * @defgroup groupFastMath Fast Math Functions
+  67:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  * This set of functions provides a fast approximation to sine, cosine, and square root.
+ARM GAS  /tmp/cc4WyvXQ.s 			page 6
+
+
+  68:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  * As compared to most of the other functions in the CMSIS math library, the fast math functions
+  69:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  * operate on individual values and not arrays.
+  70:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  * There are separate functions for Q15, Q31, and floating-point data.
+  71:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  *
+  72:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  */
+  73:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+  74:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+  75:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    /**
+  76:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * @brief  Fast approximation to the trigonometric sine function for floating-point data.
+  77:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * @param[in] x  input value in radians.
+  78:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * @return  sin(x).
+  79:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    */
+  80:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   float32_t arm_sin_f32(
+  81:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   float32_t x);
+  82:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+  83:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+  84:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   /**
+  85:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * @brief  Fast approximation to the trigonometric sine function for Q31 data.
+  86:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * @param[in] x  Scaled input value in radians.
+  87:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * @return  sin(x).
+  88:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    */
+  89:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   q31_t arm_sin_q31(
+  90:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   q31_t x);
+  91:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+  92:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   /**
+  93:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * @brief  Fast approximation to the trigonometric sine function for Q15 data.
+  94:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * @param[in] x  Scaled input value in radians.
+  95:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * @return  sin(x).
+  96:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    */
+  97:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   q15_t arm_sin_q15(
+  98:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   q15_t x);
+  99:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+ 100:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+ 101:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   /**
+ 102:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * @brief  Fast approximation to the trigonometric cosine function for floating-point data.
+ 103:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * @param[in] x  input value in radians.
+ 104:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * @return  cos(x).
+ 105:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    */
+ 106:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   float32_t arm_cos_f32(
+ 107:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   float32_t x);
+ 108:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+ 109:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+ 110:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   /**
+ 111:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * @brief Fast approximation to the trigonometric cosine function for Q31 data.
+ 112:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * @param[in] x  Scaled input value in radians.
+ 113:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * @return  cos(x).
+ 114:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    */
+ 115:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   q31_t arm_cos_q31(
+ 116:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   q31_t x);
+ 117:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+ 118:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+ 119:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   /**
+ 120:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * @brief  Fast approximation to the trigonometric cosine function for Q15 data.
+ 121:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * @param[in] x  Scaled input value in radians.
+ 122:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * @return  cos(x).
+ 123:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    */
+ 124:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   q15_t arm_cos_q15(
+ARM GAS  /tmp/cc4WyvXQ.s 			page 7
+
+
+ 125:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   q15_t x);
+ 126:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+ 127:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+ 128:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** /**
+ 129:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   @brief         Floating-point vector of log values.
+ 130:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   @param[in]     pSrc       points to the input vector
+ 131:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   @param[out]    pDst       points to the output vector
+ 132:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   @param[in]     blockSize  number of samples in each vector
+ 133:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  */
+ 134:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   void arm_vlog_f32(
+ 135:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   const float32_t * pSrc,
+ 136:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****         float32_t * pDst,
+ 137:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****         uint32_t blockSize);
+ 138:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+ 139:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+ 140:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+ 141:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** /**
+ 142:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   @brief         Floating-point vector of log values.
+ 143:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   @param[in]     pSrc       points to the input vector
+ 144:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   @param[out]    pDst       points to the output vector
+ 145:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   @param[in]     blockSize  number of samples in each vector
+ 146:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  */
+ 147:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   void arm_vlog_f64(
+ 148:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   const float64_t * pSrc,
+ 149:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****         float64_t * pDst,
+ 150:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****         uint32_t blockSize);
+ 151:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+ 152:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+ 153:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+ 154:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   /**
+ 155:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * @brief  q31 vector of log values.
+ 156:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * @param[in]     pSrc       points to the input vector in q31
+ 157:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * @param[out]    pDst       points to the output vector in q5.26
+ 158:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * @param[in]     blockSize  number of samples in each vector
+ 159:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    */
+ 160:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   void arm_vlog_q31(const q31_t * pSrc,
+ 161:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****         q31_t * pDst,
+ 162:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****         uint32_t blockSize);
+ 163:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+ 164:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   /**
+ 165:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * @brief  q15 vector of log values.
+ 166:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * @param[in]     pSrc       points to the input vector in q15
+ 167:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * @param[out]    pDst       points to the output vector in q4.11
+ 168:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * @param[in]     blockSize  number of samples in each vector
+ 169:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    */
+ 170:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   void arm_vlog_q15(const q15_t * pSrc,
+ 171:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****         q15_t * pDst,
+ 172:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****         uint32_t blockSize);
+ 173:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+ 174:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+ 175:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+ 176:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** /**
+ 177:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   @brief         Floating-point vector of exp values.
+ 178:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   @param[in]     pSrc       points to the input vector
+ 179:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   @param[out]    pDst       points to the output vector
+ 180:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   @param[in]     blockSize  number of samples in each vector
+ 181:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  */
+ARM GAS  /tmp/cc4WyvXQ.s 			page 8
+
+
+ 182:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   void arm_vexp_f32(
+ 183:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   const float32_t * pSrc,
+ 184:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****         float32_t * pDst,
+ 185:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****         uint32_t blockSize);
+ 186:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+ 187:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+ 188:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+ 189:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** /**
+ 190:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   @brief         Floating-point vector of exp values.
+ 191:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   @param[in]     pSrc       points to the input vector
+ 192:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   @param[out]    pDst       points to the output vector
+ 193:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   @param[in]     blockSize  number of samples in each vector
+ 194:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  */
+ 195:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   void arm_vexp_f64(
+ 196:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   const float64_t * pSrc,
+ 197:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 		float64_t * pDst,
+ 198:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 		uint32_t blockSize);
+ 199:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+ 200:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+ 201:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+ 202:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  /**
+ 203:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * @defgroup SQRT Square Root
+ 204:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    *
+ 205:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * Computes the square root of a number.
+ 206:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * There are separate functions for Q15, Q31, and floating-point data types.
+ 207:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * The square root function is computed using the Newton-Raphson algorithm.
+ 208:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * This is an iterative algorithm of the form:
+ 209:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * <pre>
+ 210:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    *      x1 = x0 - f(x0)/f'(x0)
+ 211:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * </pre>
+ 212:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * where <code>x1</code> is the current estimate,
+ 213:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * <code>x0</code> is the previous estimate, and
+ 214:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * <code>f'(x0)</code> is the derivative of <code>f()</code> evaluated at <code>x0</code>.
+ 215:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * For the square root function, the algorithm reduces to:
+ 216:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * <pre>
+ 217:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    *     x0 = in/2                         [initial guess]
+ 218:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    *     x1 = 1/2 * ( x0 + in / x0)        [each iteration]
+ 219:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * </pre>
+ 220:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    */
+ 221:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+ 222:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+ 223:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   /**
+ 224:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * @addtogroup SQRT
+ 225:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    * @{
+ 226:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****    */
+ 227:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+ 228:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** /**
+ 229:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   @brief         Floating-point square root function.
+ 230:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   @param[in]     in    input value
+ 231:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   @param[out]    pOut  square root of input value
+ 232:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   @return        execution status
+ 233:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****                    - \ref ARM_MATH_SUCCESS        : input value is positive
+ 234:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****                    - \ref ARM_MATH_ARGUMENT_ERROR : input value is negative; *pOut is set to 0
+ 235:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****  */
+ 236:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** __STATIC_FORCEINLINE arm_status arm_sqrt_f32(
+  72              		.loc 2 236 33 view .LVU16
+  73              	.LBB5:
+ARM GAS  /tmp/cc4WyvXQ.s 			page 9
+
+
+ 237:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   const float32_t in,
+ 238:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   float32_t * pOut)
+ 239:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   {
+ 240:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****     if (in >= 0.0f)
+  74              		.loc 2 240 5 view .LVU17
+  75              		.loc 2 240 8 is_stmt 0 view .LVU18
+  76 0020 B5EEC00A 		vcmpe.f32	s0, #0
+  77 0024 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+  78 0028 02DB     		blt	.L8
+ 241:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****     {
+ 242:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** #if defined ( __CC_ARM )
+ 243:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   #if defined __TARGET_FPU_VFP
+ 244:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****       *pOut = __sqrtf(in);
+ 245:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   #else
+ 246:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****       *pOut = sqrtf(in);
+ 247:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   #endif
+ 248:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+ 249:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** #elif defined ( __ICCARM__ )
+ 250:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   #if defined __ARMVFP__
+ 251:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****       __ASM("VSQRT.F32 %0,%1" : "=t"(*pOut) : "t"(in));
+ 252:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   #else
+ 253:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****       *pOut = sqrtf(in);
+ 254:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   #endif
+ 255:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+ 256:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** #elif defined ( __ARMCC_VERSION ) && ( __ARMCC_VERSION >= 6010050 )
+ 257:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****       *pOut = _sqrtf(in);
+ 258:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** #elif defined(__GNUC_PYTHON__)
+ 259:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****       *pOut = sqrtf(in);
+ 260:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** #elif defined ( __GNUC__ )
+ 261:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   #if defined (__VFP_FP__) && !defined(__SOFTFP__)
+ 262:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****       __ASM("VSQRT.F32 %0,%1" : "=t"(*pOut) : "t"(in));
+  79              		.loc 2 262 7 is_stmt 1 view .LVU19
+  80              		.syntax unified
+  81              	@ 262 "Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h" 1
+  82 002a B1EEC00A 		VSQRT.F32 s0,s0
+  83              	@ 0 "" 2
+  84              	.LVL9:
+ 263:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   #else
+ 264:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****       *pOut = sqrtf(in);
+ 265:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****   #endif
+ 266:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** #else
+ 267:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****       *pOut = sqrtf(in);
+ 268:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** #endif
+ 269:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h **** 
+ 270:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****       return (ARM_MATH_SUCCESS);
+  85              		.loc 2 270 7 view .LVU20
+  86              		.loc 2 270 14 is_stmt 0 view .LVU21
+  87              		.thumb
+  88              		.syntax unified
+  89 002e 7047     		bx	lr
+  90              	.LVL10:
+  91              	.L8:
+ 271:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****     }
+ 272:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****     else
+ 273:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****     {
+ 274:Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h ****       *pOut = 0.0f;
+  92              		.loc 2 274 13 view .LVU22
+ARM GAS  /tmp/cc4WyvXQ.s 			page 10
+
+
+  93 0030 9FED010A 		vldr.32	s0, .L9
+  94              	.LVL11:
+  95              		.loc 2 274 13 view .LVU23
+  96              	.LBE5:
+  97              	.LBE4:
+ 147:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c ****    return(tmp);
+  98              		.loc 1 147 4 is_stmt 1 view .LVU24
+ 148:Drivers/CMSIS_DSP/Source/DistanceFunctions/arm_euclidean_distance_f32.c **** }
+  99              		.loc 1 148 1 is_stmt 0 view .LVU25
+ 100 0034 7047     		bx	lr
+ 101              	.L10:
+ 102 0036 00BF     		.align	2
+ 103              	.L9:
+ 104 0038 00000000 		.word	0
+ 105              		.cfi_endproc
+ 106              	.LFE117:
+ 108              		.text
+ 109              	.Letext0:
+ 110              		.file 3 "/usr/arm-none-eabi/include/machine/_default_types.h"
+ 111              		.file 4 "/usr/arm-none-eabi/include/sys/_stdint.h"
+ 112              		.file 5 "Drivers/CMSIS_DSP/Include/arm_math_types.h"
+ARM GAS  /tmp/cc4WyvXQ.s 			page 11
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 arm_euclidean_distance_f32.c
+     /tmp/cc4WyvXQ.s:20     .text.arm_euclidean_distance_f32:00000000 $t
+     /tmp/cc4WyvXQ.s:26     .text.arm_euclidean_distance_f32:00000000 arm_euclidean_distance_f32
+     /tmp/cc4WyvXQ.s:104    .text.arm_euclidean_distance_f32:00000038 $d
+
+NO UNDEFINED SYMBOLS

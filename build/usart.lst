@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
+ARM GAS  /tmp/ccDblWGg.s 			page 1
 
 
    1              		.cpu cortex-m7
@@ -27,7 +27,7 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
   24              		.thumb_func
   26              	circ_memcpy:
   27              	.LVL0:
-  28              	.LFB860:
+  28              	.LFB893:
    1:Core/Src/usart.c **** /* USER CODE BEGIN Header */
    2:Core/Src/usart.c **** /**
    3:Core/Src/usart.c ****   ******************************************************************************
@@ -49,328 +49,337 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
   19:Core/Src/usart.c **** /* USER CODE END Header */
   20:Core/Src/usart.c **** /* Includes ------------------------------------------------------------------*/
   21:Core/Src/usart.c **** #include "usart.h"
-  22:Core/Src/usart.c **** 
+  22:Core/Src/usart.c **** #include <stdint.h>
   23:Core/Src/usart.c **** 
   24:Core/Src/usart.c **** 
-  25:Core/Src/usart.c **** /*
-  26:Core/Src/usart.c ****  * USART_Driver.c
-  27:Core/Src/usart.c ****  *
-  28:Core/Src/usart.c ****  *  Created on: Apr 22, 2026
-  29:Core/Src/usart.c ****  *      Author: frees
-  30:Core/Src/usart.c ****  */
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 2
+  25:Core/Src/usart.c **** 
+  26:Core/Src/usart.c **** /*
+  27:Core/Src/usart.c ****  * USART_Driver.c
+  28:Core/Src/usart.c ****  *
+  29:Core/Src/usart.c ****  *  Created on: Apr 22, 2026
+  30:Core/Src/usart.c ****  *      Author: frees
+ARM GAS  /tmp/ccDblWGg.s 			page 2
 
 
-  31:Core/Src/usart.c **** 
+  31:Core/Src/usart.c ****  */
   32:Core/Src/usart.c **** 
-  33:Core/Src/usart.c **** //#include "USART_Driver.h"
-  34:Core/Src/usart.c **** //uint8_t lockUsartDma;
-  35:Core/Src/usart.c **** 
-  36:Core/Src/usart.c **** __attribute__((aligned(4))) uint8_t usart_tx_buffer[USART_DmaBuffSize];
-  37:Core/Src/usart.c **** __attribute__((aligned(4))) uint8_t usart_rx_buffer[USART_DmaBuffSize];
-  38:Core/Src/usart.c **** volatile uint16_t usart_lenOfmess = 0;
-  39:Core/Src/usart.c **** volatile start_message;
-  40:Core/Src/usart.c **** volatile uint8_t USART_req;
-  41:Core/Src/usart.c **** volatile uint16_t USART_req_size;
-  42:Core/Src/usart.c **** volatile uint16_t USART_req_start_index= 0;
-  43:Core/Src/usart.c **** void circ_memcpy(uint8_t* buff_start, uint8_t* arr_for_save, uint32_t data_start_index, uint32_t da
-  29              		.loc 1 43 127 view -0
+  33:Core/Src/usart.c **** 
+  34:Core/Src/usart.c **** //#include "USART_Driver.h"
+  35:Core/Src/usart.c **** //uint8_t lockUsartDma;
+  36:Core/Src/usart.c **** 
+  37:Core/Src/usart.c **** __attribute__((aligned(4))) uint8_t usart_tx_buffer[USART_DmaBuffSize];
+  38:Core/Src/usart.c **** __attribute__((aligned(4))) uint8_t usart_rx_buffer[USART_DmaBuffSize];
+  39:Core/Src/usart.c **** volatile uint16_t usart_lenOfmess = 0;
+  40:Core/Src/usart.c **** volatile uint8_t start_message;
+  41:Core/Src/usart.c **** volatile uint8_t USART_req;
+  42:Core/Src/usart.c **** volatile uint16_t USART_req_size;
+  43:Core/Src/usart.c **** volatile uint16_t USART_req_start_index= 0;
+  44:Core/Src/usart.c **** void circ_memcpy(uint8_t* buff_start, uint8_t* arr_for_save, uint32_t data_start_index, uint32_t da
+  29              		.loc 1 44 127 view -0
   30              		.cfi_startproc
   31              		@ args = 4, pretend = 0, frame = 0
   32              		@ frame_needed = 0, uses_anonymous_args = 0
-  33              		.loc 1 43 127 is_stmt 0 view .LVU1
+  33              		.loc 1 44 127 is_stmt 0 view .LVU1
   34 0000 30B5     		push	{r4, r5, lr}
   35              	.LCFI0:
   36              		.cfi_def_cfa_offset 12
   37              		.cfi_offset 4, -12
   38              		.cfi_offset 5, -8
   39              		.cfi_offset 14, -4
-  40 0002 039C     		ldr	r4, [sp, #12]
-  44:Core/Src/usart.c **** 	for (uint32_t i = 0; i < data_size; i++) {
-  41              		.loc 1 44 2 is_stmt 1 view .LVU2
-  42              	.LBB6:
-  43              		.loc 1 44 7 view .LVU3
-  44              	.LVL1:
-  45              		.loc 1 44 16 is_stmt 0 view .LVU4
-  46 0004 4FF0000C 		mov	ip, #0
-  47              		.loc 1 44 2 view .LVU5
-  48 0008 0BE0     		b	.L2
-  49              	.LVL2:
-  50              	.L3:
-  45:Core/Src/usart.c ****     	arr_for_save[i] = buff_start[(data_start_index + i) % buff_len];
-  51              		.loc 1 45 6 is_stmt 1 view .LVU6
-  52              		.loc 1 45 53 is_stmt 0 view .LVU7
-  53 000a 0CEB020E 		add	lr, ip, r2
-  54              		.loc 1 45 58 view .LVU8
-  55 000e BEFBF4F5 		udiv	r5, lr, r4
-  56 0012 04FB15EE 		mls	lr, r4, r5, lr
-  57              		.loc 1 45 34 view .LVU9
-  58 0016 10F80EE0 		ldrb	lr, [r0, lr]	@ zero_extendqisi2
-  59              		.loc 1 45 22 view .LVU10
-  60 001a 01F80CE0 		strb	lr, [r1, ip]
-  44:Core/Src/usart.c **** 	for (uint32_t i = 0; i < data_size; i++) {
-  61              		.loc 1 44 39 is_stmt 1 discriminator 3 view .LVU11
-  62 001e 0CF1010C 		add	ip, ip, #1
-  63              	.LVL3:
-  64              	.L2:
-  44:Core/Src/usart.c **** 	for (uint32_t i = 0; i < data_size; i++) {
-  65              		.loc 1 44 25 discriminator 1 view .LVU12
-  66 0022 9C45     		cmp	ip, r3
-  67 0024 F1D3     		bcc	.L3
-  68              	.LBE6:
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 3
+  40 0002 0446     		mov	r4, r0
+  41 0004 0D46     		mov	r5, r1
+  42 0006 1146     		mov	r1, r2
+  43              	.LVL1:
+  44              		.loc 1 44 127 view .LVU2
+  45 0008 1A46     		mov	r2, r3
+  46              	.LVL2:
+  47              		.loc 1 44 127 view .LVU3
+  48 000a 0398     		ldr	r0, [sp, #12]
+  49              	.LVL3:
+  45:Core/Src/usart.c **** 	for (uint32_t i = 0; i < data_size; i++) {
+  50              		.loc 1 45 2 is_stmt 1 view .LVU4
+  51              	.LBB6:
+  52              		.loc 1 45 7 view .LVU5
+  53              		.loc 1 45 16 is_stmt 0 view .LVU6
+  54 000c 4FF0000C 		mov	ip, #0
+  55              		.loc 1 45 2 view .LVU7
+  56 0010 0BE0     		b	.L2
+  57              	.LVL4:
+  58              	.L3:
+  46:Core/Src/usart.c ****     	arr_for_save[i] = buff_start[(data_start_index + i) % buff_len];
+  59              		.loc 1 46 6 is_stmt 1 view .LVU8
+  60              		.loc 1 46 53 is_stmt 0 view .LVU9
+  61 0012 0CEB010E 		add	lr, ip, r1
+  62              		.loc 1 46 58 view .LVU10
+  63 0016 BEFBF0F3 		udiv	r3, lr, r0
+  64 001a 00FB13EE 		mls	lr, r0, r3, lr
+  65              		.loc 1 46 34 view .LVU11
+  66 001e 14F80EE0 		ldrb	lr, [r4, lr]	@ zero_extendqisi2
+  67              		.loc 1 46 22 view .LVU12
+  68 0022 05F80CE0 		strb	lr, [r5, ip]
+  45:Core/Src/usart.c **** 	for (uint32_t i = 0; i < data_size; i++) {
+ARM GAS  /tmp/ccDblWGg.s 			page 3
 
 
-  46:Core/Src/usart.c **** 	}	
-  47:Core/Src/usart.c **** }
-  69              		.loc 1 47 1 is_stmt 0 view .LVU13
-  70 0026 30BD     		pop	{r4, r5, pc}
-  71              		.loc 1 47 1 view .LVU14
-  72              		.cfi_endproc
-  73              	.LFE860:
-  75              		.section	.text.Usart_Init,"ax",%progbits
-  76              		.align	1
-  77              		.global	Usart_Init
-  78              		.syntax unified
-  79              		.thumb
-  80              		.thumb_func
-  82              	Usart_Init:
-  83              	.LFB861:
-  48:Core/Src/usart.c **** void Usart_Init(){
-  84              		.loc 1 48 18 is_stmt 1 view -0
-  85              		.cfi_startproc
-  86              		@ args = 0, pretend = 0, frame = 0
-  87              		@ frame_needed = 0, uses_anonymous_args = 0
-  88              		@ link register save eliminated.
-  49:Core/Src/usart.c **** 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIODEN;
-  89              		.loc 1 49 2 view .LVU16
-  90              		.loc 1 49 5 is_stmt 0 view .LVU17
-  91 0000 3F4A     		ldr	r2, .L9
-  92 0002 136B     		ldr	r3, [r2, #48]
-  93              		.loc 1 49 15 view .LVU18
-  94 0004 43F00803 		orr	r3, r3, #8
-  95 0008 1363     		str	r3, [r2, #48]
-  50:Core/Src/usart.c **** 	RCC->APB1ENR |= RCC_APB1ENR_USART3EN;
-  96              		.loc 1 50 2 is_stmt 1 view .LVU19
-  97              		.loc 1 50 5 is_stmt 0 view .LVU20
-  98 000a 136C     		ldr	r3, [r2, #64]
-  99              		.loc 1 50 15 view .LVU21
- 100 000c 43F48023 		orr	r3, r3, #262144
- 101 0010 1364     		str	r3, [r2, #64]
-  51:Core/Src/usart.c **** 
-  52:Core/Src/usart.c **** 	GPIOD->MODER &= ~(GPIO_MODER_MODER8 | GPIO_MODER_MODER9);
- 102              		.loc 1 52 2 is_stmt 1 view .LVU22
- 103              		.loc 1 52 7 is_stmt 0 view .LVU23
- 104 0012 3C4B     		ldr	r3, .L9+4
- 105 0014 1968     		ldr	r1, [r3]
- 106              		.loc 1 52 15 view .LVU24
- 107 0016 21F47021 		bic	r1, r1, #983040
- 108 001a 1960     		str	r1, [r3]
-  53:Core/Src/usart.c **** 	GPIOD->MODER |= (GPIO_MODER_MODER8_1) | (GPIO_MODER_MODER9_1);
- 109              		.loc 1 53 2 is_stmt 1 view .LVU25
- 110              		.loc 1 53 7 is_stmt 0 view .LVU26
- 111 001c 1968     		ldr	r1, [r3]
- 112              		.loc 1 53 15 view .LVU27
- 113 001e 41F42021 		orr	r1, r1, #655360
- 114 0022 1960     		str	r1, [r3]
-  54:Core/Src/usart.c **** 	GPIOD->AFR[1] &= ~(0xFFUL << (4 * 0)); // PD8, PD9
- 115              		.loc 1 54 2 is_stmt 1 view .LVU28
- 116              		.loc 1 54 12 is_stmt 0 view .LVU29
- 117 0024 596A     		ldr	r1, [r3, #36]
- 118              		.loc 1 54 16 view .LVU30
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 4
+  69              		.loc 1 45 39 is_stmt 1 discriminator 3 view .LVU13
+  70 0026 0CF1010C 		add	ip, ip, #1
+  71              	.LVL5:
+  72              	.L2:
+  45:Core/Src/usart.c **** 	for (uint32_t i = 0; i < data_size; i++) {
+  73              		.loc 1 45 25 discriminator 1 view .LVU14
+  74 002a 9445     		cmp	ip, r2
+  75 002c F1D3     		bcc	.L3
+  76              	.LBE6:
+  47:Core/Src/usart.c **** 	}
+  48:Core/Src/usart.c **** }
+  77              		.loc 1 48 1 is_stmt 0 view .LVU15
+  78 002e 30BD     		pop	{r4, r5, pc}
+  79              		.loc 1 48 1 view .LVU16
+  80              		.cfi_endproc
+  81              	.LFE893:
+  83              		.section	.text.Usart_Init,"ax",%progbits
+  84              		.align	1
+  85              		.global	Usart_Init
+  86              		.syntax unified
+  87              		.thumb
+  88              		.thumb_func
+  90              	Usart_Init:
+  91              	.LFB894:
+  49:Core/Src/usart.c **** void Usart_Init(){
+  92              		.loc 1 49 18 is_stmt 1 view -0
+  93              		.cfi_startproc
+  94              		@ args = 0, pretend = 0, frame = 0
+  95              		@ frame_needed = 0, uses_anonymous_args = 0
+  96              		@ link register save eliminated.
+  50:Core/Src/usart.c **** 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIODEN;
+  97              		.loc 1 50 2 view .LVU18
+  98              		.loc 1 50 5 is_stmt 0 view .LVU19
+  99 0000 3F4A     		ldr	r2, .L9
+ 100 0002 136B     		ldr	r3, [r2, #48]
+ 101              		.loc 1 50 15 view .LVU20
+ 102 0004 43F00803 		orr	r3, r3, #8
+ 103 0008 1363     		str	r3, [r2, #48]
+  51:Core/Src/usart.c **** 	RCC->APB1ENR |= RCC_APB1ENR_USART3EN;
+ 104              		.loc 1 51 2 is_stmt 1 view .LVU21
+ 105              		.loc 1 51 5 is_stmt 0 view .LVU22
+ 106 000a 136C     		ldr	r3, [r2, #64]
+ 107              		.loc 1 51 15 view .LVU23
+ 108 000c 43F48023 		orr	r3, r3, #262144
+ 109 0010 1364     		str	r3, [r2, #64]
+  52:Core/Src/usart.c **** 
+  53:Core/Src/usart.c **** 	GPIOD->MODER &= ~(GPIO_MODER_MODER8 | GPIO_MODER_MODER9);
+ 110              		.loc 1 53 2 is_stmt 1 view .LVU24
+ 111              		.loc 1 53 7 is_stmt 0 view .LVU25
+ 112 0012 3C4B     		ldr	r3, .L9+4
+ 113 0014 1968     		ldr	r1, [r3]
+ 114              		.loc 1 53 15 view .LVU26
+ 115 0016 21F47021 		bic	r1, r1, #983040
+ 116 001a 1960     		str	r1, [r3]
+  54:Core/Src/usart.c **** 	GPIOD->MODER |= (GPIO_MODER_MODER8_1) | (GPIO_MODER_MODER9_1);
+ 117              		.loc 1 54 2 is_stmt 1 view .LVU27
+ 118              		.loc 1 54 7 is_stmt 0 view .LVU28
+ARM GAS  /tmp/ccDblWGg.s 			page 4
 
 
- 119 0026 21F0FF01 		bic	r1, r1, #255
- 120 002a 5962     		str	r1, [r3, #36]
-  55:Core/Src/usart.c **** 	GPIOD->AFR[1] |= (7UL << GPIO_AFRH_AFRH1_Pos)
- 121              		.loc 1 55 2 is_stmt 1 view .LVU31
- 122              		.loc 1 55 12 is_stmt 0 view .LVU32
- 123 002c 596A     		ldr	r1, [r3, #36]
- 124              		.loc 1 55 16 view .LVU33
- 125 002e 41F07701 		orr	r1, r1, #119
- 126 0032 5962     		str	r1, [r3, #36]
-  56:Core/Src/usart.c **** 			| (7UL << GPIO_AFRH_AFRH0_Pos); // AF7
-  57:Core/Src/usart.c **** 	// ------------------------------------------------------
-  58:Core/Src/usart.c **** 	RCC->AHB1ENR |= RCC_AHB1ENR_DMA1EN;
- 127              		.loc 1 58 2 is_stmt 1 view .LVU34
- 128              		.loc 1 58 5 is_stmt 0 view .LVU35
- 129 0034 136B     		ldr	r3, [r2, #48]
- 130              		.loc 1 58 15 view .LVU36
- 131 0036 43F40013 		orr	r3, r3, #2097152
- 132 003a 1363     		str	r3, [r2, #48]
-  59:Core/Src/usart.c **** 	(void) (RCC->AHB1ENR); // Барьер
- 133              		.loc 1 59 2 is_stmt 1 view .LVU37
- 134 003c 136B     		ldr	r3, [r2, #48]
-  60:Core/Src/usart.c **** 	USART3->CR1 = 0;
- 135              		.loc 1 60 2 view .LVU38
- 136              		.loc 1 60 14 is_stmt 0 view .LVU39
- 137 003e 324B     		ldr	r3, .L9+8
- 138 0040 0021     		movs	r1, #0
- 139 0042 1960     		str	r1, [r3]
-  61:Core/Src/usart.c **** 	// USART3->CR1 &= ~USART_CR1_UE;
-  62:Core/Src/usart.c **** 
-  63:Core/Src/usart.c **** 	//USART3->BRR = 0x0341;
-  64:Core/Src/usart.c **** 	USART3 ->BRR = 0x3B; 
- 140              		.loc 1 64 2 is_stmt 1 view .LVU40
- 141              		.loc 1 64 15 is_stmt 0 view .LVU41
- 142 0044 3B22     		movs	r2, #59
- 143 0046 DA60     		str	r2, [r3, #12]
-  65:Core/Src/usart.c **** 	USART3->CR1 |= USART_CR1_RE | USART_CR1_TE //| USART_CR1_OVER8
- 144              		.loc 1 65 2 is_stmt 1 view .LVU42
- 145              		.loc 1 65 8 is_stmt 0 view .LVU43
- 146 0048 1868     		ldr	r0, [r3]
- 147              		.loc 1 65 14 view .LVU44
- 148 004a 304A     		ldr	r2, .L9+12
- 149 004c 0243     		orrs	r2, r2, r0
- 150 004e 1A60     		str	r2, [r3]
-  66:Core/Src/usart.c **** 			| USART_CR1_RTOIE;  // Приём, передача, USART вкл.
-  67:Core/Src/usart.c **** 
-  68:Core/Src/usart.c **** 	USART3->CR2 = 0;                                  // 1 стоп-бит
- 151              		.loc 1 68 2 is_stmt 1 view .LVU45
- 152              		.loc 1 68 14 is_stmt 0 view .LVU46
- 153 0050 5960     		str	r1, [r3, #4]
-  69:Core/Src/usart.c **** 	USART3->RTOR |= 33; 
- 154              		.loc 1 69 2 is_stmt 1 view .LVU47
- 155              		.loc 1 69 8 is_stmt 0 view .LVU48
- 156 0052 5A69     		ldr	r2, [r3, #20]
- 157              		.loc 1 69 15 view .LVU49
- 158 0054 42F02102 		orr	r2, r2, #33
- 159 0058 5A61     		str	r2, [r3, #20]
-  70:Core/Src/usart.c **** 	// USART3->CR2 |= USART_CR2_RTOEN;
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 5
+ 119 001c 1968     		ldr	r1, [r3]
+ 120              		.loc 1 54 15 view .LVU29
+ 121 001e 41F42021 		orr	r1, r1, #655360
+ 122 0022 1960     		str	r1, [r3]
+  55:Core/Src/usart.c **** 	GPIOD->AFR[1] &= ~(0xFFUL << (4 * 0)); // PD8, PD9
+ 123              		.loc 1 55 2 is_stmt 1 view .LVU30
+ 124              		.loc 1 55 12 is_stmt 0 view .LVU31
+ 125 0024 596A     		ldr	r1, [r3, #36]
+ 126              		.loc 1 55 16 view .LVU32
+ 127 0026 21F0FF01 		bic	r1, r1, #255
+ 128 002a 5962     		str	r1, [r3, #36]
+  56:Core/Src/usart.c **** 	GPIOD->AFR[1] |= (7UL << GPIO_AFRH_AFRH1_Pos)
+ 129              		.loc 1 56 2 is_stmt 1 view .LVU33
+ 130              		.loc 1 56 12 is_stmt 0 view .LVU34
+ 131 002c 596A     		ldr	r1, [r3, #36]
+ 132              		.loc 1 56 16 view .LVU35
+ 133 002e 41F07701 		orr	r1, r1, #119
+ 134 0032 5962     		str	r1, [r3, #36]
+  57:Core/Src/usart.c **** 			| (7UL << GPIO_AFRH_AFRH0_Pos); // AF7
+  58:Core/Src/usart.c **** 	// ------------------------------------------------------
+  59:Core/Src/usart.c **** 	RCC->AHB1ENR |= RCC_AHB1ENR_DMA1EN;
+ 135              		.loc 1 59 2 is_stmt 1 view .LVU36
+ 136              		.loc 1 59 5 is_stmt 0 view .LVU37
+ 137 0034 136B     		ldr	r3, [r2, #48]
+ 138              		.loc 1 59 15 view .LVU38
+ 139 0036 43F40013 		orr	r3, r3, #2097152
+ 140 003a 1363     		str	r3, [r2, #48]
+  60:Core/Src/usart.c **** 	(void) (RCC->AHB1ENR); // Барьер
+ 141              		.loc 1 60 2 is_stmt 1 view .LVU39
+ 142 003c 136B     		ldr	r3, [r2, #48]
+  61:Core/Src/usart.c **** 	USART3->CR1 = 0;
+ 143              		.loc 1 61 2 view .LVU40
+ 144              		.loc 1 61 14 is_stmt 0 view .LVU41
+ 145 003e 324B     		ldr	r3, .L9+8
+ 146 0040 0021     		movs	r1, #0
+ 147 0042 1960     		str	r1, [r3]
+  62:Core/Src/usart.c **** 	// USART3->CR1 &= ~USART_CR1_UE;
+  63:Core/Src/usart.c **** 
+  64:Core/Src/usart.c **** 	//USART3->BRR = 0x0341;
+  65:Core/Src/usart.c **** 	USART3 ->BRR = 0x3B;
+ 148              		.loc 1 65 2 is_stmt 1 view .LVU42
+ 149              		.loc 1 65 15 is_stmt 0 view .LVU43
+ 150 0044 3B22     		movs	r2, #59
+ 151 0046 DA60     		str	r2, [r3, #12]
+  66:Core/Src/usart.c **** 	USART3->CR1 |= USART_CR1_RE | USART_CR1_TE //| USART_CR1_OVER8
+ 152              		.loc 1 66 2 is_stmt 1 view .LVU44
+ 153              		.loc 1 66 8 is_stmt 0 view .LVU45
+ 154 0048 1868     		ldr	r0, [r3]
+ 155              		.loc 1 66 14 view .LVU46
+ 156 004a 304A     		ldr	r2, .L9+12
+ 157 004c 0243     		orrs	r2, r2, r0
+ 158 004e 1A60     		str	r2, [r3]
+  67:Core/Src/usart.c **** 			| USART_CR1_RTOIE;  // Приём, передача, USART вкл.
+  68:Core/Src/usart.c **** 
+  69:Core/Src/usart.c **** 	USART3->CR2 = 0;                                  // 1 стоп-бит
+ 159              		.loc 1 69 2 is_stmt 1 view .LVU47
+ 160              		.loc 1 69 14 is_stmt 0 view .LVU48
+ARM GAS  /tmp/ccDblWGg.s 			page 5
 
 
-  71:Core/Src/usart.c **** 
-  72:Core/Src/usart.c **** 	USART3->CR3 = USART_CR3_DMAT | USART_CR3_DMAR;                           // | USART_CR3_DMAT;
- 160              		.loc 1 72 2 is_stmt 1 view .LVU50
- 161              		.loc 1 72 14 is_stmt 0 view .LVU51
- 162 005a C022     		movs	r2, #192
- 163 005c 9A60     		str	r2, [r3, #8]
-  73:Core/Src/usart.c **** 
-  74:Core/Src/usart.c **** 	// USART RX CONFIG -------------------------------------------------------------------------- // 
-  75:Core/Src/usart.c **** 	Dma_Disable(DMA1_Stream3);
- 164              		.loc 1 75 2 is_stmt 1 view .LVU52
- 165              		.loc 1 75 2 view .LVU53
- 166 005e 2C4A     		ldr	r2, .L9+16
- 167 0060 936D     		ldr	r3, [r2, #88]
- 168 0062 23F00103 		bic	r3, r3, #1
- 169 0066 9365     		str	r3, [r2, #88]
- 170              		.loc 1 75 2 view .LVU54
- 171              	.L6:
- 172              		.loc 1 75 2 discriminator 2 view .LVU55
- 173 0068 294B     		ldr	r3, .L9+16
- 174 006a 9B6D     		ldr	r3, [r3, #88]
- 175 006c 13F0010F 		tst	r3, #1
- 176 0070 FAD1     		bne	.L6
- 177              		.loc 1 75 2 discriminator 3 view .LVU56
-  76:Core/Src/usart.c **** 	DMA1->LIFCR |= DMA_LIFCR_CTCIF3 | DMA_LIFCR_CHTIF3 | DMA_LIFCR_CTEIF3
- 178              		.loc 1 76 2 view .LVU57
- 179              		.loc 1 76 6 is_stmt 0 view .LVU58
- 180 0072 274B     		ldr	r3, .L9+16
- 181 0074 9A68     		ldr	r2, [r3, #8]
- 182              		.loc 1 76 14 view .LVU59
- 183 0076 42F07462 		orr	r2, r2, #255852544
- 184 007a 9A60     		str	r2, [r3, #8]
-  77:Core/Src/usart.c **** 				| DMA_LIFCR_CDMEIF3 | DMA_LIFCR_CFEIF3;
-  78:Core/Src/usart.c **** 	DMA1_Stream3->CR = 0;
- 185              		.loc 1 78 2 is_stmt 1 view .LVU60
- 186              		.loc 1 78 19 is_stmt 0 view .LVU61
- 187 007c 0022     		movs	r2, #0
- 188 007e 9A65     		str	r2, [r3, #88]
-  79:Core/Src/usart.c **** 	DMA1_Stream3->CR |= (4 << DMA_SxCR_CHSEL_Pos) | DMA_SxCR_PL_0
- 189              		.loc 1 79 2 is_stmt 1 view .LVU62
- 190              		.loc 1 79 14 is_stmt 0 view .LVU63
- 191 0080 996D     		ldr	r1, [r3, #88]
- 192              		.loc 1 79 19 view .LVU64
- 193 0082 244A     		ldr	r2, .L9+20
- 194 0084 0A43     		orrs	r2, r2, r1
- 195 0086 9A65     		str	r2, [r3, #88]
-  80:Core/Src/usart.c **** 			| DMA_SxCR_MINC |        // Memory increment
-  81:Core/Src/usart.c **** 			DMA_SxCR_TCIE | DMA_SxCR_DIR_0;
-  82:Core/Src/usart.c **** 	//			DMA_SxCR_CIRC;
-  83:Core/Src/usart.c **** 
-  84:Core/Src/usart.c **** 	DMA1_Stream3->PAR = (uint32_t) &(USART3->TDR); // TX
- 196              		.loc 1 84 2 is_stmt 1 view .LVU65
- 197              		.loc 1 84 20 is_stmt 0 view .LVU66
- 198 0088 234A     		ldr	r2, .L9+24
- 199 008a 1A66     		str	r2, [r3, #96]
-  85:Core/Src/usart.c **** 	// USART RX CONFIG -------------------------------------------------------------------------- // 
-  86:Core/Src/usart.c **** 	Dma_Disable(DMA1_Stream1);
- 200              		.loc 1 86 2 is_stmt 1 view .LVU67
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 6
+ 161 0050 5960     		str	r1, [r3, #4]
+  70:Core/Src/usart.c **** 	USART3->RTOR |= 33;
+ 162              		.loc 1 70 2 is_stmt 1 view .LVU49
+ 163              		.loc 1 70 8 is_stmt 0 view .LVU50
+ 164 0052 5A69     		ldr	r2, [r3, #20]
+ 165              		.loc 1 70 15 view .LVU51
+ 166 0054 42F02102 		orr	r2, r2, #33
+ 167 0058 5A61     		str	r2, [r3, #20]
+  71:Core/Src/usart.c **** 	// USART3->CR2 |= USART_CR2_RTOEN;
+  72:Core/Src/usart.c **** 
+  73:Core/Src/usart.c **** 	USART3->CR3 = USART_CR3_DMAT | USART_CR3_DMAR;                           // | USART_CR3_DMAT;
+ 168              		.loc 1 73 2 is_stmt 1 view .LVU52
+ 169              		.loc 1 73 14 is_stmt 0 view .LVU53
+ 170 005a C022     		movs	r2, #192
+ 171 005c 9A60     		str	r2, [r3, #8]
+  74:Core/Src/usart.c **** 
+  75:Core/Src/usart.c **** 	// USART RX CONFIG -------------------------------------------------------------------------- //
+  76:Core/Src/usart.c **** 	Dma_Disable(DMA1_Stream3);
+ 172              		.loc 1 76 2 is_stmt 1 view .LVU54
+ 173              		.loc 1 76 2 view .LVU55
+ 174 005e 2C4A     		ldr	r2, .L9+16
+ 175 0060 936D     		ldr	r3, [r2, #88]
+ 176 0062 23F00103 		bic	r3, r3, #1
+ 177 0066 9365     		str	r3, [r2, #88]
+ 178              		.loc 1 76 2 view .LVU56
+ 179              	.L6:
+ 180              		.loc 1 76 2 discriminator 2 view .LVU57
+ 181 0068 294B     		ldr	r3, .L9+16
+ 182 006a 9B6D     		ldr	r3, [r3, #88]
+ 183 006c 13F0010F 		tst	r3, #1
+ 184 0070 FAD1     		bne	.L6
+ 185              		.loc 1 76 2 view .LVU58
+  77:Core/Src/usart.c **** 	DMA1->LIFCR |= DMA_LIFCR_CTCIF3 | DMA_LIFCR_CHTIF3 | DMA_LIFCR_CTEIF3
+ 186              		.loc 1 77 2 view .LVU59
+ 187              		.loc 1 77 6 is_stmt 0 view .LVU60
+ 188 0072 274B     		ldr	r3, .L9+16
+ 189 0074 9A68     		ldr	r2, [r3, #8]
+ 190              		.loc 1 77 14 view .LVU61
+ 191 0076 42F07462 		orr	r2, r2, #255852544
+ 192 007a 9A60     		str	r2, [r3, #8]
+  78:Core/Src/usart.c **** 				| DMA_LIFCR_CDMEIF3 | DMA_LIFCR_CFEIF3;
+  79:Core/Src/usart.c **** 	DMA1_Stream3->CR = 0;
+ 193              		.loc 1 79 2 is_stmt 1 view .LVU62
+ 194              		.loc 1 79 19 is_stmt 0 view .LVU63
+ 195 007c 0022     		movs	r2, #0
+ 196 007e 9A65     		str	r2, [r3, #88]
+  80:Core/Src/usart.c **** 	DMA1_Stream3->CR |= (4 << DMA_SxCR_CHSEL_Pos) | DMA_SxCR_PL_0
+ 197              		.loc 1 80 2 is_stmt 1 view .LVU64
+ 198              		.loc 1 80 14 is_stmt 0 view .LVU65
+ 199 0080 996D     		ldr	r1, [r3, #88]
+ 200              		.loc 1 80 19 view .LVU66
+ 201 0082 244A     		ldr	r2, .L9+20
+ 202 0084 0A43     		orrs	r2, r2, r1
+ 203 0086 9A65     		str	r2, [r3, #88]
+  81:Core/Src/usart.c **** 			| DMA_SxCR_MINC |        // Memory increment
+  82:Core/Src/usart.c **** 			DMA_SxCR_TCIE | DMA_SxCR_DIR_0;
+  83:Core/Src/usart.c **** 	//			DMA_SxCR_CIRC;
+ARM GAS  /tmp/ccDblWGg.s 			page 6
 
 
- 201              		.loc 1 86 2 view .LVU68
- 202 008c 9A6A     		ldr	r2, [r3, #40]
- 203 008e 22F00102 		bic	r2, r2, #1
- 204 0092 9A62     		str	r2, [r3, #40]
- 205              		.loc 1 86 2 view .LVU69
- 206              	.L7:
- 207              		.loc 1 86 2 discriminator 2 view .LVU70
- 208 0094 1E4B     		ldr	r3, .L9+16
- 209 0096 9B6A     		ldr	r3, [r3, #40]
- 210 0098 13F0010F 		tst	r3, #1
- 211 009c FAD1     		bne	.L7
- 212              		.loc 1 86 2 discriminator 3 view .LVU71
-  87:Core/Src/usart.c **** 	DMA1->LIFCR |= DMA_LIFCR_CTCIF1 | DMA_LIFCR_CHTIF1 | DMA_LIFCR_CTEIF1 |
- 213              		.loc 1 87 2 view .LVU72
- 214              		.loc 1 87 6 is_stmt 0 view .LVU73
- 215 009e 1C4B     		ldr	r3, .L9+16
- 216 00a0 9A68     		ldr	r2, [r3, #8]
- 217              		.loc 1 87 14 view .LVU74
- 218 00a2 42F47462 		orr	r2, r2, #3904
- 219 00a6 9A60     		str	r2, [r3, #8]
-  88:Core/Src/usart.c **** 				   DMA_LIFCR_CDMEIF1 | DMA_LIFCR_CFEIF1;
-  89:Core/Src/usart.c **** 
-  90:Core/Src/usart.c **** 	DMA1_Stream1->CR = 0;
- 220              		.loc 1 90 2 is_stmt 1 view .LVU75
- 221              		.loc 1 90 19 is_stmt 0 view .LVU76
- 222 00a8 0022     		movs	r2, #0
- 223 00aa 9A62     		str	r2, [r3, #40]
-  91:Core/Src/usart.c **** 	DMA1_Stream1->CR |= (4 << DMA_SxCR_CHSEL_Pos) |
- 224              		.loc 1 91 2 is_stmt 1 view .LVU77
- 225              		.loc 1 91 14 is_stmt 0 view .LVU78
- 226 00ac 996A     		ldr	r1, [r3, #40]
- 227              		.loc 1 91 19 view .LVU79
- 228 00ae 1B4A     		ldr	r2, .L9+28
- 229 00b0 0A43     		orrs	r2, r2, r1
- 230 00b2 9A62     		str	r2, [r3, #40]
-  92:Core/Src/usart.c **** 						DMA_SxCR_PL_0 | // Medium (01)
-  93:Core/Src/usart.c **** 						DMA_SxCR_MINC | // Memory increment
-  94:Core/Src/usart.c **** 						DMA_SxCR_TCIE |
-  95:Core/Src/usart.c **** 						DMA_SxCR_CIRC;        			// Transfer complete
-  96:Core/Src/usart.c **** 						DMA1_Stream1->PAR = (uint32_t)&(USART3->RDR); // RX
- 231              		.loc 1 96 7 is_stmt 1 view .LVU80
- 232              		.loc 1 96 25 is_stmt 0 view .LVU81
- 233 00b4 1A4A     		ldr	r2, .L9+32
- 234 00b6 1A63     		str	r2, [r3, #48]
-  97:Core/Src/usart.c **** 	// USART3->CR2 |= USART_CR2_STOP_0;
-  98:Core/Src/usart.c **** 	USART3->CR1 |= USART_CR1_UE;
- 235              		.loc 1 98 2 is_stmt 1 view .LVU82
- 236              		.loc 1 98 8 is_stmt 0 view .LVU83
- 237 00b8 243A     		subs	r2, r2, #36
- 238 00ba 1168     		ldr	r1, [r2]
- 239              		.loc 1 98 14 view .LVU84
- 240 00bc 41F00101 		orr	r1, r1, #1
- 241 00c0 1160     		str	r1, [r2]
-  99:Core/Src/usart.c **** 	USART3->CR2 |= USART_CR2_RTOEN;// 
- 242              		.loc 1 99 2 is_stmt 1 view .LVU85
- 243              		.loc 1 99 8 is_stmt 0 view .LVU86
- 244 00c2 5168     		ldr	r1, [r2, #4]
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 7
+  84:Core/Src/usart.c **** 
+  85:Core/Src/usart.c **** 	DMA1_Stream3->PAR = (uint32_t) &(USART3->TDR); // TX
+ 204              		.loc 1 85 2 is_stmt 1 view .LVU67
+ 205              		.loc 1 85 20 is_stmt 0 view .LVU68
+ 206 0088 234A     		ldr	r2, .L9+24
+ 207 008a 1A66     		str	r2, [r3, #96]
+  86:Core/Src/usart.c **** 	// USART RX CONFIG -------------------------------------------------------------------------- //
+  87:Core/Src/usart.c **** 	Dma_Disable(DMA1_Stream1);
+ 208              		.loc 1 87 2 is_stmt 1 view .LVU69
+ 209              		.loc 1 87 2 view .LVU70
+ 210 008c 9A6A     		ldr	r2, [r3, #40]
+ 211 008e 22F00102 		bic	r2, r2, #1
+ 212 0092 9A62     		str	r2, [r3, #40]
+ 213              		.loc 1 87 2 view .LVU71
+ 214              	.L7:
+ 215              		.loc 1 87 2 discriminator 2 view .LVU72
+ 216 0094 1E4B     		ldr	r3, .L9+16
+ 217 0096 9B6A     		ldr	r3, [r3, #40]
+ 218 0098 13F0010F 		tst	r3, #1
+ 219 009c FAD1     		bne	.L7
+ 220              		.loc 1 87 2 view .LVU73
+  88:Core/Src/usart.c **** 	DMA1->LIFCR |= DMA_LIFCR_CTCIF1 | DMA_LIFCR_CHTIF1 | DMA_LIFCR_CTEIF1 |
+ 221              		.loc 1 88 2 view .LVU74
+ 222              		.loc 1 88 6 is_stmt 0 view .LVU75
+ 223 009e 1C4B     		ldr	r3, .L9+16
+ 224 00a0 9A68     		ldr	r2, [r3, #8]
+ 225              		.loc 1 88 14 view .LVU76
+ 226 00a2 42F47462 		orr	r2, r2, #3904
+ 227 00a6 9A60     		str	r2, [r3, #8]
+  89:Core/Src/usart.c **** 				   DMA_LIFCR_CDMEIF1 | DMA_LIFCR_CFEIF1;
+  90:Core/Src/usart.c **** 
+  91:Core/Src/usart.c **** 	DMA1_Stream1->CR = 0;
+ 228              		.loc 1 91 2 is_stmt 1 view .LVU77
+ 229              		.loc 1 91 19 is_stmt 0 view .LVU78
+ 230 00a8 0022     		movs	r2, #0
+ 231 00aa 9A62     		str	r2, [r3, #40]
+  92:Core/Src/usart.c **** 	DMA1_Stream1->CR |= (4 << DMA_SxCR_CHSEL_Pos) |
+ 232              		.loc 1 92 2 is_stmt 1 view .LVU79
+ 233              		.loc 1 92 14 is_stmt 0 view .LVU80
+ 234 00ac 996A     		ldr	r1, [r3, #40]
+ 235              		.loc 1 92 19 view .LVU81
+ 236 00ae 1B4A     		ldr	r2, .L9+28
+ 237 00b0 0A43     		orrs	r2, r2, r1
+ 238 00b2 9A62     		str	r2, [r3, #40]
+  93:Core/Src/usart.c **** 						DMA_SxCR_PL_0 | // Medium (01)
+  94:Core/Src/usart.c **** 						DMA_SxCR_MINC | // Memory increment
+  95:Core/Src/usart.c **** 						DMA_SxCR_TCIE |
+  96:Core/Src/usart.c **** 						DMA_SxCR_CIRC;        			// Transfer complete
+  97:Core/Src/usart.c **** 						DMA1_Stream1->PAR = (uint32_t)&(USART3->RDR); // RX
+ 239              		.loc 1 97 7 is_stmt 1 view .LVU82
+ 240              		.loc 1 97 25 is_stmt 0 view .LVU83
+ 241 00b4 1A4A     		ldr	r2, .L9+32
+ 242 00b6 1A63     		str	r2, [r3, #48]
+  98:Core/Src/usart.c **** 	// USART3->CR2 |= USART_CR2_STOP_0;
+  99:Core/Src/usart.c **** 	USART3->CR1 |= USART_CR1_UE;
+ 243              		.loc 1 99 2 is_stmt 1 view .LVU84
+ 244              		.loc 1 99 8 is_stmt 0 view .LVU85
+ARM GAS  /tmp/ccDblWGg.s 			page 7
 
 
- 245              		.loc 1 99 14 view .LVU87
- 246 00c4 41F40001 		orr	r1, r1, #8388608
- 247 00c8 5160     		str	r1, [r2, #4]
- 100:Core/Src/usart.c **** 	
- 101:Core/Src/usart.c **** 	NVIC_EnableIRQ(DMA1_Stream3_IRQn);
- 248              		.loc 1 101 2 is_stmt 1 view .LVU88
- 249              	.LVL4:
- 250              	.LBB7:
- 251              	.LBI7:
- 252              		.file 2 "Drivers/CMSIS/Include/core_cm7.h"
+ 245 00b8 243A     		subs	r2, r2, #36
+ 246 00ba 1168     		ldr	r1, [r2]
+ 247              		.loc 1 99 14 view .LVU86
+ 248 00bc 41F00101 		orr	r1, r1, #1
+ 249 00c0 1160     		str	r1, [r2]
+ 100:Core/Src/usart.c **** 	USART3->CR2 |= USART_CR2_RTOEN;//
+ 250              		.loc 1 100 2 is_stmt 1 view .LVU87
+ 251              		.loc 1 100 8 is_stmt 0 view .LVU88
+ 252 00c2 5168     		ldr	r1, [r2, #4]
+ 253              		.loc 1 100 14 view .LVU89
+ 254 00c4 41F40001 		orr	r1, r1, #8388608
+ 255 00c8 5160     		str	r1, [r2, #4]
+ 101:Core/Src/usart.c **** 
+ 102:Core/Src/usart.c **** 	NVIC_EnableIRQ(DMA1_Stream3_IRQn);
+ 256              		.loc 1 102 2 is_stmt 1 view .LVU90
+ 257              	.LVL6:
+ 258              	.LBB7:
+ 259              	.LBI7:
+ 260              		.file 2 "Drivers/CMSIS/Include/core_cm7.h"
    1:Drivers/CMSIS/Include/core_cm7.h **** /**************************************************************************//**
    2:Drivers/CMSIS/Include/core_cm7.h ****  * @file     core_cm7.h
    3:Drivers/CMSIS/Include/core_cm7.h ****  * @brief    CMSIS Cortex-M7 Core Peripheral Access Layer Header File
@@ -409,6 +418,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
   36:Drivers/CMSIS/Include/core_cm7.h **** #ifdef __cplusplus
   37:Drivers/CMSIS/Include/core_cm7.h ****  extern "C" {
   38:Drivers/CMSIS/Include/core_cm7.h **** #endif
+ARM GAS  /tmp/ccDblWGg.s 			page 8
+
+
   39:Drivers/CMSIS/Include/core_cm7.h **** 
   40:Drivers/CMSIS/Include/core_cm7.h **** /**
   41:Drivers/CMSIS/Include/core_cm7.h ****   \page CMSIS_MISRA_Exceptions  MISRA-C:2004 Compliance Exceptions
@@ -418,9 +430,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
   45:Drivers/CMSIS/Include/core_cm7.h ****      Function definitions in header files are used to allow 'inlining'.
   46:Drivers/CMSIS/Include/core_cm7.h **** 
   47:Drivers/CMSIS/Include/core_cm7.h ****    \li Required Rule 18.4, declaration of union type or object of union type: '{...}'.<br>
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 8
-
-
   48:Drivers/CMSIS/Include/core_cm7.h ****      Unions are used for effective representation of core registers.
   49:Drivers/CMSIS/Include/core_cm7.h **** 
   50:Drivers/CMSIS/Include/core_cm7.h ****    \li Advisory Rule 19.7, Function-like macro defined.<br>
@@ -469,6 +478,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
   93:Drivers/CMSIS/Include/core_cm7.h ****       #warning "Compiler generates FPU instructions for a device without an FPU (check __FPU_PRESEN
   94:Drivers/CMSIS/Include/core_cm7.h ****       #define __FPU_USED       0U
   95:Drivers/CMSIS/Include/core_cm7.h ****     #endif
+ARM GAS  /tmp/ccDblWGg.s 			page 9
+
+
   96:Drivers/CMSIS/Include/core_cm7.h ****   #else
   97:Drivers/CMSIS/Include/core_cm7.h ****     #define __FPU_USED         0U
   98:Drivers/CMSIS/Include/core_cm7.h ****   #endif
@@ -478,9 +490,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
  102:Drivers/CMSIS/Include/core_cm7.h ****     #if defined (__FPU_PRESENT) && (__FPU_PRESENT == 1U)
  103:Drivers/CMSIS/Include/core_cm7.h ****       #define __FPU_USED       1U
  104:Drivers/CMSIS/Include/core_cm7.h ****     #else
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 9
-
-
  105:Drivers/CMSIS/Include/core_cm7.h ****       #error "Compiler generates FPU instructions for a device without an FPU (check __FPU_PRESENT)
  106:Drivers/CMSIS/Include/core_cm7.h ****       #define __FPU_USED       0U
  107:Drivers/CMSIS/Include/core_cm7.h ****     #endif
@@ -529,6 +538,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
  150:Drivers/CMSIS/Include/core_cm7.h ****     #if defined (__FPU_PRESENT) && (__FPU_PRESENT == 1U)
  151:Drivers/CMSIS/Include/core_cm7.h ****       #define __FPU_USED       1U
  152:Drivers/CMSIS/Include/core_cm7.h ****     #else
+ARM GAS  /tmp/ccDblWGg.s 			page 10
+
+
  153:Drivers/CMSIS/Include/core_cm7.h ****       #error "Compiler generates FPU instructions for a device without an FPU (check __FPU_PRESENT)
  154:Drivers/CMSIS/Include/core_cm7.h ****       #define __FPU_USED       0U
  155:Drivers/CMSIS/Include/core_cm7.h ****     #endif
@@ -538,9 +550,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
  159:Drivers/CMSIS/Include/core_cm7.h **** 
  160:Drivers/CMSIS/Include/core_cm7.h **** #endif
  161:Drivers/CMSIS/Include/core_cm7.h **** 
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 10
-
-
  162:Drivers/CMSIS/Include/core_cm7.h **** #include "cmsis_compiler.h"               /* CMSIS compiler specific defines */
  163:Drivers/CMSIS/Include/core_cm7.h **** 
  164:Drivers/CMSIS/Include/core_cm7.h **** 
@@ -589,6 +598,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
  207:Drivers/CMSIS/Include/core_cm7.h ****   #ifndef __DTCM_PRESENT
  208:Drivers/CMSIS/Include/core_cm7.h ****     #define __DTCM_PRESENT            0U
  209:Drivers/CMSIS/Include/core_cm7.h ****     #warning "__DTCM_PRESENT        not defined in device header file; using default!"
+ARM GAS  /tmp/ccDblWGg.s 			page 11
+
+
  210:Drivers/CMSIS/Include/core_cm7.h ****   #endif
  211:Drivers/CMSIS/Include/core_cm7.h **** 
  212:Drivers/CMSIS/Include/core_cm7.h ****   #ifndef __NVIC_PRIO_BITS
@@ -598,9 +610,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
  216:Drivers/CMSIS/Include/core_cm7.h **** 
  217:Drivers/CMSIS/Include/core_cm7.h ****   #ifndef __Vendor_SysTickConfig
  218:Drivers/CMSIS/Include/core_cm7.h ****     #define __Vendor_SysTickConfig    0U
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 11
-
-
  219:Drivers/CMSIS/Include/core_cm7.h ****     #warning "__Vendor_SysTickConfig not defined in device header file; using default!"
  220:Drivers/CMSIS/Include/core_cm7.h ****   #endif
  221:Drivers/CMSIS/Include/core_cm7.h **** #endif
@@ -649,6 +658,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
  264:Drivers/CMSIS/Include/core_cm7.h **** /**
  265:Drivers/CMSIS/Include/core_cm7.h ****   \ingroup    CMSIS_core_register
  266:Drivers/CMSIS/Include/core_cm7.h ****   \defgroup   CMSIS_CORE  Status and Control Registers
+ARM GAS  /tmp/ccDblWGg.s 			page 12
+
+
  267:Drivers/CMSIS/Include/core_cm7.h ****   \brief      Core Register type definitions.
  268:Drivers/CMSIS/Include/core_cm7.h ****   @{
  269:Drivers/CMSIS/Include/core_cm7.h ****  */
@@ -658,9 +670,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
  273:Drivers/CMSIS/Include/core_cm7.h ****  */
  274:Drivers/CMSIS/Include/core_cm7.h **** typedef union
  275:Drivers/CMSIS/Include/core_cm7.h **** {
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 12
-
-
  276:Drivers/CMSIS/Include/core_cm7.h ****   struct
  277:Drivers/CMSIS/Include/core_cm7.h ****   {
  278:Drivers/CMSIS/Include/core_cm7.h ****     uint32_t _reserved0:16;              /*!< bit:  0..15  Reserved */
@@ -709,6 +718,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
  321:Drivers/CMSIS/Include/core_cm7.h **** } IPSR_Type;
  322:Drivers/CMSIS/Include/core_cm7.h **** 
  323:Drivers/CMSIS/Include/core_cm7.h **** /* IPSR Register Definitions */
+ARM GAS  /tmp/ccDblWGg.s 			page 13
+
+
  324:Drivers/CMSIS/Include/core_cm7.h **** #define IPSR_ISR_Pos                        0U                                            /*!< IPSR
  325:Drivers/CMSIS/Include/core_cm7.h **** #define IPSR_ISR_Msk                       (0x1FFUL /*<< IPSR_ISR_Pos*/)                  /*!< IPSR
  326:Drivers/CMSIS/Include/core_cm7.h **** 
@@ -718,9 +730,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
  330:Drivers/CMSIS/Include/core_cm7.h ****  */
  331:Drivers/CMSIS/Include/core_cm7.h **** typedef union
  332:Drivers/CMSIS/Include/core_cm7.h **** {
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 13
-
-
  333:Drivers/CMSIS/Include/core_cm7.h ****   struct
  334:Drivers/CMSIS/Include/core_cm7.h ****   {
  335:Drivers/CMSIS/Include/core_cm7.h ****     uint32_t ISR:9;                      /*!< bit:  0.. 8  Exception number */
@@ -769,6 +778,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
  378:Drivers/CMSIS/Include/core_cm7.h **** 
  379:Drivers/CMSIS/Include/core_cm7.h **** #define xPSR_ISR_Pos                        0U                                            /*!< xPSR
  380:Drivers/CMSIS/Include/core_cm7.h **** #define xPSR_ISR_Msk                       (0x1FFUL /*<< xPSR_ISR_Pos*/)                  /*!< xPSR
+ARM GAS  /tmp/ccDblWGg.s 			page 14
+
+
  381:Drivers/CMSIS/Include/core_cm7.h **** 
  382:Drivers/CMSIS/Include/core_cm7.h **** 
  383:Drivers/CMSIS/Include/core_cm7.h **** /**
@@ -778,9 +790,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
  387:Drivers/CMSIS/Include/core_cm7.h **** {
  388:Drivers/CMSIS/Include/core_cm7.h ****   struct
  389:Drivers/CMSIS/Include/core_cm7.h ****   {
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 14
-
-
  390:Drivers/CMSIS/Include/core_cm7.h ****     uint32_t nPRIV:1;                    /*!< bit:      0  Execution privilege in Thread mode */
  391:Drivers/CMSIS/Include/core_cm7.h ****     uint32_t SPSEL:1;                    /*!< bit:      1  Stack to be used */
  392:Drivers/CMSIS/Include/core_cm7.h ****     uint32_t FPCA:1;                     /*!< bit:      2  FP extension active flag */
@@ -829,6 +838,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
  435:Drivers/CMSIS/Include/core_cm7.h ****   __OM  uint32_t STIR;                   /*!< Offset: 0xE00 ( /W)  Software Trigger Interrupt Regis
  436:Drivers/CMSIS/Include/core_cm7.h **** }  NVIC_Type;
  437:Drivers/CMSIS/Include/core_cm7.h **** 
+ARM GAS  /tmp/ccDblWGg.s 			page 15
+
+
  438:Drivers/CMSIS/Include/core_cm7.h **** /* Software Triggered Interrupt Register Definitions */
  439:Drivers/CMSIS/Include/core_cm7.h **** #define NVIC_STIR_INTID_Pos                 0U                                         /*!< STIR: I
  440:Drivers/CMSIS/Include/core_cm7.h **** #define NVIC_STIR_INTID_Msk                (0x1FFUL /*<< NVIC_STIR_INTID_Pos*/)        /*!< STIR: I
@@ -838,9 +850,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
  444:Drivers/CMSIS/Include/core_cm7.h **** 
  445:Drivers/CMSIS/Include/core_cm7.h **** /**
  446:Drivers/CMSIS/Include/core_cm7.h ****   \ingroup  CMSIS_core_register
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 15
-
-
  447:Drivers/CMSIS/Include/core_cm7.h ****   \defgroup CMSIS_SCB     System Control Block (SCB)
  448:Drivers/CMSIS/Include/core_cm7.h ****   \brief    Type definitions for the System Control Block Registers
  449:Drivers/CMSIS/Include/core_cm7.h ****   @{
@@ -889,6 +898,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
  492:Drivers/CMSIS/Include/core_cm7.h ****   __OM  uint32_t DCIMVAC;                /*!< Offset: 0x25C ( /W)  D-Cache Invalidate by MVA to PoC
  493:Drivers/CMSIS/Include/core_cm7.h ****   __OM  uint32_t DCISW;                  /*!< Offset: 0x260 ( /W)  D-Cache Invalidate by Set-way */
  494:Drivers/CMSIS/Include/core_cm7.h ****   __OM  uint32_t DCCMVAU;                /*!< Offset: 0x264 ( /W)  D-Cache Clean by MVA to PoU */
+ARM GAS  /tmp/ccDblWGg.s 			page 16
+
+
  495:Drivers/CMSIS/Include/core_cm7.h ****   __OM  uint32_t DCCMVAC;                /*!< Offset: 0x268 ( /W)  D-Cache Clean by MVA to PoC */
  496:Drivers/CMSIS/Include/core_cm7.h ****   __OM  uint32_t DCCSW;                  /*!< Offset: 0x26C ( /W)  D-Cache Clean by Set-way */
  497:Drivers/CMSIS/Include/core_cm7.h ****   __OM  uint32_t DCCIMVAC;               /*!< Offset: 0x270 ( /W)  D-Cache Clean and Invalidate by 
@@ -898,9 +910,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
  501:Drivers/CMSIS/Include/core_cm7.h ****   __IOM uint32_t DTCMCR;                 /*!< Offset: 0x294 (R/W)  Data Tightly-Coupled Memory Cont
  502:Drivers/CMSIS/Include/core_cm7.h ****   __IOM uint32_t AHBPCR;                 /*!< Offset: 0x298 (R/W)  AHBP Control Register */
  503:Drivers/CMSIS/Include/core_cm7.h ****   __IOM uint32_t CACR;                   /*!< Offset: 0x29C (R/W)  L1 Cache Control Register */
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 16
-
-
  504:Drivers/CMSIS/Include/core_cm7.h ****   __IOM uint32_t AHBSCR;                 /*!< Offset: 0x2A0 (R/W)  AHB Slave Control Register */
  505:Drivers/CMSIS/Include/core_cm7.h ****         uint32_t RESERVED8[1U];
  506:Drivers/CMSIS/Include/core_cm7.h ****   __IOM uint32_t ABFSR;                  /*!< Offset: 0x2A8 (R/W)  Auxiliary Bus Fault Status Regis
@@ -949,6 +958,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
  549:Drivers/CMSIS/Include/core_cm7.h **** 
  550:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_ICSR_RETTOBASE_Pos             11U                                            /*!< SCB 
  551:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_ICSR_RETTOBASE_Msk             (1UL << SCB_ICSR_RETTOBASE_Pos)                /*!< SCB 
+ARM GAS  /tmp/ccDblWGg.s 			page 17
+
+
  552:Drivers/CMSIS/Include/core_cm7.h **** 
  553:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_ICSR_VECTACTIVE_Pos             0U                                            /*!< SCB 
  554:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_ICSR_VECTACTIVE_Msk            (0x1FFUL /*<< SCB_ICSR_VECTACTIVE_Pos*/)       /*!< SCB 
@@ -958,9 +970,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
  558:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_VTOR_TBLOFF_Msk                (0x1FFFFFFUL << SCB_VTOR_TBLOFF_Pos)           /*!< SCB 
  559:Drivers/CMSIS/Include/core_cm7.h **** 
  560:Drivers/CMSIS/Include/core_cm7.h **** /* SCB Application Interrupt and Reset Control Register Definitions */
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 17
-
-
  561:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_AIRCR_VECTKEY_Pos              16U                                            /*!< SCB 
  562:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_AIRCR_VECTKEY_Msk              (0xFFFFUL << SCB_AIRCR_VECTKEY_Pos)            /*!< SCB 
  563:Drivers/CMSIS/Include/core_cm7.h **** 
@@ -1009,6 +1018,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
  606:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CCR_BFHFNMIGN_Msk              (1UL << SCB_CCR_BFHFNMIGN_Pos)                 /*!< SCB 
  607:Drivers/CMSIS/Include/core_cm7.h **** 
  608:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CCR_DIV_0_TRP_Pos               4U                                            /*!< SCB 
+ARM GAS  /tmp/ccDblWGg.s 			page 18
+
+
  609:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CCR_DIV_0_TRP_Msk              (1UL << SCB_CCR_DIV_0_TRP_Pos)                 /*!< SCB 
  610:Drivers/CMSIS/Include/core_cm7.h **** 
  611:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CCR_UNALIGN_TRP_Pos             3U                                            /*!< SCB 
@@ -1018,9 +1030,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
  615:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CCR_USERSETMPEND_Msk           (1UL << SCB_CCR_USERSETMPEND_Pos)              /*!< SCB 
  616:Drivers/CMSIS/Include/core_cm7.h **** 
  617:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CCR_NONBASETHRDENA_Pos          0U                                            /*!< SCB 
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 18
-
-
  618:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CCR_NONBASETHRDENA_Msk         (1UL /*<< SCB_CCR_NONBASETHRDENA_Pos*/)        /*!< SCB 
  619:Drivers/CMSIS/Include/core_cm7.h **** 
  620:Drivers/CMSIS/Include/core_cm7.h **** /* SCB System Handler Control and State Register Definitions */
@@ -1069,6 +1078,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
  663:Drivers/CMSIS/Include/core_cm7.h **** /* SCB Configurable Fault Status Register Definitions */
  664:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CFSR_USGFAULTSR_Pos            16U                                            /*!< SCB 
  665:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CFSR_USGFAULTSR_Msk            (0xFFFFUL << SCB_CFSR_USGFAULTSR_Pos)          /*!< SCB 
+ARM GAS  /tmp/ccDblWGg.s 			page 19
+
+
  666:Drivers/CMSIS/Include/core_cm7.h **** 
  667:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CFSR_BUSFAULTSR_Pos             8U                                            /*!< SCB 
  668:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CFSR_BUSFAULTSR_Msk            (0xFFUL << SCB_CFSR_BUSFAULTSR_Pos)            /*!< SCB 
@@ -1078,9 +1090,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
  672:Drivers/CMSIS/Include/core_cm7.h **** 
  673:Drivers/CMSIS/Include/core_cm7.h **** /* MemManage Fault Status Register (part of SCB Configurable Fault Status Register) */
  674:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CFSR_MMARVALID_Pos             (SCB_SHCSR_MEMFAULTACT_Pos + 7U)               /*!< SCB 
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 19
-
-
  675:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CFSR_MMARVALID_Msk             (1UL << SCB_CFSR_MMARVALID_Pos)                /*!< SCB 
  676:Drivers/CMSIS/Include/core_cm7.h **** 
  677:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CFSR_MLSPERR_Pos               (SCB_SHCSR_MEMFAULTACT_Pos + 5U)               /*!< SCB 
@@ -1129,6 +1138,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
  720:Drivers/CMSIS/Include/core_cm7.h **** 
  721:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CFSR_NOCP_Pos                 (SCB_CFSR_USGFAULTSR_Pos + 3U)                  /*!< SCB 
  722:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CFSR_NOCP_Msk                 (1UL << SCB_CFSR_NOCP_Pos)                      /*!< SCB 
+ARM GAS  /tmp/ccDblWGg.s 			page 20
+
+
  723:Drivers/CMSIS/Include/core_cm7.h **** 
  724:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CFSR_INVPC_Pos                (SCB_CFSR_USGFAULTSR_Pos + 2U)                  /*!< SCB 
  725:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CFSR_INVPC_Msk                (1UL << SCB_CFSR_INVPC_Pos)                     /*!< SCB 
@@ -1138,9 +1150,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
  729:Drivers/CMSIS/Include/core_cm7.h **** 
  730:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CFSR_UNDEFINSTR_Pos           (SCB_CFSR_USGFAULTSR_Pos + 0U)                  /*!< SCB 
  731:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CFSR_UNDEFINSTR_Msk           (1UL << SCB_CFSR_UNDEFINSTR_Pos)                /*!< SCB 
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 20
-
-
  732:Drivers/CMSIS/Include/core_cm7.h **** 
  733:Drivers/CMSIS/Include/core_cm7.h **** /* SCB Hard Fault Status Register Definitions */
  734:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_HFSR_DEBUGEVT_Pos              31U                                            /*!< SCB 
@@ -1189,6 +1198,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
  777:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CTR_DMINLINE_Msk               (0xFUL << SCB_CTR_DMINLINE_Pos)                /*!< SCB 
  778:Drivers/CMSIS/Include/core_cm7.h **** 
  779:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CTR_IMINLINE_Pos                0U                                            /*!< SCB 
+ARM GAS  /tmp/ccDblWGg.s 			page 21
+
+
  780:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CTR_IMINLINE_Msk               (0xFUL /*<< SCB_CTR_IMINLINE_Pos*/)            /*!< SCB 
  781:Drivers/CMSIS/Include/core_cm7.h **** 
  782:Drivers/CMSIS/Include/core_cm7.h **** /* SCB Cache Size ID Register Definitions */
@@ -1198,9 +1210,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
  786:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CCSIDR_WB_Pos                  30U                                            /*!< SCB 
  787:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CCSIDR_WB_Msk                  (1UL << SCB_CCSIDR_WB_Pos)                     /*!< SCB 
  788:Drivers/CMSIS/Include/core_cm7.h **** 
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 21
-
-
  789:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CCSIDR_RA_Pos                  29U                                            /*!< SCB 
  790:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_CCSIDR_RA_Msk                  (1UL << SCB_CCSIDR_RA_Pos)                     /*!< SCB 
  791:Drivers/CMSIS/Include/core_cm7.h **** 
@@ -1249,6 +1258,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
  834:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_DCCISW_SET_Msk                 (0x1FFUL << SCB_DCCISW_SET_Pos)                /*!< SCB 
  835:Drivers/CMSIS/Include/core_cm7.h **** 
  836:Drivers/CMSIS/Include/core_cm7.h **** /* Instruction Tightly-Coupled Memory Control Register Definitions */
+ARM GAS  /tmp/ccDblWGg.s 			page 22
+
+
  837:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_ITCMCR_SZ_Pos                   3U                                            /*!< SCB 
  838:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_ITCMCR_SZ_Msk                  (0xFUL << SCB_ITCMCR_SZ_Pos)                   /*!< SCB 
  839:Drivers/CMSIS/Include/core_cm7.h **** 
@@ -1258,9 +1270,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
  843:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_ITCMCR_RMW_Pos                  1U                                            /*!< SCB 
  844:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_ITCMCR_RMW_Msk                 (1UL << SCB_ITCMCR_RMW_Pos)                    /*!< SCB 
  845:Drivers/CMSIS/Include/core_cm7.h **** 
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 22
-
-
  846:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_ITCMCR_EN_Pos                   0U                                            /*!< SCB 
  847:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_ITCMCR_EN_Msk                  (1UL /*<< SCB_ITCMCR_EN_Pos*/)                 /*!< SCB 
  848:Drivers/CMSIS/Include/core_cm7.h **** 
@@ -1309,6 +1318,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
  891:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_ABFSR_AXIMTYPE_Msk             (3UL << SCB_ABFSR_AXIMTYPE_Pos)                /*!< SCB 
  892:Drivers/CMSIS/Include/core_cm7.h **** 
  893:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_ABFSR_EPPB_Pos                  4U                                            /*!< SCB 
+ARM GAS  /tmp/ccDblWGg.s 			page 23
+
+
  894:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_ABFSR_EPPB_Msk                 (1UL << SCB_ABFSR_EPPB_Pos)                    /*!< SCB 
  895:Drivers/CMSIS/Include/core_cm7.h **** 
  896:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_ABFSR_AXIM_Pos                  3U                                            /*!< SCB 
@@ -1318,9 +1330,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
  900:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_ABFSR_AHBP_Msk                 (1UL << SCB_ABFSR_AHBP_Pos)                    /*!< SCB 
  901:Drivers/CMSIS/Include/core_cm7.h **** 
  902:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_ABFSR_DTCM_Pos                  1U                                            /*!< SCB 
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 23
-
-
  903:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_ABFSR_DTCM_Msk                 (1UL << SCB_ABFSR_DTCM_Pos)                    /*!< SCB 
  904:Drivers/CMSIS/Include/core_cm7.h **** 
  905:Drivers/CMSIS/Include/core_cm7.h **** #define SCB_ABFSR_ITCM_Pos                  0U                                            /*!< SCB 
@@ -1369,6 +1378,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
  948:Drivers/CMSIS/Include/core_cm7.h **** /*@} end of group CMSIS_SCnotSCB */
  949:Drivers/CMSIS/Include/core_cm7.h **** 
  950:Drivers/CMSIS/Include/core_cm7.h **** 
+ARM GAS  /tmp/ccDblWGg.s 			page 24
+
+
  951:Drivers/CMSIS/Include/core_cm7.h **** /**
  952:Drivers/CMSIS/Include/core_cm7.h ****   \ingroup  CMSIS_core_register
  953:Drivers/CMSIS/Include/core_cm7.h ****   \defgroup CMSIS_SysTick     System Tick Timer (SysTick)
@@ -1378,9 +1390,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
  957:Drivers/CMSIS/Include/core_cm7.h **** 
  958:Drivers/CMSIS/Include/core_cm7.h **** /**
  959:Drivers/CMSIS/Include/core_cm7.h ****   \brief  Structure type to access the System Timer (SysTick).
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 24
-
-
  960:Drivers/CMSIS/Include/core_cm7.h ****  */
  961:Drivers/CMSIS/Include/core_cm7.h **** typedef struct
  962:Drivers/CMSIS/Include/core_cm7.h **** {
@@ -1429,6 +1438,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1005:Drivers/CMSIS/Include/core_cm7.h ****   \defgroup CMSIS_ITM     Instrumentation Trace Macrocell (ITM)
 1006:Drivers/CMSIS/Include/core_cm7.h ****   \brief    Type definitions for the Instrumentation Trace Macrocell (ITM)
 1007:Drivers/CMSIS/Include/core_cm7.h ****   @{
+ARM GAS  /tmp/ccDblWGg.s 			page 25
+
+
 1008:Drivers/CMSIS/Include/core_cm7.h ****  */
 1009:Drivers/CMSIS/Include/core_cm7.h **** 
 1010:Drivers/CMSIS/Include/core_cm7.h **** /**
@@ -1438,9 +1450,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1014:Drivers/CMSIS/Include/core_cm7.h **** {
 1015:Drivers/CMSIS/Include/core_cm7.h ****   __OM  union
 1016:Drivers/CMSIS/Include/core_cm7.h ****   {
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 25
-
-
 1017:Drivers/CMSIS/Include/core_cm7.h ****     __OM  uint8_t    u8;                 /*!< Offset: 0x000 ( /W)  ITM Stimulus Port 8-bit */
 1018:Drivers/CMSIS/Include/core_cm7.h ****     __OM  uint16_t   u16;                /*!< Offset: 0x000 ( /W)  ITM Stimulus Port 16-bit */
 1019:Drivers/CMSIS/Include/core_cm7.h ****     __OM  uint32_t   u32;                /*!< Offset: 0x000 ( /W)  ITM Stimulus Port 32-bit */
@@ -1489,6 +1498,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1062:Drivers/CMSIS/Include/core_cm7.h **** 
 1063:Drivers/CMSIS/Include/core_cm7.h **** #define ITM_TCR_TSPrescale_Pos              8U                                            /*!< ITM 
 1064:Drivers/CMSIS/Include/core_cm7.h **** #define ITM_TCR_TSPrescale_Msk             (3UL << ITM_TCR_TSPrescale_Pos)                /*!< ITM 
+ARM GAS  /tmp/ccDblWGg.s 			page 26
+
+
 1065:Drivers/CMSIS/Include/core_cm7.h **** 
 1066:Drivers/CMSIS/Include/core_cm7.h **** #define ITM_TCR_SWOENA_Pos                  4U                                            /*!< ITM 
 1067:Drivers/CMSIS/Include/core_cm7.h **** #define ITM_TCR_SWOENA_Msk                 (1UL << ITM_TCR_SWOENA_Pos)                    /*!< ITM 
@@ -1498,9 +1510,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1071:Drivers/CMSIS/Include/core_cm7.h **** 
 1072:Drivers/CMSIS/Include/core_cm7.h **** #define ITM_TCR_SYNCENA_Pos                 2U                                            /*!< ITM 
 1073:Drivers/CMSIS/Include/core_cm7.h **** #define ITM_TCR_SYNCENA_Msk                (1UL << ITM_TCR_SYNCENA_Pos)                   /*!< ITM 
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 26
-
-
 1074:Drivers/CMSIS/Include/core_cm7.h **** 
 1075:Drivers/CMSIS/Include/core_cm7.h **** #define ITM_TCR_TSENA_Pos                   1U                                            /*!< ITM 
 1076:Drivers/CMSIS/Include/core_cm7.h **** #define ITM_TCR_TSENA_Msk                  (1UL << ITM_TCR_TSENA_Pos)                     /*!< ITM 
@@ -1549,6 +1558,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1119:Drivers/CMSIS/Include/core_cm7.h ****   __IOM uint32_t CYCCNT;                 /*!< Offset: 0x004 (R/W)  Cycle Count Register */
 1120:Drivers/CMSIS/Include/core_cm7.h ****   __IOM uint32_t CPICNT;                 /*!< Offset: 0x008 (R/W)  CPI Count Register */
 1121:Drivers/CMSIS/Include/core_cm7.h ****   __IOM uint32_t EXCCNT;                 /*!< Offset: 0x00C (R/W)  Exception Overhead Count Registe
+ARM GAS  /tmp/ccDblWGg.s 			page 27
+
+
 1122:Drivers/CMSIS/Include/core_cm7.h ****   __IOM uint32_t SLEEPCNT;               /*!< Offset: 0x010 (R/W)  Sleep Count Register */
 1123:Drivers/CMSIS/Include/core_cm7.h ****   __IOM uint32_t LSUCNT;                 /*!< Offset: 0x014 (R/W)  LSU Count Register */
 1124:Drivers/CMSIS/Include/core_cm7.h ****   __IOM uint32_t FOLDCNT;                /*!< Offset: 0x018 (R/W)  Folded-instruction Count Registe
@@ -1558,9 +1570,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1128:Drivers/CMSIS/Include/core_cm7.h ****   __IOM uint32_t FUNCTION0;              /*!< Offset: 0x028 (R/W)  Function Register 0 */
 1129:Drivers/CMSIS/Include/core_cm7.h ****         uint32_t RESERVED0[1U];
 1130:Drivers/CMSIS/Include/core_cm7.h ****   __IOM uint32_t COMP1;                  /*!< Offset: 0x030 (R/W)  Comparator Register 1 */
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 27
-
-
 1131:Drivers/CMSIS/Include/core_cm7.h ****   __IOM uint32_t MASK1;                  /*!< Offset: 0x034 (R/W)  Mask Register 1 */
 1132:Drivers/CMSIS/Include/core_cm7.h ****   __IOM uint32_t FUNCTION1;              /*!< Offset: 0x038 (R/W)  Function Register 1 */
 1133:Drivers/CMSIS/Include/core_cm7.h ****         uint32_t RESERVED1[1U];
@@ -1609,6 +1618,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1176:Drivers/CMSIS/Include/core_cm7.h **** 
 1177:Drivers/CMSIS/Include/core_cm7.h **** #define DWT_CTRL_CPIEVTENA_Pos             17U                                         /*!< DWT CTR
 1178:Drivers/CMSIS/Include/core_cm7.h **** #define DWT_CTRL_CPIEVTENA_Msk             (0x1UL << DWT_CTRL_CPIEVTENA_Pos)           /*!< DWT CTR
+ARM GAS  /tmp/ccDblWGg.s 			page 28
+
+
 1179:Drivers/CMSIS/Include/core_cm7.h **** 
 1180:Drivers/CMSIS/Include/core_cm7.h **** #define DWT_CTRL_EXCTRCENA_Pos             16U                                         /*!< DWT CTR
 1181:Drivers/CMSIS/Include/core_cm7.h **** #define DWT_CTRL_EXCTRCENA_Msk             (0x1UL << DWT_CTRL_EXCTRCENA_Pos)           /*!< DWT CTR
@@ -1618,9 +1630,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1185:Drivers/CMSIS/Include/core_cm7.h **** 
 1186:Drivers/CMSIS/Include/core_cm7.h **** #define DWT_CTRL_SYNCTAP_Pos               10U                                         /*!< DWT CTR
 1187:Drivers/CMSIS/Include/core_cm7.h **** #define DWT_CTRL_SYNCTAP_Msk               (0x3UL << DWT_CTRL_SYNCTAP_Pos)             /*!< DWT CTR
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 28
-
-
 1188:Drivers/CMSIS/Include/core_cm7.h **** 
 1189:Drivers/CMSIS/Include/core_cm7.h **** #define DWT_CTRL_CYCTAP_Pos                 9U                                         /*!< DWT CTR
 1190:Drivers/CMSIS/Include/core_cm7.h **** #define DWT_CTRL_CYCTAP_Msk                (0x1UL << DWT_CTRL_CYCTAP_Pos)              /*!< DWT CTR
@@ -1669,6 +1678,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1233:Drivers/CMSIS/Include/core_cm7.h **** #define DWT_FUNCTION_DATAVADDR0_Msk        (0xFUL << DWT_FUNCTION_DATAVADDR0_Pos)      /*!< DWT FUN
 1234:Drivers/CMSIS/Include/core_cm7.h **** 
 1235:Drivers/CMSIS/Include/core_cm7.h **** #define DWT_FUNCTION_DATAVSIZE_Pos         10U                                         /*!< DWT FUN
+ARM GAS  /tmp/ccDblWGg.s 			page 29
+
+
 1236:Drivers/CMSIS/Include/core_cm7.h **** #define DWT_FUNCTION_DATAVSIZE_Msk         (0x3UL << DWT_FUNCTION_DATAVSIZE_Pos)       /*!< DWT FUN
 1237:Drivers/CMSIS/Include/core_cm7.h **** 
 1238:Drivers/CMSIS/Include/core_cm7.h **** #define DWT_FUNCTION_LNK1ENA_Pos            9U                                         /*!< DWT FUN
@@ -1678,9 +1690,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1242:Drivers/CMSIS/Include/core_cm7.h **** #define DWT_FUNCTION_DATAVMATCH_Msk        (0x1UL << DWT_FUNCTION_DATAVMATCH_Pos)      /*!< DWT FUN
 1243:Drivers/CMSIS/Include/core_cm7.h **** 
 1244:Drivers/CMSIS/Include/core_cm7.h **** #define DWT_FUNCTION_CYCMATCH_Pos           7U                                         /*!< DWT FUN
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 29
-
-
 1245:Drivers/CMSIS/Include/core_cm7.h **** #define DWT_FUNCTION_CYCMATCH_Msk          (0x1UL << DWT_FUNCTION_CYCMATCH_Pos)        /*!< DWT FUN
 1246:Drivers/CMSIS/Include/core_cm7.h **** 
 1247:Drivers/CMSIS/Include/core_cm7.h **** #define DWT_FUNCTION_EMITRANGE_Pos          5U                                         /*!< DWT FUN
@@ -1729,6 +1738,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1290:Drivers/CMSIS/Include/core_cm7.h ****   __IM  uint32_t DEVID;                  /*!< Offset: 0xFC8 (R/ )  TPIU_DEVID */
 1291:Drivers/CMSIS/Include/core_cm7.h ****   __IM  uint32_t DEVTYPE;                /*!< Offset: 0xFCC (R/ )  TPIU_DEVTYPE */
 1292:Drivers/CMSIS/Include/core_cm7.h **** } TPI_Type;
+ARM GAS  /tmp/ccDblWGg.s 			page 30
+
+
 1293:Drivers/CMSIS/Include/core_cm7.h **** 
 1294:Drivers/CMSIS/Include/core_cm7.h **** /* TPI Asynchronous Clock Prescaler Register Definitions */
 1295:Drivers/CMSIS/Include/core_cm7.h **** #define TPI_ACPR_PRESCALER_Pos              0U                                         /*!< TPI ACP
@@ -1738,9 +1750,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1299:Drivers/CMSIS/Include/core_cm7.h **** #define TPI_SPPR_TXMODE_Pos                 0U                                         /*!< TPI SPP
 1300:Drivers/CMSIS/Include/core_cm7.h **** #define TPI_SPPR_TXMODE_Msk                (0x3UL /*<< TPI_SPPR_TXMODE_Pos*/)          /*!< TPI SPP
 1301:Drivers/CMSIS/Include/core_cm7.h **** 
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 30
-
-
 1302:Drivers/CMSIS/Include/core_cm7.h **** /* TPI Formatter and Flush Status Register Definitions */
 1303:Drivers/CMSIS/Include/core_cm7.h **** #define TPI_FFSR_FtNonStop_Pos              3U                                         /*!< TPI FFS
 1304:Drivers/CMSIS/Include/core_cm7.h **** #define TPI_FFSR_FtNonStop_Msk             (0x1UL << TPI_FFSR_FtNonStop_Pos)           /*!< TPI FFS
@@ -1789,6 +1798,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1347:Drivers/CMSIS/Include/core_cm7.h **** 
 1348:Drivers/CMSIS/Include/core_cm7.h **** /* TPI ITATBCTR2 Register Definitions */
 1349:Drivers/CMSIS/Include/core_cm7.h **** #define TPI_ITATBCTR2_ATREADY2_Pos          0U                                         /*!< TPI ITA
+ARM GAS  /tmp/ccDblWGg.s 			page 31
+
+
 1350:Drivers/CMSIS/Include/core_cm7.h **** #define TPI_ITATBCTR2_ATREADY2_Msk         (0x1UL /*<< TPI_ITATBCTR2_ATREADY2_Pos*/)   /*!< TPI ITA
 1351:Drivers/CMSIS/Include/core_cm7.h **** 
 1352:Drivers/CMSIS/Include/core_cm7.h **** #define TPI_ITATBCTR2_ATREADY1_Pos          0U                                         /*!< TPI ITA
@@ -1798,9 +1810,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1356:Drivers/CMSIS/Include/core_cm7.h **** #define TPI_FIFO1_ITM_ATVALID_Pos          29U                                         /*!< TPI FIF
 1357:Drivers/CMSIS/Include/core_cm7.h **** #define TPI_FIFO1_ITM_ATVALID_Msk          (0x3UL << TPI_FIFO1_ITM_ATVALID_Pos)        /*!< TPI FIF
 1358:Drivers/CMSIS/Include/core_cm7.h **** 
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 31
-
-
 1359:Drivers/CMSIS/Include/core_cm7.h **** #define TPI_FIFO1_ITM_bytecount_Pos        27U                                         /*!< TPI FIF
 1360:Drivers/CMSIS/Include/core_cm7.h **** #define TPI_FIFO1_ITM_bytecount_Msk        (0x3UL << TPI_FIFO1_ITM_bytecount_Pos)      /*!< TPI FIF
 1361:Drivers/CMSIS/Include/core_cm7.h **** 
@@ -1849,6 +1858,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1404:Drivers/CMSIS/Include/core_cm7.h **** #define TPI_DEVID_NrTraceInput_Pos          0U                                         /*!< TPI DEV
 1405:Drivers/CMSIS/Include/core_cm7.h **** #define TPI_DEVID_NrTraceInput_Msk         (0x1FUL /*<< TPI_DEVID_NrTraceInput_Pos*/)  /*!< TPI DEV
 1406:Drivers/CMSIS/Include/core_cm7.h **** 
+ARM GAS  /tmp/ccDblWGg.s 			page 32
+
+
 1407:Drivers/CMSIS/Include/core_cm7.h **** /* TPI DEVTYPE Register Definitions */
 1408:Drivers/CMSIS/Include/core_cm7.h **** #define TPI_DEVTYPE_SubType_Pos             4U                                         /*!< TPI DEV
 1409:Drivers/CMSIS/Include/core_cm7.h **** #define TPI_DEVTYPE_SubType_Msk            (0xFUL /*<< TPI_DEVTYPE_SubType_Pos*/)      /*!< TPI DEV
@@ -1858,9 +1870,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1413:Drivers/CMSIS/Include/core_cm7.h **** 
 1414:Drivers/CMSIS/Include/core_cm7.h **** /*@}*/ /* end of group CMSIS_TPI */
 1415:Drivers/CMSIS/Include/core_cm7.h **** 
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 32
-
-
 1416:Drivers/CMSIS/Include/core_cm7.h **** 
 1417:Drivers/CMSIS/Include/core_cm7.h **** #if defined (__MPU_PRESENT) && (__MPU_PRESENT == 1U)
 1418:Drivers/CMSIS/Include/core_cm7.h **** /**
@@ -1909,6 +1918,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1461:Drivers/CMSIS/Include/core_cm7.h **** 
 1462:Drivers/CMSIS/Include/core_cm7.h **** #define MPU_CTRL_ENABLE_Pos                 0U                                            /*!< MPU 
 1463:Drivers/CMSIS/Include/core_cm7.h **** #define MPU_CTRL_ENABLE_Msk                (1UL /*<< MPU_CTRL_ENABLE_Pos*/)               /*!< MPU 
+ARM GAS  /tmp/ccDblWGg.s 			page 33
+
+
 1464:Drivers/CMSIS/Include/core_cm7.h **** 
 1465:Drivers/CMSIS/Include/core_cm7.h **** /* MPU Region Number Register Definitions */
 1466:Drivers/CMSIS/Include/core_cm7.h **** #define MPU_RNR_REGION_Pos                  0U                                            /*!< MPU 
@@ -1918,9 +1930,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1470:Drivers/CMSIS/Include/core_cm7.h **** #define MPU_RBAR_ADDR_Pos                   5U                                            /*!< MPU 
 1471:Drivers/CMSIS/Include/core_cm7.h **** #define MPU_RBAR_ADDR_Msk                  (0x7FFFFFFUL << MPU_RBAR_ADDR_Pos)             /*!< MPU 
 1472:Drivers/CMSIS/Include/core_cm7.h **** 
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 33
-
-
 1473:Drivers/CMSIS/Include/core_cm7.h **** #define MPU_RBAR_VALID_Pos                  4U                                            /*!< MPU 
 1474:Drivers/CMSIS/Include/core_cm7.h **** #define MPU_RBAR_VALID_Msk                 (1UL << MPU_RBAR_VALID_Pos)                    /*!< MPU 
 1475:Drivers/CMSIS/Include/core_cm7.h **** 
@@ -1969,6 +1978,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1518:Drivers/CMSIS/Include/core_cm7.h ****   @{
 1519:Drivers/CMSIS/Include/core_cm7.h ****  */
 1520:Drivers/CMSIS/Include/core_cm7.h **** 
+ARM GAS  /tmp/ccDblWGg.s 			page 34
+
+
 1521:Drivers/CMSIS/Include/core_cm7.h **** /**
 1522:Drivers/CMSIS/Include/core_cm7.h ****   \brief  Structure type to access the Floating Point Unit (FPU).
 1523:Drivers/CMSIS/Include/core_cm7.h ****  */
@@ -1978,9 +1990,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1527:Drivers/CMSIS/Include/core_cm7.h ****   __IOM uint32_t FPCCR;                  /*!< Offset: 0x004 (R/W)  Floating-Point Context Control R
 1528:Drivers/CMSIS/Include/core_cm7.h ****   __IOM uint32_t FPCAR;                  /*!< Offset: 0x008 (R/W)  Floating-Point Context Address R
 1529:Drivers/CMSIS/Include/core_cm7.h ****   __IOM uint32_t FPDSCR;                 /*!< Offset: 0x00C (R/W)  Floating-Point Default Status Co
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 34
-
-
 1530:Drivers/CMSIS/Include/core_cm7.h ****   __IM  uint32_t MVFR0;                  /*!< Offset: 0x010 (R/ )  Media and FP Feature Register 0 
 1531:Drivers/CMSIS/Include/core_cm7.h ****   __IM  uint32_t MVFR1;                  /*!< Offset: 0x014 (R/ )  Media and FP Feature Register 1 
 1532:Drivers/CMSIS/Include/core_cm7.h ****   __IM  uint32_t MVFR2;                  /*!< Offset: 0x018 (R/ )  Media and FP Feature Register 2 
@@ -2029,6 +2038,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1575:Drivers/CMSIS/Include/core_cm7.h **** #define FPU_FPDSCR_FZ_Msk                  (1UL << FPU_FPDSCR_FZ_Pos)                     /*!< FPDS
 1576:Drivers/CMSIS/Include/core_cm7.h **** 
 1577:Drivers/CMSIS/Include/core_cm7.h **** #define FPU_FPDSCR_RMode_Pos               22U                                            /*!< FPDS
+ARM GAS  /tmp/ccDblWGg.s 			page 35
+
+
 1578:Drivers/CMSIS/Include/core_cm7.h **** #define FPU_FPDSCR_RMode_Msk               (3UL << FPU_FPDSCR_RMode_Pos)                  /*!< FPDS
 1579:Drivers/CMSIS/Include/core_cm7.h **** 
 1580:Drivers/CMSIS/Include/core_cm7.h **** /* Media and FP Feature Register 0 Definitions */
@@ -2038,9 +2050,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1584:Drivers/CMSIS/Include/core_cm7.h **** #define FPU_MVFR0_Short_vectors_Pos        24U                                            /*!< MVFR
 1585:Drivers/CMSIS/Include/core_cm7.h **** #define FPU_MVFR0_Short_vectors_Msk        (0xFUL << FPU_MVFR0_Short_vectors_Pos)         /*!< MVFR
 1586:Drivers/CMSIS/Include/core_cm7.h **** 
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 35
-
-
 1587:Drivers/CMSIS/Include/core_cm7.h **** #define FPU_MVFR0_Square_root_Pos          20U                                            /*!< MVFR
 1588:Drivers/CMSIS/Include/core_cm7.h **** #define FPU_MVFR0_Square_root_Msk          (0xFUL << FPU_MVFR0_Square_root_Pos)           /*!< MVFR
 1589:Drivers/CMSIS/Include/core_cm7.h **** 
@@ -2089,6 +2098,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1632:Drivers/CMSIS/Include/core_cm7.h ****  */
 1633:Drivers/CMSIS/Include/core_cm7.h **** typedef struct
 1634:Drivers/CMSIS/Include/core_cm7.h **** {
+ARM GAS  /tmp/ccDblWGg.s 			page 36
+
+
 1635:Drivers/CMSIS/Include/core_cm7.h ****   __IOM uint32_t DHCSR;                  /*!< Offset: 0x000 (R/W)  Debug Halting Control and Status
 1636:Drivers/CMSIS/Include/core_cm7.h ****   __OM  uint32_t DCRSR;                  /*!< Offset: 0x004 ( /W)  Debug Core Register Selector Reg
 1637:Drivers/CMSIS/Include/core_cm7.h ****   __IOM uint32_t DCRDR;                  /*!< Offset: 0x008 (R/W)  Debug Core Register Data Registe
@@ -2098,9 +2110,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1641:Drivers/CMSIS/Include/core_cm7.h **** /* Debug Halting Control and Status Register Definitions */
 1642:Drivers/CMSIS/Include/core_cm7.h **** #define CoreDebug_DHCSR_DBGKEY_Pos         16U                                            /*!< Core
 1643:Drivers/CMSIS/Include/core_cm7.h **** #define CoreDebug_DHCSR_DBGKEY_Msk         (0xFFFFUL << CoreDebug_DHCSR_DBGKEY_Pos)       /*!< Core
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 36
-
-
 1644:Drivers/CMSIS/Include/core_cm7.h **** 
 1645:Drivers/CMSIS/Include/core_cm7.h **** #define CoreDebug_DHCSR_S_RESET_ST_Pos     25U                                            /*!< Core
 1646:Drivers/CMSIS/Include/core_cm7.h **** #define CoreDebug_DHCSR_S_RESET_ST_Msk     (1UL << CoreDebug_DHCSR_S_RESET_ST_Pos)        /*!< Core
@@ -2149,6 +2158,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1689:Drivers/CMSIS/Include/core_cm7.h **** #define CoreDebug_DEMCR_MON_REQ_Pos        19U                                            /*!< Core
 1690:Drivers/CMSIS/Include/core_cm7.h **** #define CoreDebug_DEMCR_MON_REQ_Msk        (1UL << CoreDebug_DEMCR_MON_REQ_Pos)           /*!< Core
 1691:Drivers/CMSIS/Include/core_cm7.h **** 
+ARM GAS  /tmp/ccDblWGg.s 			page 37
+
+
 1692:Drivers/CMSIS/Include/core_cm7.h **** #define CoreDebug_DEMCR_MON_STEP_Pos       18U                                            /*!< Core
 1693:Drivers/CMSIS/Include/core_cm7.h **** #define CoreDebug_DEMCR_MON_STEP_Msk       (1UL << CoreDebug_DEMCR_MON_STEP_Pos)          /*!< Core
 1694:Drivers/CMSIS/Include/core_cm7.h **** 
@@ -2158,9 +2170,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1698:Drivers/CMSIS/Include/core_cm7.h **** #define CoreDebug_DEMCR_MON_EN_Pos         16U                                            /*!< Core
 1699:Drivers/CMSIS/Include/core_cm7.h **** #define CoreDebug_DEMCR_MON_EN_Msk         (1UL << CoreDebug_DEMCR_MON_EN_Pos)            /*!< Core
 1700:Drivers/CMSIS/Include/core_cm7.h **** 
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 37
-
-
 1701:Drivers/CMSIS/Include/core_cm7.h **** #define CoreDebug_DEMCR_VC_HARDERR_Pos     10U                                            /*!< Core
 1702:Drivers/CMSIS/Include/core_cm7.h **** #define CoreDebug_DEMCR_VC_HARDERR_Msk     (1UL << CoreDebug_DEMCR_VC_HARDERR_Pos)        /*!< Core
 1703:Drivers/CMSIS/Include/core_cm7.h **** 
@@ -2209,6 +2218,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1746:Drivers/CMSIS/Include/core_cm7.h ****   \param[in] value  Value of register. This parameter is interpreted as an uint32_t type.
 1747:Drivers/CMSIS/Include/core_cm7.h ****   \return           Masked and shifted bit field value.
 1748:Drivers/CMSIS/Include/core_cm7.h **** */
+ARM GAS  /tmp/ccDblWGg.s 			page 38
+
+
 1749:Drivers/CMSIS/Include/core_cm7.h **** #define _FLD2VAL(field, value)    (((uint32_t)(value) & field ## _Msk) >> field ## _Pos)
 1750:Drivers/CMSIS/Include/core_cm7.h **** 
 1751:Drivers/CMSIS/Include/core_cm7.h **** /*@} end of group CMSIS_core_bitfield */
@@ -2218,9 +2230,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1755:Drivers/CMSIS/Include/core_cm7.h ****   \ingroup    CMSIS_core_register
 1756:Drivers/CMSIS/Include/core_cm7.h ****   \defgroup   CMSIS_core_base     Core Definitions
 1757:Drivers/CMSIS/Include/core_cm7.h ****   \brief      Definitions for base addresses, unions, and structures.
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 38
-
-
 1758:Drivers/CMSIS/Include/core_cm7.h ****   @{
 1759:Drivers/CMSIS/Include/core_cm7.h ****  */
 1760:Drivers/CMSIS/Include/core_cm7.h **** 
@@ -2269,6 +2278,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1803:Drivers/CMSIS/Include/core_cm7.h **** 
 1804:Drivers/CMSIS/Include/core_cm7.h **** 
 1805:Drivers/CMSIS/Include/core_cm7.h **** 
+ARM GAS  /tmp/ccDblWGg.s 			page 39
+
+
 1806:Drivers/CMSIS/Include/core_cm7.h **** /* ##########################   NVIC functions  #################################### */
 1807:Drivers/CMSIS/Include/core_cm7.h **** /**
 1808:Drivers/CMSIS/Include/core_cm7.h ****   \ingroup  CMSIS_Core_FunctionInterface
@@ -2278,9 +2290,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1812:Drivers/CMSIS/Include/core_cm7.h ****  */
 1813:Drivers/CMSIS/Include/core_cm7.h **** 
 1814:Drivers/CMSIS/Include/core_cm7.h **** #ifdef CMSIS_NVIC_VIRTUAL
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 39
-
-
 1815:Drivers/CMSIS/Include/core_cm7.h ****   #ifndef CMSIS_NVIC_VIRTUAL_HEADER_FILE
 1816:Drivers/CMSIS/Include/core_cm7.h ****     #define CMSIS_NVIC_VIRTUAL_HEADER_FILE "cmsis_nvic_virtual.h"
 1817:Drivers/CMSIS/Include/core_cm7.h ****   #endif
@@ -2329,6 +2338,9 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1860:Drivers/CMSIS/Include/core_cm7.h ****            Only values from 0..7 are used.
 1861:Drivers/CMSIS/Include/core_cm7.h ****            In case of a conflict between priority grouping and available
 1862:Drivers/CMSIS/Include/core_cm7.h ****            priority bits (__NVIC_PRIO_BITS), the smallest possible priority group is set.
+ARM GAS  /tmp/ccDblWGg.s 			page 40
+
+
 1863:Drivers/CMSIS/Include/core_cm7.h ****   \param [in]      PriorityGroup  Priority grouping field.
 1864:Drivers/CMSIS/Include/core_cm7.h ****  */
 1865:Drivers/CMSIS/Include/core_cm7.h **** __STATIC_INLINE void __NVIC_SetPriorityGrouping(uint32_t PriorityGroup)
@@ -2338,9 +2350,6 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1869:Drivers/CMSIS/Include/core_cm7.h **** 
 1870:Drivers/CMSIS/Include/core_cm7.h ****   reg_value  =  SCB->AIRCR;                                                   /* read old register 
 1871:Drivers/CMSIS/Include/core_cm7.h ****   reg_value &= ~((uint32_t)(SCB_AIRCR_VECTKEY_Msk | SCB_AIRCR_PRIGROUP_Msk)); /* clear bits to chan
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 40
-
-
 1872:Drivers/CMSIS/Include/core_cm7.h ****   reg_value  =  (reg_value                                   |
 1873:Drivers/CMSIS/Include/core_cm7.h ****                 ((uint32_t)0x5FAUL << SCB_AIRCR_VECTKEY_Pos) |
 1874:Drivers/CMSIS/Include/core_cm7.h ****                 (PriorityGroupTmp << SCB_AIRCR_PRIGROUP_Pos)  );              /* Insert write key a
@@ -2366,730 +2375,730 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 1
 1894:Drivers/CMSIS/Include/core_cm7.h ****   \note    IRQn must not be negative.
 1895:Drivers/CMSIS/Include/core_cm7.h ****  */
 1896:Drivers/CMSIS/Include/core_cm7.h **** __STATIC_INLINE void __NVIC_EnableIRQ(IRQn_Type IRQn)
- 253              		.loc 2 1896 22 view .LVU89
- 254              	.LBB8:
+ 261              		.loc 2 1896 22 view .LVU91
+ 262              	.LBB8:
 1897:Drivers/CMSIS/Include/core_cm7.h **** {
 1898:Drivers/CMSIS/Include/core_cm7.h ****   if ((int32_t)(IRQn) >= 0)
- 255              		.loc 2 1898 3 view .LVU90
+ 263              		.loc 2 1898 3 view .LVU92
 1899:Drivers/CMSIS/Include/core_cm7.h ****   {
 1900:Drivers/CMSIS/Include/core_cm7.h ****     NVIC->ISER[(((uint32_t)IRQn) >> 5UL)] = (uint32_t)(1UL << (((uint32_t)IRQn) & 0x1FUL));
- 256              		.loc 2 1900 5 view .LVU91
- 257              		.loc 2 1900 43 is_stmt 0 view .LVU92
- 258 00ca 164A     		ldr	r2, .L9+36
- 259 00cc 4FF48041 		mov	r1, #16384
- 260 00d0 1160     		str	r1, [r2]
- 261              	.LVL5:
- 262              		.loc 2 1900 43 view .LVU93
- 263              	.LBE8:
- 264              	.LBE7:
- 102:Core/Src/usart.c **** 	NVIC_EnableIRQ(DMA1_Stream1_IRQn);
- 265              		.loc 1 102 2 is_stmt 1 view .LVU94
- 266              	.LBB9:
- 267              	.LBI9:
+ 264              		.loc 2 1900 5 view .LVU93
+ 265              		.loc 2 1900 43 is_stmt 0 view .LVU94
+ 266 00ca 164A     		ldr	r2, .L9+36
+ 267 00cc 4FF48041 		mov	r1, #16384
+ 268 00d0 1160     		str	r1, [r2]
+ 269              	.LVL7:
+ 270              		.loc 2 1900 43 view .LVU95
+ 271              	.LBE8:
+ 272              	.LBE7:
+ 103:Core/Src/usart.c **** 	NVIC_EnableIRQ(DMA1_Stream1_IRQn);
+ 273              		.loc 1 103 2 is_stmt 1 view .LVU96
+ 274              	.LBB9:
+ 275              	.LBI9:
 1896:Drivers/CMSIS/Include/core_cm7.h **** {
- 268              		.loc 2 1896 22 view .LVU95
- 269              	.LBB10:
+ 276              		.loc 2 1896 22 view .LVU97
+ 277              	.LBB10:
+ARM GAS  /tmp/ccDblWGg.s 			page 41
+
+
 1898:Drivers/CMSIS/Include/core_cm7.h ****   {
- 270              		.loc 2 1898 3 view .LVU96
- 271              		.loc 2 1900 5 view .LVU97
- 272              		.loc 2 1900 43 is_stmt 0 view .LVU98
- 273 00d2 4FF48051 		mov	r1, #4096
- 274 00d6 1160     		str	r1, [r2]
- 275              	.LVL6:
- 276              		.loc 2 1900 43 view .LVU99
- 277              	.LBE10:
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 41
+ 278              		.loc 2 1898 3 view .LVU98
+ 279              		.loc 2 1900 5 view .LVU99
+ 280              		.loc 2 1900 43 is_stmt 0 view .LVU100
+ 281 00d2 4FF48051 		mov	r1, #4096
+ 282 00d6 1160     		str	r1, [r2]
+ 283              	.LVL8:
+ 284              		.loc 2 1900 43 view .LVU101
+ 285              	.LBE10:
+ 286              	.LBE9:
+ 104:Core/Src/usart.c **** 	// NVIC_EnableIRQ(USART3_IRQn); // Включаем прерывание
+ 105:Core/Src/usart.c **** 	// NVIC_SetPriority(USART3_IRQn, 0); // Устанавливаем приоритетi
+ 106:Core/Src/usart.c **** 	Dma_Start(DMA1_Stream1, usart_rx_buffer, USART_DmaBuffSize);
+ 287              		.loc 1 106 2 is_stmt 1 view .LVU102
+ 288              		.loc 1 106 2 view .LVU103
+ 289              		.loc 1 106 2 view .LVU104
+ 290 00d8 9A6A     		ldr	r2, [r3, #40]
+ 291 00da 22F00102 		bic	r2, r2, #1
+ 292 00de 9A62     		str	r2, [r3, #40]
+ 293              		.loc 1 106 2 view .LVU105
+ 294              	.L8:
+ 295              		.loc 1 106 2 discriminator 2 view .LVU106
+ 296 00e0 0B4B     		ldr	r3, .L9+16
+ 297 00e2 9B6A     		ldr	r3, [r3, #40]
+ 298 00e4 13F0010F 		tst	r3, #1
+ 299 00e8 FAD1     		bne	.L8
+ 300              		.loc 1 106 2 discriminator 3 view .LVU107
+ 301              		.loc 1 106 2 discriminator 3 view .LVU108
+ 302 00ea 094B     		ldr	r3, .L9+16
+ 303 00ec 0E4A     		ldr	r2, .L9+40
+ 304 00ee 5A63     		str	r2, [r3, #52]
+ 305              		.loc 1 106 2 view .LVU109
+ 306              		.loc 1 106 2 is_stmt 0 discriminator 3 view .LVU110
+ 307 00f0 FF22     		movs	r2, #255
+ 308 00f2 DA62     		str	r2, [r3, #44]
+ 309              		.loc 1 106 2 is_stmt 1 view .LVU111
+ 310              		.loc 1 106 2 is_stmt 0 discriminator 3 view .LVU112
+ 311 00f4 9A6A     		ldr	r2, [r3, #40]
+ 312 00f6 42F00102 		orr	r2, r2, #1
+ 313 00fa 9A62     		str	r2, [r3, #40]
+ 314              		.loc 1 106 2 is_stmt 1 view .LVU113
+ 107:Core/Src/usart.c **** }
+ 315              		.loc 1 107 1 is_stmt 0 view .LVU114
+ 316 00fc 7047     		bx	lr
+ 317              	.L10:
+ 318 00fe 00BF     		.align	2
+ 319              	.L9:
+ 320 0100 00380240 		.word	1073887232
+ 321 0104 000C0240 		.word	1073875968
+ 322 0108 00480040 		.word	1073760256
+ 323 010c 0C000004 		.word	67108876
+ 324 0110 00600240 		.word	1073897472
+ 325 0114 50040108 		.word	134284368
+ 326 0118 28480040 		.word	1073760296
+ 327 011c 10050108 		.word	134284560
+ 328 0120 24480040 		.word	1073760292
+ 329 0124 00E100E0 		.word	-536813312
+ARM GAS  /tmp/ccDblWGg.s 			page 42
 
 
- 278              	.LBE9:
- 103:Core/Src/usart.c **** 	// NVIC_EnableIRQ(USART3_IRQn); // Включаем прерывание
- 104:Core/Src/usart.c **** 	// NVIC_SetPriority(USART3_IRQn, 0); // Устанавливаем приоритетi
- 105:Core/Src/usart.c **** 	Dma_Start(DMA1_Stream1, usart_rx_buffer, USART_DmaBuffSize);
- 279              		.loc 1 105 2 is_stmt 1 view .LVU100
- 280              		.loc 1 105 2 view .LVU101
- 281              		.loc 1 105 2 view .LVU102
- 282 00d8 9A6A     		ldr	r2, [r3, #40]
- 283 00da 22F00102 		bic	r2, r2, #1
- 284 00de 9A62     		str	r2, [r3, #40]
- 285              		.loc 1 105 2 view .LVU103
- 286              	.L8:
- 287              		.loc 1 105 2 discriminator 2 view .LVU104
- 288 00e0 0B4B     		ldr	r3, .L9+16
- 289 00e2 9B6A     		ldr	r3, [r3, #40]
- 290 00e4 13F0010F 		tst	r3, #1
- 291 00e8 FAD1     		bne	.L8
- 292              		.loc 1 105 2 discriminator 3 view .LVU105
- 293              		.loc 1 105 2 discriminator 3 view .LVU106
- 294 00ea 094B     		ldr	r3, .L9+16
- 295 00ec 0E4A     		ldr	r2, .L9+40
- 296 00ee 5A63     		str	r2, [r3, #52]
- 297              		.loc 1 105 2 discriminator 3 view .LVU107
- 298 00f0 FF22     		movs	r2, #255
- 299 00f2 DA62     		str	r2, [r3, #44]
- 300              		.loc 1 105 2 discriminator 3 view .LVU108
- 301 00f4 9A6A     		ldr	r2, [r3, #40]
- 302 00f6 42F00102 		orr	r2, r2, #1
- 303 00fa 9A62     		str	r2, [r3, #40]
- 304              		.loc 1 105 2 discriminator 3 view .LVU109
- 106:Core/Src/usart.c **** }
- 305              		.loc 1 106 1 is_stmt 0 view .LVU110
- 306 00fc 7047     		bx	lr
- 307              	.L10:
- 308 00fe 00BF     		.align	2
- 309              	.L9:
- 310 0100 00380240 		.word	1073887232
- 311 0104 000C0240 		.word	1073875968
- 312 0108 00480040 		.word	1073760256
- 313 010c 0C000004 		.word	67108876
- 314 0110 00600240 		.word	1073897472
- 315 0114 50040108 		.word	134284368
- 316 0118 28480040 		.word	1073760296
- 317 011c 10050108 		.word	134284560
- 318 0120 24480040 		.word	1073760292
- 319 0124 00E100E0 		.word	-536813312
- 320 0128 00000000 		.word	usart_rx_buffer
- 321              		.cfi_endproc
- 322              	.LFE861:
- 324              		.section	.text.USART3_IRQHandler,"ax",%progbits
- 325              		.align	1
- 326              		.global	USART3_IRQHandler
- 327              		.syntax unified
- 328              		.thumb
- 329              		.thumb_func
- 331              	USART3_IRQHandler:
- 332              	.LFB862:
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 42
-
-
- 107:Core/Src/usart.c **** typedef struct{
- 108:Core/Src/usart.c **** 	uint8_t *data;
- 109:Core/Src/usart.c **** 	uint16_t buffSize;
- 110:Core/Src/usart.c **** }fifoUsart_t;
- 111:Core/Src/usart.c **** //static uint8_t start = 0;
- 112:Core/Src/usart.c **** static uint16_t USART_req_it = 0;
- 113:Core/Src/usart.c **** static uint16_t USART_req_tail = 0;
- 114:Core/Src/usart.c **** 
+ 330 0128 00000000 		.word	usart_rx_buffer
+ 331              		.cfi_endproc
+ 332              	.LFE894:
+ 334              		.section	.text.USART3_IRQHandler,"ax",%progbits
+ 335              		.align	1
+ 336              		.global	USART3_IRQHandler
+ 337              		.syntax unified
+ 338              		.thumb
+ 339              		.thumb_func
+ 341              	USART3_IRQHandler:
+ 342              	.LFB895:
+ 108:Core/Src/usart.c **** typedef struct{
+ 109:Core/Src/usart.c **** 	uint8_t *data;
+ 110:Core/Src/usart.c **** 	uint16_t buffSize;
+ 111:Core/Src/usart.c **** }fifoUsart_t;
+ 112:Core/Src/usart.c **** //static uint8_t start = 0;
+ 113:Core/Src/usart.c **** static uint16_t USART_req_it = 0;
+ 114:Core/Src/usart.c **** static uint16_t USART_req_tail = 0;
  115:Core/Src/usart.c **** 
  116:Core/Src/usart.c **** 
- 117:Core/Src/usart.c **** void USART3_IRQHandler(void)
- 118:Core/Src/usart.c **** {
- 333              		.loc 1 118 1 is_stmt 1 view -0
- 334              		.cfi_startproc
- 335              		@ args = 0, pretend = 0, frame = 0
- 336              		@ frame_needed = 0, uses_anonymous_args = 0
- 337 0000 08B5     		push	{r3, lr}
- 338              	.LCFI1:
- 339              		.cfi_def_cfa_offset 8
- 340              		.cfi_offset 3, -8
- 341              		.cfi_offset 14, -4
- 119:Core/Src/usart.c ****     if ((USART3->ISR & USART_ISR_RTOF) != 0) {
- 342              		.loc 1 119 5 view .LVU112
- 343              		.loc 1 119 16 is_stmt 0 view .LVU113
- 344 0002 144B     		ldr	r3, .L16
- 345 0004 DB69     		ldr	r3, [r3, #28]
- 346              		.loc 1 119 8 view .LVU114
- 347 0006 13F4006F 		tst	r3, #2048
- 348 000a 1DD0     		beq	.L11
- 120:Core/Src/usart.c ****         USART3->ICR = USART_ICR_RTOCF;
- 349              		.loc 1 120 9 is_stmt 1 view .LVU115
- 350              		.loc 1 120 21 is_stmt 0 view .LVU116
- 351 000c 114B     		ldr	r3, .L16
- 352 000e 4FF40062 		mov	r2, #2048
- 353 0012 1A62     		str	r2, [r3, #32]
- 121:Core/Src/usart.c **** 		
- 122:Core/Src/usart.c ****         // Получаем количество принятых байт через DMA (если
- 123:Core/Src/usart.c **** 		USART_req_tail = USART_DmaBuffSize - DMA1_Stream1->NDTR;
- 354              		.loc 1 123 3 is_stmt 1 view .LVU117
- 355              		.loc 1 123 52 is_stmt 0 view .LVU118
- 356 0014 03F50633 		add	r3, r3, #137216
- 357 0018 DB6A     		ldr	r3, [r3, #44]
- 358              		.loc 1 123 38 view .LVU119
- 359 001a C3F1FF03 		rsb	r3, r3, #255
- 360 001e 9BB2     		uxth	r3, r3
- 361              		.loc 1 123 18 view .LVU120
- 362 0020 0D4A     		ldr	r2, .L16+4
- 363 0022 1380     		strh	r3, [r2]	@ movhi
- 124:Core/Src/usart.c **** 		// addElement(&USART_req_tail, 1);
- 125:Core/Src/usart.c **** 		USART_req_size = (USART_req_it <  USART_req_tail ? USART_req_tail - USART_req_it : USART_DmaBuffS
- 364              		.loc 1 125 3 is_stmt 1 view .LVU121
- 365              		.loc 1 125 34 is_stmt 0 view .LVU122
- 366 0024 0D4A     		ldr	r2, .L16+8
- 367 0026 1188     		ldrh	r1, [r2]
- 368              		.loc 1 125 18 view .LVU123
- 369 0028 8B42     		cmp	r3, r1
- 370 002a 0ED9     		bls	.L13
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 43
+ 117:Core/Src/usart.c **** 
+ 118:Core/Src/usart.c **** void USART3_IRQHandler(void)
+ 119:Core/Src/usart.c **** {
+ 343              		.loc 1 119 1 is_stmt 1 view -0
+ 344              		.cfi_startproc
+ 345              		@ args = 0, pretend = 0, frame = 0
+ 346              		@ frame_needed = 0, uses_anonymous_args = 0
+ 347 0000 08B5     		push	{r3, lr}
+ 348              	.LCFI1:
+ 349              		.cfi_def_cfa_offset 8
+ 350              		.cfi_offset 3, -8
+ 351              		.cfi_offset 14, -4
+ 120:Core/Src/usart.c ****     if ((USART3->ISR & USART_ISR_RTOF) != 0) {
+ 352              		.loc 1 120 5 view .LVU116
+ 353              		.loc 1 120 16 is_stmt 0 view .LVU117
+ 354 0002 144B     		ldr	r3, .L16
+ 355 0004 DB69     		ldr	r3, [r3, #28]
+ 356              		.loc 1 120 8 view .LVU118
+ 357 0006 13F4006F 		tst	r3, #2048
+ 358 000a 1DD0     		beq	.L11
+ 121:Core/Src/usart.c ****         USART3->ICR = USART_ICR_RTOCF;
+ 359              		.loc 1 121 9 is_stmt 1 view .LVU119
+ 360              		.loc 1 121 21 is_stmt 0 view .LVU120
+ 361 000c 114B     		ldr	r3, .L16
+ 362 000e 4FF40062 		mov	r2, #2048
+ 363 0012 1A62     		str	r2, [r3, #32]
+ 122:Core/Src/usart.c **** 
+ 123:Core/Src/usart.c ****         // Получаем количество принятых байт через DMA (если
+ 124:Core/Src/usart.c **** 		USART_req_tail = USART_DmaBuffSize - DMA1_Stream1->NDTR;
+ 364              		.loc 1 124 3 is_stmt 1 view .LVU121
+ 365              		.loc 1 124 52 is_stmt 0 view .LVU122
+ 366 0014 03F50633 		add	r3, r3, #137216
+ 367 0018 DB6A     		ldr	r3, [r3, #44]
+ 368              		.loc 1 124 38 view .LVU123
+ 369 001a C3F1FF03 		rsb	r3, r3, #255
+ 370 001e 9BB2     		uxth	r3, r3
+ 371              		.loc 1 124 18 view .LVU124
+ARM GAS  /tmp/ccDblWGg.s 			page 43
 
 
- 371              		.loc 1 125 18 discriminator 1 view .LVU124
- 372 002c 5A1A     		subs	r2, r3, r1
- 373 002e 92B2     		uxth	r2, r2
- 374              	.L14:
- 375              		.loc 1 125 18 discriminator 4 view .LVU125
- 376 0030 0B48     		ldr	r0, .L16+12
- 377 0032 0280     		strh	r2, [r0]	@ movhi
+ 372 0020 0D4A     		ldr	r2, .L16+4
+ 373 0022 1380     		strh	r3, [r2]	@ movhi
+ 125:Core/Src/usart.c **** 		// addElement(&USART_req_tail, 1);
+ 126:Core/Src/usart.c **** 		USART_req_size = (USART_req_it <  USART_req_tail ? USART_req_tail - USART_req_it : USART_DmaBuffS
+ 374              		.loc 1 126 3 is_stmt 1 view .LVU125
+ 375              		.loc 1 126 34 is_stmt 0 view .LVU126
+ 376 0024 0D4A     		ldr	r2, .L16+8
+ 377 0026 1188     		ldrh	r1, [r2]
+ 378              		.loc 1 126 18 view .LVU127
+ 379 0028 8B42     		cmp	r3, r1
+ 380 002a 0ED9     		bls	.L13
+ 381              		.loc 1 126 18 discriminator 1 view .LVU128
+ 382 002c 5A1A     		subs	r2, r3, r1
+ 383 002e 92B2     		uxth	r2, r2
+ 384              	.L14:
+ 385              		.loc 1 126 18 discriminator 4 view .LVU129
+ 386 0030 0B48     		ldr	r0, .L16+12
+ 387 0032 0280     		strh	r2, [r0]	@ movhi
+ 127:Core/Src/usart.c **** 		USART_req_start_index = USART_req_it;
+ 388              		.loc 1 127 3 is_stmt 1 view .LVU130
+ 389              		.loc 1 127 25 is_stmt 0 view .LVU131
+ 390 0034 0B4A     		ldr	r2, .L16+16
+ 391 0036 1180     		strh	r1, [r2]	@ movhi
+ 128:Core/Src/usart.c **** 		USART_req_it = USART_req_tail;
+ 392              		.loc 1 128 3 is_stmt 1 view .LVU132
+ 393              		.loc 1 128 16 is_stmt 0 view .LVU133
+ 394 0038 084A     		ldr	r2, .L16+8
+ 395 003a 1380     		strh	r3, [r2]	@ movhi
+ 129:Core/Src/usart.c ****         USART_req = 1;
+ 396              		.loc 1 129 9 is_stmt 1 view .LVU134
+ 397              		.loc 1 129 19 is_stmt 0 view .LVU135
+ 398 003c 0121     		movs	r1, #1
+ 399 003e 0A4B     		ldr	r3, .L16+20
+ 400 0040 1970     		strb	r1, [r3]
+ 130:Core/Src/usart.c ****         // ... ваша логика обработки принятых данных ...
+ 131:Core/Src/usart.c ****         // HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+ 132:Core/Src/usart.c ****         HAL_GPIO_TogglePin(LD1_GPIO_Port, LD1_Pin);
+ 401              		.loc 1 132 9 is_stmt 1 view .LVU136
+ 402 0042 0A48     		ldr	r0, .L16+24
+ 403 0044 FFF7FEFF 		bl	HAL_GPIO_TogglePin
+ 404              	.LVL9:
+ 405              	.L11:
+ 133:Core/Src/usart.c ****     }
+ 134:Core/Src/usart.c **** }
+ 406              		.loc 1 134 1 is_stmt 0 view .LVU137
+ 407 0048 08BD     		pop	{r3, pc}
+ 408              	.L13:
  126:Core/Src/usart.c **** 		USART_req_start_index = USART_req_it;
- 378              		.loc 1 126 3 is_stmt 1 view .LVU126
- 379              		.loc 1 126 25 is_stmt 0 view .LVU127
- 380 0034 0B4A     		ldr	r2, .L16+16
- 381 0036 1180     		strh	r1, [r2]	@ movhi
- 127:Core/Src/usart.c **** 		USART_req_it = USART_req_tail;
- 382              		.loc 1 127 3 is_stmt 1 view .LVU128
- 383              		.loc 1 127 16 is_stmt 0 view .LVU129
- 384 0038 084A     		ldr	r2, .L16+8
- 385 003a 1380     		strh	r3, [r2]	@ movhi
- 128:Core/Src/usart.c ****         USART_req = 1;
- 386              		.loc 1 128 9 is_stmt 1 view .LVU130
- 387              		.loc 1 128 19 is_stmt 0 view .LVU131
- 388 003c 0121     		movs	r1, #1
- 389 003e 0A4B     		ldr	r3, .L16+20
- 390 0040 1970     		strb	r1, [r3]
- 129:Core/Src/usart.c ****         // ... ваша логика обработки принятых данных ...
- 130:Core/Src/usart.c ****         // HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
- 131:Core/Src/usart.c ****         HAL_GPIO_TogglePin(LD1_GPIO_Port, LD1_Pin);
- 391              		.loc 1 131 9 is_stmt 1 view .LVU132
- 392 0042 0A48     		ldr	r0, .L16+24
- 393 0044 FFF7FEFF 		bl	HAL_GPIO_TogglePin
- 394              	.LVL7:
- 395              	.L11:
- 132:Core/Src/usart.c ****     }
- 133:Core/Src/usart.c **** }
- 396              		.loc 1 133 1 is_stmt 0 view .LVU133
- 397 0048 08BD     		pop	{r3, pc}
- 398              	.L13:
- 125:Core/Src/usart.c **** 		USART_req_start_index = USART_req_it;
- 399              		.loc 1 125 120 discriminator 2 view .LVU134
- 400 004a 5A1A     		subs	r2, r3, r1
- 401 004c 92B2     		uxth	r2, r2
- 125:Core/Src/usart.c **** 		USART_req_start_index = USART_req_it;
- 402              		.loc 1 125 18 discriminator 2 view .LVU135
- 403 004e FF32     		adds	r2, r2, #255
- 404 0050 92B2     		uxth	r2, r2
- 405 0052 EDE7     		b	.L14
- 406              	.L17:
- 407              		.align	2
- 408              	.L16:
- 409 0054 00480040 		.word	1073760256
- 410 0058 00000000 		.word	USART_req_tail
- 411 005c 00000000 		.word	USART_req_it
- 412 0060 00000000 		.word	USART_req_size
- 413 0064 00000000 		.word	USART_req_start_index
- 414 0068 00000000 		.word	USART_req
- 415 006c 00040240 		.word	1073873920
- 416              		.cfi_endproc
- 417              	.LFE862:
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 44
+ 409              		.loc 1 126 120 discriminator 2 view .LVU138
+ 410 004a 5A1A     		subs	r2, r3, r1
+ 411 004c 92B2     		uxth	r2, r2
+ 126:Core/Src/usart.c **** 		USART_req_start_index = USART_req_it;
+ 412              		.loc 1 126 18 discriminator 2 view .LVU139
+ 413 004e FF32     		adds	r2, r2, #255
+ 414 0050 92B2     		uxth	r2, r2
+ 415 0052 EDE7     		b	.L14
+ 416              	.L17:
+ARM GAS  /tmp/ccDblWGg.s 			page 44
 
 
- 419              		.section	.text.addElement,"ax",%progbits
- 420              		.align	1
- 421              		.global	addElement
- 422              		.syntax unified
- 423              		.thumb
- 424              		.thumb_func
- 426              	addElement:
- 427              	.LVL8:
- 428              	.LFB863:
- 134:Core/Src/usart.c **** #define FIFO_SIZE 24
- 135:Core/Src/usart.c **** static uint8_t it = 0;
- 136:Core/Src/usart.c **** static uint8_t tail = 0;
- 137:Core/Src/usart.c **** static fifoUsart_t fifoBuff[FIFO_SIZE];
- 138:Core/Src/usart.c **** //static uint8_t sizeFifo;
- 139:Core/Src/usart.c **** static uint8_t lockUsartDma = 0;
- 140:Core/Src/usart.c **** #define IT (it % FIFO_SIZE)
- 141:Core/Src/usart.c **** #define TAIL (tail % FIFO_SIZE)
- 142:Core/Src/usart.c **** void addElement(uint8_t *data, uint16_t buffSize){
- 429              		.loc 1 142 50 is_stmt 1 view -0
- 430              		.cfi_startproc
- 431              		@ args = 0, pretend = 0, frame = 0
- 432              		@ frame_needed = 0, uses_anonymous_args = 0
- 433              		@ link register save eliminated.
- 434              		.loc 1 142 50 is_stmt 0 view .LVU137
- 435 0000 30B4     		push	{r4, r5}
- 436              	.LCFI2:
- 437              		.cfi_def_cfa_offset 8
- 438              		.cfi_offset 4, -8
- 439              		.cfi_offset 5, -4
- 143:Core/Src/usart.c **** 
- 144:Core/Src/usart.c **** 	fifoBuff[TAIL].buffSize = buffSize;
- 440              		.loc 1 144 2 is_stmt 1 view .LVU138
- 441              		.loc 1 144 11 is_stmt 0 view .LVU139
- 442 0002 1F4C     		ldr	r4, .L22
- 443 0004 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
- 444 0006 1F4B     		ldr	r3, .L22+4
- 445 0008 A3FB0253 		umull	r5, r3, r3, r2
- 446 000c 1B09     		lsrs	r3, r3, #4
- 447 000e 03EB4303 		add	r3, r3, r3, lsl #1
- 448 0012 A2EBC303 		sub	r3, r2, r3, lsl #3
- 449 0016 DBB2     		uxtb	r3, r3
- 450              		.loc 1 144 26 view .LVU140
- 451 0018 1B4D     		ldr	r5, .L22+8
- 452 001a 05EBC30C 		add	ip, r5, r3, lsl #3
- 453 001e ACF80410 		strh	r1, [ip, #4]	@ movhi
- 145:Core/Src/usart.c **** 	fifoBuff[TAIL].data = data;
- 454              		.loc 1 145 2 is_stmt 1 view .LVU141
- 455              		.loc 1 145 22 is_stmt 0 view .LVU142
- 456 0022 45F83300 		str	r0, [r5, r3, lsl #3]
- 146:Core/Src/usart.c **** 	tail+=1;
- 457              		.loc 1 146 2 is_stmt 1 view .LVU143
- 458              		.loc 1 146 6 is_stmt 0 view .LVU144
- 459 0026 0132     		adds	r2, r2, #1
- 460 0028 2270     		strb	r2, [r4]
- 147:Core/Src/usart.c **** 	// if(tail < it) Led_On(); 
- 148:Core/Src/usart.c **** 	if(lockUsartDma == 0) {
- 461              		.loc 1 148 2 is_stmt 1 view .LVU145
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 45
+ 417              		.align	2
+ 418              	.L16:
+ 419 0054 00480040 		.word	1073760256
+ 420 0058 00000000 		.word	USART_req_tail
+ 421 005c 00000000 		.word	USART_req_it
+ 422 0060 00000000 		.word	USART_req_size
+ 423 0064 00000000 		.word	USART_req_start_index
+ 424 0068 00000000 		.word	USART_req
+ 425 006c 00040240 		.word	1073873920
+ 426              		.cfi_endproc
+ 427              	.LFE895:
+ 429              		.section	.text.addElement,"ax",%progbits
+ 430              		.align	1
+ 431              		.global	addElement
+ 432              		.syntax unified
+ 433              		.thumb
+ 434              		.thumb_func
+ 436              	addElement:
+ 437              	.LVL10:
+ 438              	.LFB896:
+ 135:Core/Src/usart.c **** #define FIFO_SIZE 24
+ 136:Core/Src/usart.c **** static uint8_t it = 0;
+ 137:Core/Src/usart.c **** static uint8_t tail = 0;
+ 138:Core/Src/usart.c **** static fifoUsart_t fifoBuff[FIFO_SIZE];
+ 139:Core/Src/usart.c **** //static uint8_t sizeFifo;
+ 140:Core/Src/usart.c **** static uint8_t lockUsartDma = 0;
+ 141:Core/Src/usart.c **** #define IT (it % FIFO_SIZE)
+ 142:Core/Src/usart.c **** #define TAIL (tail % FIFO_SIZE)
+ 143:Core/Src/usart.c **** void addElement(uint8_t *data, uint16_t buffSize){
+ 439              		.loc 1 143 50 is_stmt 1 view -0
+ 440              		.cfi_startproc
+ 441              		@ args = 0, pretend = 0, frame = 0
+ 442              		@ frame_needed = 0, uses_anonymous_args = 0
+ 443              		.loc 1 143 50 is_stmt 0 view .LVU141
+ 444 0000 10B5     		push	{r4, lr}
+ 445              	.LCFI2:
+ 446              		.cfi_def_cfa_offset 8
+ 447              		.cfi_offset 4, -8
+ 448              		.cfi_offset 14, -4
+ 449 0002 0C46     		mov	r4, r1
+ 144:Core/Src/usart.c **** 
+ 145:Core/Src/usart.c **** 	fifoBuff[TAIL].buffSize = buffSize;
+ 450              		.loc 1 145 2 is_stmt 1 view .LVU142
+ 451              		.loc 1 145 11 is_stmt 0 view .LVU143
+ 452 0004 DFF890C0 		ldr	ip, .L22+20
+ 453 0008 9CF80020 		ldrb	r2, [ip]	@ zero_extendqisi2
+ 454 000c 1D4B     		ldr	r3, .L22
+ 455 000e A3FB0213 		umull	r1, r3, r3, r2
+ 456              	.LVL11:
+ 457              		.loc 1 145 11 view .LVU144
+ 458 0012 1B09     		lsrs	r3, r3, #4
+ 459 0014 03EB4303 		add	r3, r3, r3, lsl #1
+ 460 0018 A2EBC303 		sub	r3, r2, r3, lsl #3
+ 461 001c DBB2     		uxtb	r3, r3
+ 462              		.loc 1 145 26 view .LVU145
+ 463 001e DFF874E0 		ldr	lr, .L22+16
+ 464 0022 0EEBC301 		add	r1, lr, r3, lsl #3
+ARM GAS  /tmp/ccDblWGg.s 			page 45
 
 
- 462              		.loc 1 148 18 is_stmt 0 view .LVU146
- 463 002a 184B     		ldr	r3, .L22+12
- 464 002c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
- 465              		.loc 1 148 4 view .LVU147
- 466 002e 23BB     		cbnz	r3, .L18
- 149:Core/Src/usart.c **** 		lockUsartDma = 1;
- 467              		.loc 1 149 3 is_stmt 1 view .LVU148
- 468              		.loc 1 149 16 is_stmt 0 view .LVU149
- 469 0030 164B     		ldr	r3, .L22+12
- 470 0032 0122     		movs	r2, #1
- 471 0034 1A70     		strb	r2, [r3]
- 150:Core/Src/usart.c **** 		Dma_Start(DMA1_Stream3,fifoBuff[IT].data, fifoBuff[IT].buffSize);
- 472              		.loc 1 150 3 is_stmt 1 view .LVU150
- 473              		.loc 1 150 3 view .LVU151
- 474              		.loc 1 150 3 view .LVU152
- 475 0036 164A     		ldr	r2, .L22+16
- 476 0038 936D     		ldr	r3, [r2, #88]
- 477 003a 23F00103 		bic	r3, r3, #1
- 478 003e 9365     		str	r3, [r2, #88]
- 479              		.loc 1 150 3 view .LVU153
- 480              	.L20:
- 481              		.loc 1 150 3 discriminator 2 view .LVU154
- 482 0040 134B     		ldr	r3, .L22+16
- 483 0042 9B6D     		ldr	r3, [r3, #88]
- 484 0044 13F0010F 		tst	r3, #1
- 485 0048 FAD1     		bne	.L20
- 486              		.loc 1 150 3 discriminator 3 view .LVU155
- 487              		.loc 1 150 3 discriminator 3 view .LVU156
- 488 004a 124B     		ldr	r3, .L22+20
- 489 004c 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
- 490 004e 0D4B     		ldr	r3, .L22+4
- 491 0050 A3FB0213 		umull	r1, r3, r3, r2
- 492              	.LVL9:
- 493              		.loc 1 150 3 is_stmt 0 discriminator 3 view .LVU157
- 494 0054 1B09     		lsrs	r3, r3, #4
- 495 0056 03EB4303 		add	r3, r3, r3, lsl #1
- 496 005a A2EBC303 		sub	r3, r2, r3, lsl #3
- 497 005e DBB2     		uxtb	r3, r3
- 498 0060 0949     		ldr	r1, .L22+8
- 499 0062 51F83300 		ldr	r0, [r1, r3, lsl #3]
- 500              	.LVL10:
- 501              		.loc 1 150 3 discriminator 3 view .LVU158
- 502 0066 0A4A     		ldr	r2, .L22+16
- 503 0068 5066     		str	r0, [r2, #100]
- 504              		.loc 1 150 3 is_stmt 1 discriminator 3 view .LVU159
- 505 006a 01EBC301 		add	r1, r1, r3, lsl #3
- 506 006e 8B88     		ldrh	r3, [r1, #4]
- 507 0070 D365     		str	r3, [r2, #92]
- 508              		.loc 1 150 3 discriminator 3 view .LVU160
- 509 0072 936D     		ldr	r3, [r2, #88]
- 510 0074 43F00103 		orr	r3, r3, #1
- 511 0078 9365     		str	r3, [r2, #88]
- 512              		.loc 1 150 3 discriminator 4 view .LVU161
- 513              	.L18:
- 151:Core/Src/usart.c **** 	}
- 152:Core/Src/usart.c **** }
- 514              		.loc 1 152 1 is_stmt 0 view .LVU162
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 46
+ 465 0026 8C80     		strh	r4, [r1, #4]	@ movhi
+ 146:Core/Src/usart.c **** 	fifoBuff[TAIL].data = data;
+ 466              		.loc 1 146 2 is_stmt 1 view .LVU146
+ 467              		.loc 1 146 22 is_stmt 0 view .LVU147
+ 468 0028 4EF83300 		str	r0, [lr, r3, lsl #3]
+ 147:Core/Src/usart.c **** 	tail+=1;
+ 469              		.loc 1 147 2 is_stmt 1 view .LVU148
+ 470              		.loc 1 147 6 is_stmt 0 view .LVU149
+ 471 002c 0132     		adds	r2, r2, #1
+ 472 002e 8CF80020 		strb	r2, [ip]
+ 148:Core/Src/usart.c **** 	// if(tail < it) Led_On();
+ 149:Core/Src/usart.c **** 	if(lockUsartDma == 0) {
+ 473              		.loc 1 149 2 is_stmt 1 view .LVU150
+ 474              		.loc 1 149 18 is_stmt 0 view .LVU151
+ 475 0032 154B     		ldr	r3, .L22+4
+ 476 0034 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 477              		.loc 1 149 4 view .LVU152
+ 478 0036 23BB     		cbnz	r3, .L18
+ 150:Core/Src/usart.c **** 		lockUsartDma = 1;
+ 479              		.loc 1 150 3 is_stmt 1 view .LVU153
+ 480              		.loc 1 150 16 is_stmt 0 view .LVU154
+ 481 0038 134B     		ldr	r3, .L22+4
+ 482 003a 0122     		movs	r2, #1
+ 483 003c 1A70     		strb	r2, [r3]
+ 151:Core/Src/usart.c **** 		Dma_Start(DMA1_Stream3,fifoBuff[IT].data, fifoBuff[IT].buffSize);
+ 484              		.loc 1 151 3 is_stmt 1 view .LVU155
+ 485              		.loc 1 151 3 view .LVU156
+ 486              		.loc 1 151 3 view .LVU157
+ 487 003e 134A     		ldr	r2, .L22+8
+ 488 0040 936D     		ldr	r3, [r2, #88]
+ 489 0042 23F00103 		bic	r3, r3, #1
+ 490 0046 9365     		str	r3, [r2, #88]
+ 491              		.loc 1 151 3 view .LVU158
+ 492              	.L20:
+ 493              		.loc 1 151 3 discriminator 2 view .LVU159
+ 494 0048 104B     		ldr	r3, .L22+8
+ 495 004a 9B6D     		ldr	r3, [r3, #88]
+ 496 004c 13F0010F 		tst	r3, #1
+ 497 0050 FAD1     		bne	.L20
+ 498              		.loc 1 151 3 discriminator 3 view .LVU160
+ 499              		.loc 1 151 3 discriminator 3 view .LVU161
+ 500 0052 0F4B     		ldr	r3, .L22+12
+ 501 0054 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 502 0056 0B4B     		ldr	r3, .L22
+ 503 0058 A3FB0213 		umull	r1, r3, r3, r2
+ 504 005c 1B09     		lsrs	r3, r3, #4
+ 505 005e 03EB4303 		add	r3, r3, r3, lsl #1
+ 506 0062 A2EBC303 		sub	r3, r2, r3, lsl #3
+ 507 0066 DBB2     		uxtb	r3, r3
+ 508 0068 0A49     		ldr	r1, .L22+16
+ 509 006a 51F83300 		ldr	r0, [r1, r3, lsl #3]
+ 510              	.LVL12:
+ 511              		.loc 1 151 3 is_stmt 0 discriminator 3 view .LVU162
+ 512 006e 074A     		ldr	r2, .L22+8
+ 513 0070 5066     		str	r0, [r2, #100]
+ 514              		.loc 1 151 3 is_stmt 1 view .LVU163
+ 515              		.loc 1 151 3 is_stmt 0 discriminator 3 view .LVU164
+ARM GAS  /tmp/ccDblWGg.s 			page 46
 
 
- 515 007a 30BC     		pop	{r4, r5}
- 516              	.LCFI3:
- 517              		.cfi_restore 5
- 518              		.cfi_restore 4
- 519              		.cfi_def_cfa_offset 0
- 520 007c 7047     		bx	lr
- 521              	.L23:
- 522 007e 00BF     		.align	2
- 523              	.L22:
- 524 0080 00000000 		.word	tail
- 525 0084 ABAAAAAA 		.word	-1431655765
- 526 0088 00000000 		.word	fifoBuff
- 527 008c 00000000 		.word	lockUsartDma
- 528 0090 00600240 		.word	1073897472
- 529 0094 00000000 		.word	it
- 530              		.cfi_endproc
- 531              	.LFE863:
- 533              		.section	.text.call1,"ax",%progbits
- 534              		.align	1
- 535              		.global	call1
- 536              		.syntax unified
- 537              		.thumb
- 538              		.thumb_func
- 540              	call1:
- 541              	.LFB864:
- 153:Core/Src/usart.c **** void call1(){
- 542              		.loc 1 153 13 is_stmt 1 view -0
- 543              		.cfi_startproc
- 544              		@ args = 0, pretend = 0, frame = 0
- 545              		@ frame_needed = 0, uses_anonymous_args = 0
- 546              		@ link register save eliminated.
- 154:Core/Src/usart.c ****         it+=1;
- 547              		.loc 1 154 9 view .LVU164
- 548              		.loc 1 154 11 is_stmt 0 view .LVU165
- 549 0000 1A4B     		ldr	r3, .L28
- 550 0002 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
- 551 0004 0132     		adds	r2, r2, #1
- 552 0006 D2B2     		uxtb	r2, r2
- 553 0008 1A70     		strb	r2, [r3]
- 155:Core/Src/usart.c ****         	if(IT != TAIL){
- 554              		.loc 1 155 10 is_stmt 1 view .LVU166
- 555              		.loc 1 155 16 is_stmt 0 view .LVU167
- 556 000a 194B     		ldr	r3, .L28+4
- 557 000c A3FB0201 		umull	r0, r1, r3, r2
- 558 0010 0909     		lsrs	r1, r1, #4
- 559 0012 01EB4101 		add	r1, r1, r1, lsl #1
- 560 0016 C800     		lsls	r0, r1, #3
- 561 0018 121A     		subs	r2, r2, r0
- 562 001a D2B2     		uxtb	r2, r2
- 563 001c 1549     		ldr	r1, .L28+8
- 564 001e 0978     		ldrb	r1, [r1]	@ zero_extendqisi2
- 565 0020 A3FB0103 		umull	r0, r3, r3, r1
- 566 0024 1B09     		lsrs	r3, r3, #4
- 567 0026 03EB4303 		add	r3, r3, r3, lsl #1
- 568 002a D800     		lsls	r0, r3, #3
- 569 002c 091A     		subs	r1, r1, r0
- 570 002e C9B2     		uxtb	r1, r1
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 47
+ 516 0072 01EBC301 		add	r1, r1, r3, lsl #3
+ 517 0076 8B88     		ldrh	r3, [r1, #4]
+ 518 0078 D365     		str	r3, [r2, #92]
+ 519              		.loc 1 151 3 is_stmt 1 view .LVU165
+ 520              		.loc 1 151 3 is_stmt 0 discriminator 3 view .LVU166
+ 521 007a 936D     		ldr	r3, [r2, #88]
+ 522 007c 43F00103 		orr	r3, r3, #1
+ 523 0080 9365     		str	r3, [r2, #88]
+ 524              		.loc 1 151 3 is_stmt 1 view .LVU167
+ 525              	.L18:
+ 152:Core/Src/usart.c **** 	}
+ 153:Core/Src/usart.c **** }
+ 526              		.loc 1 153 1 is_stmt 0 view .LVU168
+ 527 0082 10BD     		pop	{r4, pc}
+ 528              	.LVL13:
+ 529              	.L23:
+ 530              		.loc 1 153 1 view .LVU169
+ 531              		.align	2
+ 532              	.L22:
+ 533 0084 ABAAAAAA 		.word	-1431655765
+ 534 0088 00000000 		.word	lockUsartDma
+ 535 008c 00600240 		.word	1073897472
+ 536 0090 00000000 		.word	it
+ 537 0094 00000000 		.word	fifoBuff
+ 538 0098 00000000 		.word	tail
+ 539              		.cfi_endproc
+ 540              	.LFE896:
+ 542              		.section	.text.call1,"ax",%progbits
+ 543              		.align	1
+ 544              		.global	call1
+ 545              		.syntax unified
+ 546              		.thumb
+ 547              		.thumb_func
+ 549              	call1:
+ 550              	.LFB897:
+ 154:Core/Src/usart.c **** void call1(){
+ 551              		.loc 1 154 13 is_stmt 1 view -0
+ 552              		.cfi_startproc
+ 553              		@ args = 0, pretend = 0, frame = 0
+ 554              		@ frame_needed = 0, uses_anonymous_args = 0
+ 555              		@ link register save eliminated.
+ 155:Core/Src/usart.c ****         it+=1;
+ 556              		.loc 1 155 9 view .LVU171
+ 557              		.loc 1 155 11 is_stmt 0 view .LVU172
+ 558 0000 1A4B     		ldr	r3, .L28
+ 559 0002 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 560 0004 0132     		adds	r2, r2, #1
+ 561 0006 D2B2     		uxtb	r2, r2
+ 562 0008 1A70     		strb	r2, [r3]
+ 156:Core/Src/usart.c ****         	if(IT != TAIL){
+ 563              		.loc 1 156 10 is_stmt 1 view .LVU173
+ 564              		.loc 1 156 16 is_stmt 0 view .LVU174
+ 565 000a 194B     		ldr	r3, .L28+4
+ 566 000c A3FB0201 		umull	r0, r1, r3, r2
+ 567 0010 0909     		lsrs	r1, r1, #4
+ 568 0012 01EB4101 		add	r1, r1, r1, lsl #1
+ 569 0016 A2EBC102 		sub	r2, r2, r1, lsl #3
+ARM GAS  /tmp/ccDblWGg.s 			page 47
 
 
- 571              		.loc 1 155 12 view .LVU168
- 572 0030 8A42     		cmp	r2, r1
- 573 0032 17D0     		beq	.L25
- 156:Core/Src/usart.c ****         		Dma_Start(DMA1_Stream3,fifoBuff[IT].data, fifoBuff[IT].buffSize);
- 574              		.loc 1 156 11 is_stmt 1 view .LVU169
- 575              		.loc 1 156 11 view .LVU170
- 576              		.loc 1 156 11 view .LVU171
- 577 0034 1049     		ldr	r1, .L28+12
- 578 0036 8B6D     		ldr	r3, [r1, #88]
- 579 0038 23F00103 		bic	r3, r3, #1
- 580 003c 8B65     		str	r3, [r1, #88]
- 581              		.loc 1 156 11 view .LVU172
- 582              	.L26:
- 583              		.loc 1 156 11 discriminator 2 view .LVU173
- 584 003e 0E4B     		ldr	r3, .L28+12
- 585 0040 9B6D     		ldr	r3, [r3, #88]
- 586 0042 13F0010F 		tst	r3, #1
- 587 0046 FAD1     		bne	.L26
- 588              		.loc 1 156 11 discriminator 3 view .LVU174
- 589              		.loc 1 156 11 discriminator 3 view .LVU175
- 590 0048 0C49     		ldr	r1, .L28+16
- 591 004a 51F83200 		ldr	r0, [r1, r2, lsl #3]
- 592 004e 0A4B     		ldr	r3, .L28+12
- 593 0050 5866     		str	r0, [r3, #100]
- 594              		.loc 1 156 11 discriminator 3 view .LVU176
- 595 0052 01EBC201 		add	r1, r1, r2, lsl #3
- 596 0056 8A88     		ldrh	r2, [r1, #4]
- 597 0058 DA65     		str	r2, [r3, #92]
- 598              		.loc 1 156 11 discriminator 3 view .LVU177
- 599 005a 9A6D     		ldr	r2, [r3, #88]
- 600 005c 42F00102 		orr	r2, r2, #1
- 601 0060 9A65     		str	r2, [r3, #88]
- 602              		.loc 1 156 11 discriminator 3 view .LVU178
- 603 0062 7047     		bx	lr
- 604              	.L25:
- 157:Core/Src/usart.c ****         	}
- 158:Core/Src/usart.c ****         	else{
- 159:Core/Src/usart.c **** 				    lockUsartDma = 0;
- 605              		.loc 1 159 9 view .LVU179
- 606              		.loc 1 159 22 is_stmt 0 view .LVU180
- 607 0064 064B     		ldr	r3, .L28+20
- 608 0066 0022     		movs	r2, #0
- 609 0068 1A70     		strb	r2, [r3]
- 160:Core/Src/usart.c ****         	}
- 161:Core/Src/usart.c **** }
- 610              		.loc 1 161 1 view .LVU181
- 611 006a 7047     		bx	lr
- 612              	.L29:
- 613              		.align	2
- 614              	.L28:
- 615 006c 00000000 		.word	it
- 616 0070 ABAAAAAA 		.word	-1431655765
- 617 0074 00000000 		.word	tail
- 618 0078 00600240 		.word	1073897472
- 619 007c 00000000 		.word	fifoBuff
- 620 0080 00000000 		.word	lockUsartDma
- 621              		.cfi_endproc
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 48
+ 570 001a D2B2     		uxtb	r2, r2
+ 571 001c 1549     		ldr	r1, .L28+8
+ 572 001e 0978     		ldrb	r1, [r1]	@ zero_extendqisi2
+ 573 0020 A3FB0103 		umull	r0, r3, r3, r1
+ 574 0024 1B09     		lsrs	r3, r3, #4
+ 575 0026 03EB4303 		add	r3, r3, r3, lsl #1
+ 576 002a A1EBC301 		sub	r1, r1, r3, lsl #3
+ 577 002e C9B2     		uxtb	r1, r1
+ 578              		.loc 1 156 12 view .LVU175
+ 579 0030 8A42     		cmp	r2, r1
+ 580 0032 17D0     		beq	.L25
+ 157:Core/Src/usart.c ****         		Dma_Start(DMA1_Stream3,fifoBuff[IT].data, fifoBuff[IT].buffSize);
+ 581              		.loc 1 157 11 is_stmt 1 view .LVU176
+ 582              		.loc 1 157 11 view .LVU177
+ 583              		.loc 1 157 11 view .LVU178
+ 584 0034 1049     		ldr	r1, .L28+12
+ 585 0036 8B6D     		ldr	r3, [r1, #88]
+ 586 0038 23F00103 		bic	r3, r3, #1
+ 587 003c 8B65     		str	r3, [r1, #88]
+ 588              		.loc 1 157 11 view .LVU179
+ 589              	.L26:
+ 590              		.loc 1 157 11 discriminator 2 view .LVU180
+ 591 003e 0E4B     		ldr	r3, .L28+12
+ 592 0040 9B6D     		ldr	r3, [r3, #88]
+ 593 0042 13F0010F 		tst	r3, #1
+ 594 0046 FAD1     		bne	.L26
+ 595              		.loc 1 157 11 discriminator 3 view .LVU181
+ 596              		.loc 1 157 11 discriminator 3 view .LVU182
+ 597 0048 0C49     		ldr	r1, .L28+16
+ 598 004a 51F83200 		ldr	r0, [r1, r2, lsl #3]
+ 599 004e 0A4B     		ldr	r3, .L28+12
+ 600 0050 5866     		str	r0, [r3, #100]
+ 601              		.loc 1 157 11 view .LVU183
+ 602              		.loc 1 157 11 is_stmt 0 discriminator 3 view .LVU184
+ 603 0052 01EBC201 		add	r1, r1, r2, lsl #3
+ 604 0056 8A88     		ldrh	r2, [r1, #4]
+ 605 0058 DA65     		str	r2, [r3, #92]
+ 606              		.loc 1 157 11 is_stmt 1 view .LVU185
+ 607              		.loc 1 157 11 is_stmt 0 discriminator 3 view .LVU186
+ 608 005a 9A6D     		ldr	r2, [r3, #88]
+ 609 005c 42F00102 		orr	r2, r2, #1
+ 610 0060 9A65     		str	r2, [r3, #88]
+ 611              		.loc 1 157 11 is_stmt 1 view .LVU187
+ 612 0062 7047     		bx	lr
+ 613              	.L25:
+ 158:Core/Src/usart.c ****         	}
+ 159:Core/Src/usart.c ****         	else{
+ 160:Core/Src/usart.c **** 				    lockUsartDma = 0;
+ 614              		.loc 1 160 9 view .LVU188
+ 615              		.loc 1 160 22 is_stmt 0 view .LVU189
+ 616 0064 064B     		ldr	r3, .L28+20
+ 617 0066 0022     		movs	r2, #0
+ 618 0068 1A70     		strb	r2, [r3]
+ 161:Core/Src/usart.c ****         	}
+ 162:Core/Src/usart.c **** }
+ 619              		.loc 1 162 1 view .LVU190
+ 620 006a 7047     		bx	lr
+ARM GAS  /tmp/ccDblWGg.s 			page 48
 
 
- 622              	.LFE864:
- 624              		.section	.text.call2,"ax",%progbits
- 625              		.align	1
- 626              		.global	call2
- 627              		.syntax unified
- 628              		.thumb
- 629              		.thumb_func
- 631              	call2:
- 632              	.LFB865:
- 162:Core/Src/usart.c **** 
+ 621              	.L29:
+ 622              		.align	2
+ 623              	.L28:
+ 624 006c 00000000 		.word	it
+ 625 0070 ABAAAAAA 		.word	-1431655765
+ 626 0074 00000000 		.word	tail
+ 627 0078 00600240 		.word	1073897472
+ 628 007c 00000000 		.word	fifoBuff
+ 629 0080 00000000 		.word	lockUsartDma
+ 630              		.cfi_endproc
+ 631              	.LFE897:
+ 633              		.section	.text.call2,"ax",%progbits
+ 634              		.align	1
+ 635              		.global	call2
+ 636              		.syntax unified
+ 637              		.thumb
+ 638              		.thumb_func
+ 640              	call2:
+ 641              	.LFB898:
  163:Core/Src/usart.c **** 
  164:Core/Src/usart.c **** 
  165:Core/Src/usart.c **** 
  166:Core/Src/usart.c **** 
  167:Core/Src/usart.c **** 
  168:Core/Src/usart.c **** 
- 169:Core/Src/usart.c **** void call2(){
- 633              		.loc 1 169 13 is_stmt 1 view -0
- 634              		.cfi_startproc
- 635              		@ args = 0, pretend = 0, frame = 0
- 636              		@ frame_needed = 0, uses_anonymous_args = 0
- 637              		@ link register save eliminated.
- 170:Core/Src/usart.c **** 
- 171:Core/Src/usart.c **** }
- 638              		.loc 1 171 1 view .LVU183
- 639 0000 7047     		bx	lr
- 640              		.cfi_endproc
- 641              	.LFE865:
- 643              		.section	.text.DMA1_Stream3_IRQHandler,"ax",%progbits
- 644              		.align	1
- 645              		.global	DMA1_Stream3_IRQHandler
- 646              		.syntax unified
- 647              		.thumb
- 648              		.thumb_func
- 650              	DMA1_Stream3_IRQHandler:
- 651              	.LFB866:
- 172:Core/Src/usart.c **** void DMA1_Stream3_IRQHandler(void) {
- 652              		.loc 1 172 36 view -0
- 653              		.cfi_startproc
- 654              		@ args = 0, pretend = 0, frame = 0
- 655              		@ frame_needed = 0, uses_anonymous_args = 0
- 656 0000 08B5     		push	{r3, lr}
- 657              	.LCFI4:
- 658              		.cfi_def_cfa_offset 8
- 659              		.cfi_offset 3, -8
- 660              		.cfi_offset 14, -4
- 173:Core/Src/usart.c ****     if (DMA1->LISR & DMA_LISR_TCIF3) {        // Transfer Complete
- 661              		.loc 1 173 5 view .LVU185
- 662              		.loc 1 173 13 is_stmt 0 view .LVU186
- 663 0002 074B     		ldr	r3, .L35
- 664 0004 1B68     		ldr	r3, [r3]
- 665              		.loc 1 173 8 view .LVU187
- 666 0006 13F0006F 		tst	r3, #134217728
- 667 000a 00D1     		bne	.L34
- 668              	.L31:
- 174:Core/Src/usart.c ****         DMA1->LIFCR |= DMA_LIFCR_CTCIF3;
- 175:Core/Src/usart.c ****         call1();
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 49
+ 169:Core/Src/usart.c **** 
+ 170:Core/Src/usart.c **** void call2(){
+ 642              		.loc 1 170 13 is_stmt 1 view -0
+ 643              		.cfi_startproc
+ 644              		@ args = 0, pretend = 0, frame = 0
+ 645              		@ frame_needed = 0, uses_anonymous_args = 0
+ 646              		@ link register save eliminated.
+ 171:Core/Src/usart.c **** 
+ 172:Core/Src/usart.c **** }
+ 647              		.loc 1 172 1 view .LVU192
+ 648 0000 7047     		bx	lr
+ 649              		.cfi_endproc
+ 650              	.LFE898:
+ 652              		.section	.text.DMA1_Stream3_IRQHandler,"ax",%progbits
+ 653              		.align	1
+ 654              		.global	DMA1_Stream3_IRQHandler
+ 655              		.syntax unified
+ 656              		.thumb
+ 657              		.thumb_func
+ 659              	DMA1_Stream3_IRQHandler:
+ 660              	.LFB899:
+ 173:Core/Src/usart.c **** void DMA1_Stream3_IRQHandler(void) {
+ 661              		.loc 1 173 36 view -0
+ 662              		.cfi_startproc
+ 663              		@ args = 0, pretend = 0, frame = 0
+ 664              		@ frame_needed = 0, uses_anonymous_args = 0
+ 665 0000 08B5     		push	{r3, lr}
+ 666              	.LCFI3:
+ 667              		.cfi_def_cfa_offset 8
+ 668              		.cfi_offset 3, -8
+ 669              		.cfi_offset 14, -4
+ 174:Core/Src/usart.c ****     if (DMA1->LISR & DMA_LISR_TCIF3) {        // Transfer Complete
+ARM GAS  /tmp/ccDblWGg.s 			page 49
 
 
+ 670              		.loc 1 174 5 view .LVU194
+ 671              		.loc 1 174 13 is_stmt 0 view .LVU195
+ 672 0002 074B     		ldr	r3, .L35
+ 673 0004 1B68     		ldr	r3, [r3]
+ 674              		.loc 1 174 8 view .LVU196
+ 675 0006 13F0006F 		tst	r3, #134217728
+ 676 000a 00D1     		bne	.L34
+ 677              	.L31:
+ 175:Core/Src/usart.c ****         DMA1->LIFCR |= DMA_LIFCR_CTCIF3;
+ 176:Core/Src/usart.c ****         call1();
+ 177:Core/Src/usart.c ****     }
+ 178:Core/Src/usart.c **** }
+ 678              		.loc 1 178 1 view .LVU197
+ 679 000c 08BD     		pop	{r3, pc}
+ 680              	.L34:
+ 175:Core/Src/usart.c ****         DMA1->LIFCR |= DMA_LIFCR_CTCIF3;
+ 681              		.loc 1 175 9 is_stmt 1 view .LVU198
+ 175:Core/Src/usart.c ****         DMA1->LIFCR |= DMA_LIFCR_CTCIF3;
+ 682              		.loc 1 175 13 is_stmt 0 view .LVU199
+ 683 000e 044A     		ldr	r2, .L35
+ 684 0010 9368     		ldr	r3, [r2, #8]
+ 175:Core/Src/usart.c ****         DMA1->LIFCR |= DMA_LIFCR_CTCIF3;
+ 685              		.loc 1 175 21 view .LVU200
+ 686 0012 43F00063 		orr	r3, r3, #134217728
+ 687 0016 9360     		str	r3, [r2, #8]
  176:Core/Src/usart.c ****     }
- 177:Core/Src/usart.c **** }
- 669              		.loc 1 177 1 view .LVU188
- 670 000c 08BD     		pop	{r3, pc}
- 671              	.L34:
- 174:Core/Src/usart.c ****         DMA1->LIFCR |= DMA_LIFCR_CTCIF3;
- 672              		.loc 1 174 9 is_stmt 1 view .LVU189
- 174:Core/Src/usart.c ****         DMA1->LIFCR |= DMA_LIFCR_CTCIF3;
- 673              		.loc 1 174 13 is_stmt 0 view .LVU190
- 674 000e 044A     		ldr	r2, .L35
- 675 0010 9368     		ldr	r3, [r2, #8]
- 174:Core/Src/usart.c ****         DMA1->LIFCR |= DMA_LIFCR_CTCIF3;
- 676              		.loc 1 174 21 view .LVU191
- 677 0012 43F00063 		orr	r3, r3, #134217728
- 678 0016 9360     		str	r3, [r2, #8]
- 175:Core/Src/usart.c ****     }
- 679              		.loc 1 175 9 is_stmt 1 view .LVU192
- 680 0018 FFF7FEFF 		bl	call1
- 681              	.LVL11:
- 682              		.loc 1 177 1 is_stmt 0 view .LVU193
- 683 001c F6E7     		b	.L31
- 684              	.L36:
- 685 001e 00BF     		.align	2
- 686              	.L35:
- 687 0020 00600240 		.word	1073897472
- 688              		.cfi_endproc
- 689              	.LFE866:
- 691              		.section	.text.DMA1_Stream1_IRQHandler,"ax",%progbits
- 692              		.align	1
- 693              		.global	DMA1_Stream1_IRQHandler
- 694              		.syntax unified
- 695              		.thumb
- 696              		.thumb_func
- 698              	DMA1_Stream1_IRQHandler:
- 699              	.LFB867:
- 178:Core/Src/usart.c **** 
- 179:Core/Src/usart.c **** void DMA1_Stream1_IRQHandler(void) {
- 700              		.loc 1 179 36 is_stmt 1 view -0
- 701              		.cfi_startproc
- 702              		@ args = 0, pretend = 0, frame = 0
- 703              		@ frame_needed = 0, uses_anonymous_args = 0
- 704              		@ link register save eliminated.
- 180:Core/Src/usart.c **** 	if (DMA1->LISR & DMA_LISR_TCIF1) {
- 705              		.loc 1 180 2 view .LVU195
- 706              		.loc 1 180 10 is_stmt 0 view .LVU196
- 707 0000 044B     		ldr	r3, .L39
- 708 0002 1B68     		ldr	r3, [r3]
- 709              		.loc 1 180 5 view .LVU197
- 710 0004 13F4006F 		tst	r3, #2048
- 711 0008 03D0     		beq	.L37
- 181:Core/Src/usart.c **** 		DMA1->LIFCR = DMA_LIFCR_CTCIF1; // Сброс флага TCIF1
- 712              		.loc 1 181 3 is_stmt 1 view .LVU198
- 713              		.loc 1 181 15 is_stmt 0 view .LVU199
- 714 000a 024B     		ldr	r3, .L39
- 715 000c 4FF40062 		mov	r2, #2048
- 716 0010 9A60     		str	r2, [r3, #8]
- 717              	.L37:
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 50
+ 688              		.loc 1 176 9 is_stmt 1 view .LVU201
+ 689 0018 FFF7FEFF 		bl	call1
+ 690              	.LVL14:
+ 691              		.loc 1 178 1 is_stmt 0 view .LVU202
+ 692 001c F6E7     		b	.L31
+ 693              	.L36:
+ 694 001e 00BF     		.align	2
+ 695              	.L35:
+ 696 0020 00600240 		.word	1073897472
+ 697              		.cfi_endproc
+ 698              	.LFE899:
+ 700              		.section	.text.DMA1_Stream1_IRQHandler,"ax",%progbits
+ 701              		.align	1
+ 702              		.global	DMA1_Stream1_IRQHandler
+ 703              		.syntax unified
+ 704              		.thumb
+ 705              		.thumb_func
+ 707              	DMA1_Stream1_IRQHandler:
+ 708              	.LFB900:
+ 179:Core/Src/usart.c **** 
+ 180:Core/Src/usart.c **** void DMA1_Stream1_IRQHandler(void) {
+ 709              		.loc 1 180 36 is_stmt 1 view -0
+ 710              		.cfi_startproc
+ 711              		@ args = 0, pretend = 0, frame = 0
+ 712              		@ frame_needed = 0, uses_anonymous_args = 0
+ 713              		@ link register save eliminated.
+ 181:Core/Src/usart.c **** 	if (DMA1->LISR & DMA_LISR_TCIF1) {
+ 714              		.loc 1 181 2 view .LVU204
+ 715              		.loc 1 181 10 is_stmt 0 view .LVU205
+ 716 0000 044B     		ldr	r3, .L39
+ 717 0002 1B68     		ldr	r3, [r3]
+ARM GAS  /tmp/ccDblWGg.s 			page 50
 
 
- 182:Core/Src/usart.c **** 		// flag1 = tx_end;
- 183:Core/Src/usart.c **** 	}
- 184:Core/Src/usart.c **** 	// if (DMA1->LISR & DMA_LISR_TEIF1) {
- 185:Core/Src/usart.c **** 	// 	DMA1->LIFCR = DMA_LIFCR_CTEIF1; // Сброс флага TEIF1
- 186:Core/Src/usart.c **** 	// 	DMA1_Stream1->CR &= ~DMA_SxCR_EN;
- 187:Core/Src/usart.c **** 	// 	while(DMA1_Stream1->CR & DMA_SxCR_EN);
- 188:Core/Src/usart.c **** 	// 	DMA1_Stream1->CR |= DMA_SxCR_EN;
- 189:Core/Src/usart.c **** 	// }
- 190:Core/Src/usart.c **** }...
- 718              		.loc 1 190 1 view .LVU200
- 719 0012 7047     		bx	lr
- 720              	.L40:
- 721              		.align	2
- 722              	.L39:
- 723 0014 00600240 		.word	1073897472
- 724              		.cfi_endproc
- 725              	.LFE867:
- 727              		.section	.bss.lockUsartDma,"aw",%nobits
- 730              	lockUsartDma:
- 731 0000 00       		.space	1
- 732              		.section	.bss.fifoBuff,"aw",%nobits
- 733              		.align	2
- 736              	fifoBuff:
- 737 0000 00000000 		.space	192
- 737      00000000 
- 737      00000000 
- 737      00000000 
- 737      00000000 
- 738              		.section	.bss.tail,"aw",%nobits
- 741              	tail:
- 742 0000 00       		.space	1
- 743              		.section	.bss.it,"aw",%nobits
- 746              	it:
- 747 0000 00       		.space	1
- 748              		.section	.bss.USART_req_tail,"aw",%nobits
- 749              		.align	1
- 752              	USART_req_tail:
- 753 0000 0000     		.space	2
- 754              		.section	.bss.USART_req_it,"aw",%nobits
- 755              		.align	1
- 758              	USART_req_it:
- 759 0000 0000     		.space	2
- 760              		.global	USART_req_start_index
- 761              		.section	.bss.USART_req_start_index,"aw",%nobits
- 762              		.align	1
- 765              	USART_req_start_index:
- 766 0000 0000     		.space	2
- 767              		.global	USART_req_size
- 768              		.section	.bss.USART_req_size,"aw",%nobits
- 769              		.align	1
- 772              	USART_req_size:
- 773 0000 0000     		.space	2
- 774              		.global	USART_req
- 775              		.section	.bss.USART_req,"aw",%nobits
- 778              	USART_req:
- 779 0000 00       		.space	1
- 780              		.global	start_message
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 51
+ 718              		.loc 1 181 5 view .LVU206
+ 719 0004 13F4006F 		tst	r3, #2048
+ 720 0008 03D0     		beq	.L37
+ 182:Core/Src/usart.c **** 		DMA1->LIFCR = DMA_LIFCR_CTCIF1; // Сброс флага TCIF1
+ 721              		.loc 1 182 3 is_stmt 1 view .LVU207
+ 722              		.loc 1 182 15 is_stmt 0 view .LVU208
+ 723 000a 024B     		ldr	r3, .L39
+ 724 000c 4FF40062 		mov	r2, #2048
+ 725 0010 9A60     		str	r2, [r3, #8]
+ 726              	.L37:
+ 183:Core/Src/usart.c **** 		// flag1 = tx_end;
+ 184:Core/Src/usart.c **** 	}
+ 185:Core/Src/usart.c **** 	// if (DMA1->LISR & DMA_LISR_TEIF1) {
+ 186:Core/Src/usart.c **** 	// 	DMA1->LIFCR = DMA_LIFCR_CTEIF1; // Сброс флага TEIF1
+ 187:Core/Src/usart.c **** 	// 	DMA1_Stream1->CR &= ~DMA_SxCR_EN;
+ 188:Core/Src/usart.c **** 	// 	while(DMA1_Stream1->CR & DMA_SxCR_EN);
+ 189:Core/Src/usart.c **** 	// 	DMA1_Stream1->CR |= DMA_SxCR_EN;
+ 190:Core/Src/usart.c **** 	// }
+ 191:Core/Src/usart.c **** }
+ 727              		.loc 1 191 1 view .LVU209
+ 728 0012 7047     		bx	lr
+ 729              	.L40:
+ 730              		.align	2
+ 731              	.L39:
+ 732 0014 00600240 		.word	1073897472
+ 733              		.cfi_endproc
+ 734              	.LFE900:
+ 736              		.section	.bss.lockUsartDma,"aw",%nobits
+ 739              	lockUsartDma:
+ 740 0000 00       		.space	1
+ 741              		.section	.bss.fifoBuff,"aw",%nobits
+ 742              		.align	2
+ 745              	fifoBuff:
+ 746 0000 00000000 		.space	192
+ 746      00000000 
+ 746      00000000 
+ 746      00000000 
+ 746      00000000 
+ 747              		.section	.bss.tail,"aw",%nobits
+ 750              	tail:
+ 751 0000 00       		.space	1
+ 752              		.section	.bss.it,"aw",%nobits
+ 755              	it:
+ 756 0000 00       		.space	1
+ 757              		.section	.bss.USART_req_tail,"aw",%nobits
+ 758              		.align	1
+ 761              	USART_req_tail:
+ 762 0000 0000     		.space	2
+ 763              		.section	.bss.USART_req_it,"aw",%nobits
+ 764              		.align	1
+ 767              	USART_req_it:
+ 768 0000 0000     		.space	2
+ 769              		.global	USART_req_start_index
+ 770              		.section	.bss.USART_req_start_index,"aw",%nobits
+ 771              		.align	1
+ 774              	USART_req_start_index:
+ 775 0000 0000     		.space	2
+ARM GAS  /tmp/ccDblWGg.s 			page 51
 
 
- 781              		.section	.bss.start_message,"aw",%nobits
- 782              		.align	2
- 785              	start_message:
- 786 0000 00000000 		.space	4
- 787              		.global	usart_lenOfmess
- 788              		.section	.bss.usart_lenOfmess,"aw",%nobits
- 789              		.align	1
- 792              	usart_lenOfmess:
- 793 0000 0000     		.space	2
- 794              		.global	usart_rx_buffer
- 795              		.section	.bss.usart_rx_buffer,"aw",%nobits
- 796              		.align	2
- 799              	usart_rx_buffer:
- 800 0000 00000000 		.space	255
- 800      00000000 
- 800      00000000 
- 800      00000000 
- 800      00000000 
- 801              		.global	usart_tx_buffer
- 802              		.section	.bss.usart_tx_buffer,"aw",%nobits
- 803              		.align	2
- 806              	usart_tx_buffer:
- 807 0000 00000000 		.space	255
- 807      00000000 
- 807      00000000 
- 807      00000000 
- 807      00000000 
- 808              		.text
- 809              	.Letext0:
- 810              		.file 3 "Drivers/CMSIS/Device/ST/STM32F7xx/Include/stm32f767xx.h"
- 811              		.file 4 "C:\\ST\\STM32CubeIDE_1.19.0\\STM32CubeIDE\\plugins\\com.st.stm32cube.ide.mcu.externaltool
- 812              		.file 5 "C:\\ST\\STM32CubeIDE_1.19.0\\STM32CubeIDE\\plugins\\com.st.stm32cube.ide.mcu.externaltool
- 813              		.file 6 "Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_ll_rcc.h"
- 814              		.file 7 "Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_ll_dma.h"
- 815              		.file 8 "Core/Inc/usart.h"
- 816              		.file 9 "Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_gpio.h"
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s 			page 52
+ 776              		.global	USART_req_size
+ 777              		.section	.bss.USART_req_size,"aw",%nobits
+ 778              		.align	1
+ 781              	USART_req_size:
+ 782 0000 0000     		.space	2
+ 783              		.global	USART_req
+ 784              		.section	.bss.USART_req,"aw",%nobits
+ 787              	USART_req:
+ 788 0000 00       		.space	1
+ 789              		.global	start_message
+ 790              		.section	.bss.start_message,"aw",%nobits
+ 793              	start_message:
+ 794 0000 00       		.space	1
+ 795              		.global	usart_lenOfmess
+ 796              		.section	.bss.usart_lenOfmess,"aw",%nobits
+ 797              		.align	1
+ 800              	usart_lenOfmess:
+ 801 0000 0000     		.space	2
+ 802              		.global	usart_rx_buffer
+ 803              		.section	.bss.usart_rx_buffer,"aw",%nobits
+ 804              		.align	2
+ 807              	usart_rx_buffer:
+ 808 0000 00000000 		.space	255
+ 808      00000000 
+ 808      00000000 
+ 808      00000000 
+ 808      00000000 
+ 809              		.global	usart_tx_buffer
+ 810              		.section	.bss.usart_tx_buffer,"aw",%nobits
+ 811              		.align	2
+ 814              	usart_tx_buffer:
+ 815 0000 00000000 		.space	255
+ 815      00000000 
+ 815      00000000 
+ 815      00000000 
+ 815      00000000 
+ 816              		.text
+ 817              	.Letext0:
+ 818              		.file 3 "Drivers/CMSIS/Device/ST/STM32F7xx/Include/stm32f767xx.h"
+ 819              		.file 4 "/usr/arm-none-eabi/include/machine/_default_types.h"
+ 820              		.file 5 "/usr/arm-none-eabi/include/sys/_stdint.h"
+ 821              		.file 6 "Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_ll_rcc.h"
+ 822              		.file 7 "Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_ll_dma.h"
+ 823              		.file 8 "Core/Inc/usart.h"
+ 824              		.file 9 "Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_gpio.h"
+ARM GAS  /tmp/ccDblWGg.s 			page 52
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 usart.c
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:20     .text.circ_memcpy:00000000 $t
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:26     .text.circ_memcpy:00000000 circ_memcpy
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:76     .text.Usart_Init:00000000 $t
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:82     .text.Usart_Init:00000000 Usart_Init
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:310    .text.Usart_Init:00000100 $d
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:799    .bss.usart_rx_buffer:00000000 usart_rx_buffer
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:325    .text.USART3_IRQHandler:00000000 $t
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:331    .text.USART3_IRQHandler:00000000 USART3_IRQHandler
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:409    .text.USART3_IRQHandler:00000054 $d
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:752    .bss.USART_req_tail:00000000 USART_req_tail
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:758    .bss.USART_req_it:00000000 USART_req_it
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:772    .bss.USART_req_size:00000000 USART_req_size
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:765    .bss.USART_req_start_index:00000000 USART_req_start_index
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:778    .bss.USART_req:00000000 USART_req
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:420    .text.addElement:00000000 $t
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:426    .text.addElement:00000000 addElement
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:524    .text.addElement:00000080 $d
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:741    .bss.tail:00000000 tail
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:736    .bss.fifoBuff:00000000 fifoBuff
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:730    .bss.lockUsartDma:00000000 lockUsartDma
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:746    .bss.it:00000000 it
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:534    .text.call1:00000000 $t
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:540    .text.call1:00000000 call1
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:615    .text.call1:0000006c $d
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:625    .text.call2:00000000 $t
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:631    .text.call2:00000000 call2
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:644    .text.DMA1_Stream3_IRQHandler:00000000 $t
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:650    .text.DMA1_Stream3_IRQHandler:00000000 DMA1_Stream3_IRQHandler
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:687    .text.DMA1_Stream3_IRQHandler:00000020 $d
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:692    .text.DMA1_Stream1_IRQHandler:00000000 $t
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:698    .text.DMA1_Stream1_IRQHandler:00000000 DMA1_Stream1_IRQHandler
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:723    .text.DMA1_Stream1_IRQHandler:00000014 $d
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:731    .bss.lockUsartDma:00000000 $d
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:733    .bss.fifoBuff:00000000 $d
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:742    .bss.tail:00000000 $d
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:747    .bss.it:00000000 $d
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:749    .bss.USART_req_tail:00000000 $d
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:755    .bss.USART_req_it:00000000 $d
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:762    .bss.USART_req_start_index:00000000 $d
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:769    .bss.USART_req_size:00000000 $d
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:779    .bss.USART_req:00000000 $d
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:785    .bss.start_message:00000000 start_message
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:782    .bss.start_message:00000000 $d
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:792    .bss.usart_lenOfmess:00000000 usart_lenOfmess
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:789    .bss.usart_lenOfmess:00000000 $d
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:796    .bss.usart_rx_buffer:00000000 $d
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:806    .bss.usart_tx_buffer:00000000 usart_tx_buffer
-C:\Users\frees\AppData\Local\Temp\ccHn20Lq.s:803    .bss.usart_tx_buffer:00000000 $d
+     /tmp/ccDblWGg.s:20     .text.circ_memcpy:00000000 $t
+     /tmp/ccDblWGg.s:26     .text.circ_memcpy:00000000 circ_memcpy
+     /tmp/ccDblWGg.s:84     .text.Usart_Init:00000000 $t
+     /tmp/ccDblWGg.s:90     .text.Usart_Init:00000000 Usart_Init
+     /tmp/ccDblWGg.s:320    .text.Usart_Init:00000100 $d
+     /tmp/ccDblWGg.s:807    .bss.usart_rx_buffer:00000000 usart_rx_buffer
+     /tmp/ccDblWGg.s:335    .text.USART3_IRQHandler:00000000 $t
+     /tmp/ccDblWGg.s:341    .text.USART3_IRQHandler:00000000 USART3_IRQHandler
+     /tmp/ccDblWGg.s:419    .text.USART3_IRQHandler:00000054 $d
+     /tmp/ccDblWGg.s:761    .bss.USART_req_tail:00000000 USART_req_tail
+     /tmp/ccDblWGg.s:767    .bss.USART_req_it:00000000 USART_req_it
+     /tmp/ccDblWGg.s:781    .bss.USART_req_size:00000000 USART_req_size
+     /tmp/ccDblWGg.s:774    .bss.USART_req_start_index:00000000 USART_req_start_index
+     /tmp/ccDblWGg.s:787    .bss.USART_req:00000000 USART_req
+     /tmp/ccDblWGg.s:430    .text.addElement:00000000 $t
+     /tmp/ccDblWGg.s:436    .text.addElement:00000000 addElement
+     /tmp/ccDblWGg.s:533    .text.addElement:00000084 $d
+     /tmp/ccDblWGg.s:739    .bss.lockUsartDma:00000000 lockUsartDma
+     /tmp/ccDblWGg.s:755    .bss.it:00000000 it
+     /tmp/ccDblWGg.s:745    .bss.fifoBuff:00000000 fifoBuff
+     /tmp/ccDblWGg.s:750    .bss.tail:00000000 tail
+     /tmp/ccDblWGg.s:543    .text.call1:00000000 $t
+     /tmp/ccDblWGg.s:549    .text.call1:00000000 call1
+     /tmp/ccDblWGg.s:624    .text.call1:0000006c $d
+     /tmp/ccDblWGg.s:634    .text.call2:00000000 $t
+     /tmp/ccDblWGg.s:640    .text.call2:00000000 call2
+     /tmp/ccDblWGg.s:653    .text.DMA1_Stream3_IRQHandler:00000000 $t
+     /tmp/ccDblWGg.s:659    .text.DMA1_Stream3_IRQHandler:00000000 DMA1_Stream3_IRQHandler
+     /tmp/ccDblWGg.s:696    .text.DMA1_Stream3_IRQHandler:00000020 $d
+     /tmp/ccDblWGg.s:701    .text.DMA1_Stream1_IRQHandler:00000000 $t
+     /tmp/ccDblWGg.s:707    .text.DMA1_Stream1_IRQHandler:00000000 DMA1_Stream1_IRQHandler
+     /tmp/ccDblWGg.s:732    .text.DMA1_Stream1_IRQHandler:00000014 $d
+     /tmp/ccDblWGg.s:740    .bss.lockUsartDma:00000000 $d
+     /tmp/ccDblWGg.s:742    .bss.fifoBuff:00000000 $d
+     /tmp/ccDblWGg.s:751    .bss.tail:00000000 $d
+     /tmp/ccDblWGg.s:756    .bss.it:00000000 $d
+     /tmp/ccDblWGg.s:758    .bss.USART_req_tail:00000000 $d
+     /tmp/ccDblWGg.s:764    .bss.USART_req_it:00000000 $d
+     /tmp/ccDblWGg.s:771    .bss.USART_req_start_index:00000000 $d
+     /tmp/ccDblWGg.s:778    .bss.USART_req_size:00000000 $d
+     /tmp/ccDblWGg.s:788    .bss.USART_req:00000000 $d
+     /tmp/ccDblWGg.s:793    .bss.start_message:00000000 start_message
+     /tmp/ccDblWGg.s:794    .bss.start_message:00000000 $d
+     /tmp/ccDblWGg.s:800    .bss.usart_lenOfmess:00000000 usart_lenOfmess
+     /tmp/ccDblWGg.s:797    .bss.usart_lenOfmess:00000000 $d
+     /tmp/ccDblWGg.s:804    .bss.usart_rx_buffer:00000000 $d
+     /tmp/ccDblWGg.s:814    .bss.usart_tx_buffer:00000000 usart_tx_buffer
+     /tmp/ccDblWGg.s:811    .bss.usart_tx_buffer:00000000 $d
 
 UNDEFINED SYMBOLS
 HAL_GPIO_TogglePin

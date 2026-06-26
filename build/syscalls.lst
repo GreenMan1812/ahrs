@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccySdDCc.s 			page 1
+ARM GAS  /tmp/ccYy3ZYA.s 			page 1
 
 
    1              		.cpu cortex-m7
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccySdDCc.s 			page 1
   29:Core/Src/syscalls.c **** #include <time.h>
   30:Core/Src/syscalls.c **** #include <sys/time.h>
   31:Core/Src/syscalls.c **** #include <sys/times.h>
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccySdDCc.s 			page 2
+ARM GAS  /tmp/ccYy3ZYA.s 			page 2
 
 
   32:Core/Src/syscalls.c **** 
@@ -118,7 +118,7 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccySdDCc.s 			page 1
   66              	_kill:
   67              	.LVL0:
   68              	.LFB27:
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccySdDCc.s 			page 3
+ARM GAS  /tmp/ccYy3ZYA.s 			page 3
 
 
   52:Core/Src/syscalls.c **** 
@@ -178,7 +178,7 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccySdDCc.s 			page 1
  114              		.cfi_offset 14, -4
   63:Core/Src/syscalls.c ****   _kill(status, -1);
  115              		.loc 1 63 3 is_stmt 1 view .LVU15
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccySdDCc.s 			page 4
+ARM GAS  /tmp/ccYy3ZYA.s 			page 4
 
 
  116 0002 4FF0FF31 		mov	r1, #-1
@@ -217,8 +217,8 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccySdDCc.s 			page 1
  146              		.cfi_offset 5, -12
  147              		.cfi_offset 6, -8
  148              		.cfi_offset 14, -4
- 149 0002 0C46     		mov	r4, r1
- 150 0004 1646     		mov	r6, r2
+ 149 0002 0E46     		mov	r6, r1
+ 150 0004 1546     		mov	r5, r2
   69:Core/Src/syscalls.c ****   (void)file;
  151              		.loc 1 69 3 is_stmt 1 view .LVU21
   70:Core/Src/syscalls.c ****   int DataIdx;
@@ -228,7 +228,7 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccySdDCc.s 			page 1
  153              		.loc 1 72 3 view .LVU23
  154              	.LVL5:
  155              		.loc 1 72 16 is_stmt 0 view .LVU24
- 156 0006 0025     		movs	r5, #0
+ 156 0006 0024     		movs	r4, #0
  157              		.loc 1 72 3 view .LVU25
  158 0008 06E0     		b	.L9
  159              	.LVL6:
@@ -238,27 +238,27 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccySdDCc.s 			page 1
  161              		.loc 1 74 5 is_stmt 1 view .LVU26
  162              		.loc 1 74 14 is_stmt 0 view .LVU27
  163 000a FFF7FEFF 		bl	__io_getchar
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccySdDCc.s 			page 5
+ARM GAS  /tmp/ccYy3ZYA.s 			page 5
 
 
  164              	.LVL7:
  165              		.loc 1 74 9 discriminator 1 view .LVU28
- 166 000e 2146     		mov	r1, r4
+ 166 000e 3146     		mov	r1, r6
  167              	.LVL8:
  168              		.loc 1 74 12 discriminator 1 view .LVU29
  169 0010 01F8010B 		strb	r0, [r1], #1
  170              	.LVL9:
   72:Core/Src/syscalls.c ****   {
  171              		.loc 1 72 43 is_stmt 1 discriminator 3 view .LVU30
- 172 0014 0135     		adds	r5, r5, #1
+ 172 0014 0134     		adds	r4, r4, #1
  173              	.LVL10:
  174              		.loc 1 74 9 is_stmt 0 discriminator 1 view .LVU31
- 175 0016 0C46     		mov	r4, r1
+ 175 0016 0E46     		mov	r6, r1
  176              	.LVL11:
  177              	.L9:
   72:Core/Src/syscalls.c ****   {
  178              		.loc 1 72 29 is_stmt 1 discriminator 1 view .LVU32
- 179 0018 B542     		cmp	r5, r6
+ 179 0018 AC42     		cmp	r4, r5
  180 001a F6DB     		blt	.L10
   75:Core/Src/syscalls.c ****   }
   76:Core/Src/syscalls.c **** 
@@ -266,7 +266,7 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccySdDCc.s 			page 1
  181              		.loc 1 77 3 view .LVU33
   78:Core/Src/syscalls.c **** }
  182              		.loc 1 78 1 is_stmt 0 view .LVU34
- 183 001c 3046     		mov	r0, r6
+ 183 001c 2846     		mov	r0, r5
  184 001e 70BD     		pop	{r4, r5, r6, pc}
  185              		.loc 1 78 1 view .LVU35
  186              		.cfi_endproc
@@ -298,7 +298,7 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccySdDCc.s 			page 1
  211 0002 0C46     		mov	r4, r1
  212 0004 1646     		mov	r6, r2
   82:Core/Src/syscalls.c ****   (void)file;
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccySdDCc.s 			page 6
+ARM GAS  /tmp/ccYy3ZYA.s 			page 6
 
 
  213              		.loc 1 82 3 is_stmt 1 view .LVU38
@@ -358,7 +358,7 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccySdDCc.s 			page 1
  256              		.cfi_startproc
  257              		@ args = 0, pretend = 0, frame = 0
  258              		@ frame_needed = 0, uses_anonymous_args = 0
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccySdDCc.s 			page 7
+ARM GAS  /tmp/ccYy3ZYA.s 			page 7
 
 
  259              		@ link register save eliminated.
@@ -418,7 +418,7 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccySdDCc.s 			page 1
  306              	_isatty:
  307              	.LVL22:
  308              	.LFB33:
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccySdDCc.s 			page 8
+ARM GAS  /tmp/ccYy3ZYA.s 			page 8
 
 
  105:Core/Src/syscalls.c **** 
@@ -478,7 +478,7 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccySdDCc.s 			page 1
  352              		.align	1
  353              		.global	_open
  354              		.syntax unified
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccySdDCc.s 			page 9
+ARM GAS  /tmp/ccYy3ZYA.s 			page 9
 
 
  355              		.thumb
@@ -538,7 +538,7 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccySdDCc.s 			page 1
  401              		.cfi_startproc
  402              		@ args = 0, pretend = 0, frame = 0
  403              		@ frame_needed = 0, uses_anonymous_args = 0
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccySdDCc.s 			page 10
+ARM GAS  /tmp/ccYy3ZYA.s 			page 10
 
 
  404              		.loc 1 129 1 is_stmt 0 view .LVU83
@@ -598,7 +598,7 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccySdDCc.s 			page 1
  139:Core/Src/syscalls.c ****   return -1;
  451              		.loc 1 139 3 is_stmt 1 view .LVU94
  140:Core/Src/syscalls.c **** }
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccySdDCc.s 			page 11
+ARM GAS  /tmp/ccYy3ZYA.s 			page 11
 
 
  452              		.loc 1 140 1 is_stmt 0 view .LVU95
@@ -658,7 +658,7 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccySdDCc.s 			page 1
  499              		.loc 1 151 3 view .LVU103
  500              		.loc 1 151 15 is_stmt 0 view .LVU104
  501 0000 4FF40053 		mov	r3, #8192
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccySdDCc.s 			page 12
+ARM GAS  /tmp/ccYy3ZYA.s 			page 12
 
 
  502 0004 4B60     		str	r3, [r1, #4]
@@ -718,7 +718,7 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccySdDCc.s 			page 1
  549              		.global	_fork
  550              		.syntax unified
  551              		.thumb
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccySdDCc.s 			page 13
+ARM GAS  /tmp/ccYy3ZYA.s 			page 13
 
 
  552              		.thumb_func
@@ -778,7 +778,7 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccySdDCc.s 			page 1
  172:Core/Src/syscalls.c ****   (void)argv;
  599              		.loc 1 172 3 view .LVU124
  173:Core/Src/syscalls.c ****   (void)env;
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccySdDCc.s 			page 14
+ARM GAS  /tmp/ccYy3ZYA.s 			page 14
 
 
  600              		.loc 1 173 3 view .LVU125
@@ -811,59 +811,59 @@ ARM GAS  C:\Users\frees\AppData\Local\Temp\ccySdDCc.s 			page 1
  629              		.weak	__io_getchar
  630              		.text
  631              	.Letext0:
- 632              		.file 2 "C:\\ST\\STM32CubeIDE_1.19.0\\STM32CubeIDE\\plugins\\com.st.stm32cube.ide.mcu.externaltool
- 633              		.file 3 "C:\\ST\\STM32CubeIDE_1.19.0\\STM32CubeIDE\\plugins\\com.st.stm32cube.ide.mcu.externaltool
- 634              		.file 4 "C:\\ST\\STM32CubeIDE_1.19.0\\STM32CubeIDE\\plugins\\com.st.stm32cube.ide.mcu.externaltool
- 635              		.file 5 "C:\\ST\\STM32CubeIDE_1.19.0\\STM32CubeIDE\\plugins\\com.st.stm32cube.ide.mcu.externaltool
- 636              		.file 6 "C:\\ST\\STM32CubeIDE_1.19.0\\STM32CubeIDE\\plugins\\com.st.stm32cube.ide.mcu.externaltool
- 637              		.file 7 "C:\\ST\\STM32CubeIDE_1.19.0\\STM32CubeIDE\\plugins\\com.st.stm32cube.ide.mcu.externaltool
- 638              		.file 8 "C:\\ST\\STM32CubeIDE_1.19.0\\STM32CubeIDE\\plugins\\com.st.stm32cube.ide.mcu.externaltool
- 639              		.file 9 "C:\\ST\\STM32CubeIDE_1.19.0\\STM32CubeIDE\\plugins\\com.st.stm32cube.ide.mcu.externaltool
-ARM GAS  C:\Users\frees\AppData\Local\Temp\ccySdDCc.s 			page 15
+ 632              		.file 2 "/usr/arm-none-eabi/include/machine/_default_types.h"
+ 633              		.file 3 "/usr/arm-none-eabi/include/sys/_types.h"
+ 634              		.file 4 "/usr/arm-none-eabi/include/sys/_timeval.h"
+ 635              		.file 5 "/usr/arm-none-eabi/include/sys/_timespec.h"
+ 636              		.file 6 "/usr/arm-none-eabi/include/sys/types.h"
+ 637              		.file 7 "/usr/arm-none-eabi/include/sys/stat.h"
+ 638              		.file 8 "/usr/arm-none-eabi/include/sys/times.h"
+ 639              		.file 9 "/usr/arm-none-eabi/include/sys/errno.h"
+ARM GAS  /tmp/ccYy3ZYA.s 			page 15
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 syscalls.c
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:20     .text.initialise_monitor_handles:00000000 $t
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:26     .text.initialise_monitor_handles:00000000 initialise_monitor_handles
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:39     .text._getpid:00000000 $t
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:45     .text._getpid:00000000 _getpid
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:60     .text._kill:00000000 $t
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:66     .text._kill:00000000 _kill
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:95     .text._exit:00000000 $t
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:101    .text._exit:00000000 _exit
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:128    .text._read:00000000 $t
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:134    .text._read:00000000 _read
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:190    .text._write:00000000 $t
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:196    .text._write:00000000 _write
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:246    .text._close:00000000 $t
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:252    .text._close:00000000 _close
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:271    .text._fstat:00000000 $t
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:277    .text._fstat:00000000 _fstat
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:300    .text._isatty:00000000 $t
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:306    .text._isatty:00000000 _isatty
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:325    .text._lseek:00000000 $t
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:331    .text._lseek:00000000 _lseek
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:352    .text._open:00000000 $t
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:358    .text._open:00000000 _open
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:391    .text._wait:00000000 $t
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:397    .text._wait:00000000 _wait
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:425    .text._unlink:00000000 $t
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:431    .text._unlink:00000000 _unlink
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:459    .text._times:00000000 $t
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:465    .text._times:00000000 _times
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:484    .text._stat:00000000 $t
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:490    .text._stat:00000000 _stat
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:513    .text._link:00000000 $t
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:519    .text._link:00000000 _link
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:548    .text._fork:00000000 $t
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:554    .text._fork:00000000 _fork
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:579    .text._execve:00000000 $t
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:585    .text._execve:00000000 _execve
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:619    .data.environ:00000000 environ
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:616    .data.environ:00000000 $d
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:626    .bss.__env:00000000 __env
-C:\Users\frees\AppData\Local\Temp\ccySdDCc.s:623    .bss.__env:00000000 $d
+     /tmp/ccYy3ZYA.s:20     .text.initialise_monitor_handles:00000000 $t
+     /tmp/ccYy3ZYA.s:26     .text.initialise_monitor_handles:00000000 initialise_monitor_handles
+     /tmp/ccYy3ZYA.s:39     .text._getpid:00000000 $t
+     /tmp/ccYy3ZYA.s:45     .text._getpid:00000000 _getpid
+     /tmp/ccYy3ZYA.s:60     .text._kill:00000000 $t
+     /tmp/ccYy3ZYA.s:66     .text._kill:00000000 _kill
+     /tmp/ccYy3ZYA.s:95     .text._exit:00000000 $t
+     /tmp/ccYy3ZYA.s:101    .text._exit:00000000 _exit
+     /tmp/ccYy3ZYA.s:128    .text._read:00000000 $t
+     /tmp/ccYy3ZYA.s:134    .text._read:00000000 _read
+     /tmp/ccYy3ZYA.s:190    .text._write:00000000 $t
+     /tmp/ccYy3ZYA.s:196    .text._write:00000000 _write
+     /tmp/ccYy3ZYA.s:246    .text._close:00000000 $t
+     /tmp/ccYy3ZYA.s:252    .text._close:00000000 _close
+     /tmp/ccYy3ZYA.s:271    .text._fstat:00000000 $t
+     /tmp/ccYy3ZYA.s:277    .text._fstat:00000000 _fstat
+     /tmp/ccYy3ZYA.s:300    .text._isatty:00000000 $t
+     /tmp/ccYy3ZYA.s:306    .text._isatty:00000000 _isatty
+     /tmp/ccYy3ZYA.s:325    .text._lseek:00000000 $t
+     /tmp/ccYy3ZYA.s:331    .text._lseek:00000000 _lseek
+     /tmp/ccYy3ZYA.s:352    .text._open:00000000 $t
+     /tmp/ccYy3ZYA.s:358    .text._open:00000000 _open
+     /tmp/ccYy3ZYA.s:391    .text._wait:00000000 $t
+     /tmp/ccYy3ZYA.s:397    .text._wait:00000000 _wait
+     /tmp/ccYy3ZYA.s:425    .text._unlink:00000000 $t
+     /tmp/ccYy3ZYA.s:431    .text._unlink:00000000 _unlink
+     /tmp/ccYy3ZYA.s:459    .text._times:00000000 $t
+     /tmp/ccYy3ZYA.s:465    .text._times:00000000 _times
+     /tmp/ccYy3ZYA.s:484    .text._stat:00000000 $t
+     /tmp/ccYy3ZYA.s:490    .text._stat:00000000 _stat
+     /tmp/ccYy3ZYA.s:513    .text._link:00000000 $t
+     /tmp/ccYy3ZYA.s:519    .text._link:00000000 _link
+     /tmp/ccYy3ZYA.s:548    .text._fork:00000000 $t
+     /tmp/ccYy3ZYA.s:554    .text._fork:00000000 _fork
+     /tmp/ccYy3ZYA.s:579    .text._execve:00000000 $t
+     /tmp/ccYy3ZYA.s:585    .text._execve:00000000 _execve
+     /tmp/ccYy3ZYA.s:619    .data.environ:00000000 environ
+     /tmp/ccYy3ZYA.s:616    .data.environ:00000000 $d
+     /tmp/ccYy3ZYA.s:626    .bss.__env:00000000 __env
+     /tmp/ccYy3ZYA.s:623    .bss.__env:00000000 $d
 
 UNDEFINED SYMBOLS
 __errno

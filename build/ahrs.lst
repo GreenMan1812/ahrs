@@ -1,0 +1,1856 @@
+ARM GAS  /tmp/ccTI8A7w.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"ahrs.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "AHRS_Lib/ahrs.c"
+  19              		.section	.text._sub_grid_index,"ax",%progbits
+  20              		.align	1
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  25              	_sub_grid_index:
+  26              	.LVL0:
+  27              	.LFB897:
+   1:AHRS_Lib/ahrs.c **** #include "ahrs.h"
+   2:AHRS_Lib/ahrs.c **** 
+   3:AHRS_Lib/ahrs.c **** #define NUM_INV_MATS 10
+   4:AHRS_Lib/ahrs.c **** #define MAT_DIM 3
+   5:AHRS_Lib/ahrs.c **** static int8_t _grid_index(float* vec);
+   6:AHRS_Lib/ahrs.c **** static int8_t _sub_grid_index(float* vec, int8_t umbrella);
+   7:AHRS_Lib/ahrs.c **** /* inverses: 10 матриц 3x3 -> 10 * 9 = 90 элементов */
+   8:AHRS_Lib/ahrs.c **** static const float _inverses[90] = {
+   9:AHRS_Lib/ahrs.c ****     /* #0 */
+  10:AHRS_Lib/ahrs.c ****     -0.309017f,  0.500000f,  0.190983f,
+  11:AHRS_Lib/ahrs.c ****      0.000000f,  0.000000f, -0.618034f,
+  12:AHRS_Lib/ahrs.c ****     -0.309017f, -0.500000f,  0.190983f,
+  13:AHRS_Lib/ahrs.c **** 
+  14:AHRS_Lib/ahrs.c ****     /* #1 */
+  15:AHRS_Lib/ahrs.c ****     -0.190983f,  0.309017f, -0.500000f,
+  16:AHRS_Lib/ahrs.c ****     -0.500000f, -0.190983f,  0.309017f,
+  17:AHRS_Lib/ahrs.c ****      0.309017f, -0.500000f, -0.190983f,
+  18:AHRS_Lib/ahrs.c **** 
+  19:AHRS_Lib/ahrs.c ****     /* #2 */
+  20:AHRS_Lib/ahrs.c ****     -0.618034f,  0.000000f,  0.000000f,
+  21:AHRS_Lib/ahrs.c ****      0.190983f, -0.309017f, -0.500000f,
+  22:AHRS_Lib/ahrs.c ****      0.190983f, -0.309017f,  0.500000f,
+  23:AHRS_Lib/ahrs.c **** 
+  24:AHRS_Lib/ahrs.c ****     /* #3 */
+  25:AHRS_Lib/ahrs.c ****     -0.500000f,  0.190983f, -0.309017f,
+  26:AHRS_Lib/ahrs.c ****      0.000000f, -0.618034f,  0.000000f,
+  27:AHRS_Lib/ahrs.c ****      0.500000f,  0.190983f, -0.309017f,
+  28:AHRS_Lib/ahrs.c **** 
+  29:AHRS_Lib/ahrs.c ****     /* #4 */
+  30:AHRS_Lib/ahrs.c ****     -0.190983f, -0.309017f, -0.500000f,
+  31:AHRS_Lib/ahrs.c ****     -0.190983f, -0.309017f,  0.500000f,
+ARM GAS  /tmp/ccTI8A7w.s 			page 2
+
+
+  32:AHRS_Lib/ahrs.c ****      0.618034f,  0.000000f,  0.000000f,
+  33:AHRS_Lib/ahrs.c **** 
+  34:AHRS_Lib/ahrs.c ****     /* #5 */
+  35:AHRS_Lib/ahrs.c ****     -0.309017f, -0.500000f, -0.190983f,
+  36:AHRS_Lib/ahrs.c ****      0.190983f,  0.309017f, -0.500000f,
+  37:AHRS_Lib/ahrs.c ****      0.500000f, -0.190983f,  0.309017f,
+  38:AHRS_Lib/ahrs.c **** 
+  39:AHRS_Lib/ahrs.c ****     /* #6 */
+  40:AHRS_Lib/ahrs.c ****      0.309017f, -0.500000f,  0.190983f,
+  41:AHRS_Lib/ahrs.c ****      0.000000f,  0.000000f, -0.618034f,
+  42:AHRS_Lib/ahrs.c ****      0.309017f,  0.500000f,  0.190983f,
+  43:AHRS_Lib/ahrs.c **** 
+  44:AHRS_Lib/ahrs.c ****     /* #7 */
+  45:AHRS_Lib/ahrs.c ****      0.190983f, -0.309017f, -0.500000f,
+  46:AHRS_Lib/ahrs.c ****      0.500000f,  0.190983f,  0.309017f,
+  47:AHRS_Lib/ahrs.c ****     -0.309017f,  0.500000f, -0.190983f,
+  48:AHRS_Lib/ahrs.c **** 
+  49:AHRS_Lib/ahrs.c ****     /* #8 */
+  50:AHRS_Lib/ahrs.c ****      0.500000f, -0.190983f, -0.309017f,
+  51:AHRS_Lib/ahrs.c ****      0.000000f,  0.618034f,  0.000000f,
+  52:AHRS_Lib/ahrs.c ****     -0.500000f, -0.190983f, -0.309017f,
+  53:AHRS_Lib/ahrs.c **** 
+  54:AHRS_Lib/ahrs.c ****     /* #9 */
+  55:AHRS_Lib/ahrs.c ****      0.309017f,  0.500000f, -0.190983f,
+  56:AHRS_Lib/ahrs.c ****     -0.500000f,  0.190983f,  0.309017f,
+  57:AHRS_Lib/ahrs.c ****     -0.190983f, -0.309017f, -0.500000f
+  58:AHRS_Lib/ahrs.c **** };
+  59:AHRS_Lib/ahrs.c **** 
+  60:AHRS_Lib/ahrs.c **** /* _mid_inverses: 10 матриц 3x3 -> 10 * 9 = 90 элементов */
+  61:AHRS_Lib/ahrs.c **** static const float _mid_inverses[90] = {
+  62:AHRS_Lib/ahrs.c ****     /* #0 */
+  63:AHRS_Lib/ahrs.c ****      0.000000f,  1.000000f, -0.618034f,
+  64:AHRS_Lib/ahrs.c ****      0.000000f, -1.000000f, -0.618034f,
+  65:AHRS_Lib/ahrs.c ****     -0.618034f,  0.000000f,  1.000000f,
+  66:AHRS_Lib/ahrs.c **** 
+  67:AHRS_Lib/ahrs.c ****     /* #1 */
+  68:AHRS_Lib/ahrs.c ****     -1.000000f,  0.618034f,  0.000000f,
+  69:AHRS_Lib/ahrs.c ****      0.000000f, -1.000000f,  0.618034f,
+  70:AHRS_Lib/ahrs.c ****      0.618034f,  0.000000f, -1.000000f,
+  71:AHRS_Lib/ahrs.c **** 
+  72:AHRS_Lib/ahrs.c ****     /* #2 */
+  73:AHRS_Lib/ahrs.c ****     -0.618034f,  0.000000f, -1.000000f,
+  74:AHRS_Lib/ahrs.c ****      1.000000f, -0.618034f,  0.000000f,
+  75:AHRS_Lib/ahrs.c ****     -0.618034f,  0.000000f,  1.000000f,
+  76:AHRS_Lib/ahrs.c **** 
+  77:AHRS_Lib/ahrs.c ****     /* #3 */
+  78:AHRS_Lib/ahrs.c ****     -1.000000f, -0.618034f,  0.000000f,
+  79:AHRS_Lib/ahrs.c ****      1.000000f, -0.618034f,  0.000000f,
+  80:AHRS_Lib/ahrs.c ****      0.000000f,  1.000000f, -0.618034f,
+  81:AHRS_Lib/ahrs.c **** 
+  82:AHRS_Lib/ahrs.c ****     /* #4 */
+  83:AHRS_Lib/ahrs.c ****     -1.000000f, -0.618034f,  0.000000f,
+  84:AHRS_Lib/ahrs.c ****      0.618034f,  0.000000f,  1.000000f,
+  85:AHRS_Lib/ahrs.c ****      0.618034f,  0.000000f, -1.000000f,
+  86:AHRS_Lib/ahrs.c **** 
+  87:AHRS_Lib/ahrs.c ****     /* #5 */
+  88:AHRS_Lib/ahrs.c ****     -0.618034f,  0.000000f, -1.000000f,
+ARM GAS  /tmp/ccTI8A7w.s 			page 3
+
+
+  89:AHRS_Lib/ahrs.c ****      1.000000f,  0.618034f,  0.000000f,
+  90:AHRS_Lib/ahrs.c ****      0.000000f, -1.000000f,  0.618034f,
+  91:AHRS_Lib/ahrs.c **** 
+  92:AHRS_Lib/ahrs.c ****     /* #6 */
+  93:AHRS_Lib/ahrs.c ****      0.000000f, -1.000000f, -0.618034f,
+  94:AHRS_Lib/ahrs.c ****      0.000000f,  1.000000f, -0.618034f,
+  95:AHRS_Lib/ahrs.c ****      0.618034f,  0.000000f,  1.000000f,
+  96:AHRS_Lib/ahrs.c **** 
+  97:AHRS_Lib/ahrs.c ****     /* #7 */
+  98:AHRS_Lib/ahrs.c ****      1.000000f, -0.618034f,  0.000000f,
+  99:AHRS_Lib/ahrs.c ****      0.000000f,  1.000000f,  0.618034f,
+ 100:AHRS_Lib/ahrs.c ****     -0.618034f,  0.000000f, -1.000000f,
+ 101:AHRS_Lib/ahrs.c **** 
+ 102:AHRS_Lib/ahrs.c ****     /* #8 */
+ 103:AHRS_Lib/ahrs.c ****      1.000000f,  0.618034f,  0.000000f,
+ 104:AHRS_Lib/ahrs.c ****     -1.000000f,  0.618034f,  0.000000f,
+ 105:AHRS_Lib/ahrs.c ****      0.000000f, -1.000000f, -0.618034f,
+ 106:AHRS_Lib/ahrs.c **** 
+ 107:AHRS_Lib/ahrs.c ****     /* #9 */
+ 108:AHRS_Lib/ahrs.c ****      0.000000f,  1.000000f,  0.618034f,
+ 109:AHRS_Lib/ahrs.c ****     -1.000000f, -0.618034f,  0.000000f,
+ 110:AHRS_Lib/ahrs.c ****      0.618034f,  0.000000f, -1.000000f
+ 111:AHRS_Lib/ahrs.c **** };
+ 112:AHRS_Lib/ahrs.c **** 
+ 113:AHRS_Lib/ahrs.c **** arm_matrix_instance_f32 _arm_matrix_inverses[10];
+ 114:AHRS_Lib/ahrs.c **** arm_matrix_instance_f32 _arm_matrix_mid_inverses[10];
+ 115:AHRS_Lib/ahrs.c **** static const neighbor_umbrella_t _neighbor_umbrellas[3] = {
+ 116:AHRS_Lib/ahrs.c ****     {{9, 8, 7, 12, 14}, 1, 2, 0, 0, 2},
+ 117:AHRS_Lib/ahrs.c ****     {{1,2,4,5,3}, 0,0,2,2,0},
+ 118:AHRS_Lib/ahrs.c ****     {{16,15,13,18,17}, 2,2,0,2,1},
+ 119:AHRS_Lib/ahrs.c **** };
+ 120:AHRS_Lib/ahrs.c **** 
+ 121:AHRS_Lib/ahrs.c **** static const int8_t _key_table[10] = {
+ 122:AHRS_Lib/ahrs.c ****     10, // 0b00
+ 123:AHRS_Lib/ahrs.c ****     4,  // 0b01
+ 124:AHRS_Lib/ahrs.c ****     5,  // 0b10
+ 125:AHRS_Lib/ahrs.c ****     0,
+ 126:AHRS_Lib/ahrs.c ****     3,
+ 127:AHRS_Lib/ahrs.c ****     2,
+ 128:AHRS_Lib/ahrs.c ****     1,
+ 129:AHRS_Lib/ahrs.c ****     0
+ 130:AHRS_Lib/ahrs.c **** };
+ 131:AHRS_Lib/ahrs.c **** uint8_t get_component(int8_t idx, int8_t comp_idx)
+ 132:AHRS_Lib/ahrs.c **** {
+ 133:AHRS_Lib/ahrs.c ****     if(idx < 3){
+ 134:AHRS_Lib/ahrs.c ****         return _neighbor_umbrellas[idx].components[comp_idx];
+ 135:AHRS_Lib/ahrs.c ****     }
+ 136:AHRS_Lib/ahrs.c ****     return (_neighbor_umbrellas[idx % 3].components[comp_idx] + 10) % 20;
+ 137:AHRS_Lib/ahrs.c **** }
+ 138:AHRS_Lib/ahrs.c **** void AHRS_GridInit()
+ 139:AHRS_Lib/ahrs.c **** {
+ 140:AHRS_Lib/ahrs.c ****     for (uint8_t i = 0; i < NUM_INV_MATS; i++) {
+ 141:AHRS_Lib/ahrs.c ****         arm_mat_init_f32(&_arm_matrix_inverses[i], MAT_DIM, MAT_DIM, (float32_t*)_inverses + i * MA
+ 142:AHRS_Lib/ahrs.c ****         arm_mat_init_f32(&_arm_matrix_mid_inverses[i], MAT_DIM, MAT_DIM, (float32_t*)_mid_inverses 
+ 143:AHRS_Lib/ahrs.c ****     }
+ 144:AHRS_Lib/ahrs.c **** }
+ 145:AHRS_Lib/ahrs.c **** 
+ARM GAS  /tmp/ccTI8A7w.s 			page 4
+
+
+ 146:AHRS_Lib/ahrs.c **** int8_t AHRS_SectionGrid(float* vec)
+ 147:AHRS_Lib/ahrs.c **** {
+ 148:AHRS_Lib/ahrs.c ****     int8_t i = _grid_index(vec);
+ 149:AHRS_Lib/ahrs.c ****     if(i == -1) return -1;
+ 150:AHRS_Lib/ahrs.c ****     int8_t j = _sub_grid_index(vec, i);
+ 151:AHRS_Lib/ahrs.c ****     if(j == -1) return -1;
+ 152:AHRS_Lib/ahrs.c ****     return i * 4 + j;
+ 153:AHRS_Lib/ahrs.c **** }
+ 154:AHRS_Lib/ahrs.c **** 
+ 155:AHRS_Lib/ahrs.c **** int8_t _sub_grid_index(float* vec, int8_t i)
+ 156:AHRS_Lib/ahrs.c **** {
+  28              		.loc 1 156 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 16
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		.loc 1 156 1 is_stmt 0 view .LVU1
+  33 0000 10B5     		push	{r4, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 4, -8
+  37              		.cfi_offset 14, -4
+  38 0002 84B0     		sub	sp, sp, #16
+  39              	.LCFI1:
+  40              		.cfi_def_cfa_offset 24
+  41 0004 0C46     		mov	r4, r1
+ 157:AHRS_Lib/ahrs.c ****     float w[3] = {0.0f, 0.0f, 0.0f};
+  42              		.loc 1 157 5 is_stmt 1 view .LVU2
+  43              		.loc 1 157 11 is_stmt 0 view .LVU3
+  44 0006 0023     		movs	r3, #0
+  45 0008 0193     		str	r3, [sp, #4]	@ float
+  46 000a 0293     		str	r3, [sp, #8]	@ float
+  47 000c 0393     		str	r3, [sp, #12]	@ float
+ 158:AHRS_Lib/ahrs.c ****     arm_mat_vec_mult_f32(&_arm_matrix_mid_inverses[i % 10], vec, w);
+  48              		.loc 1 158 5 is_stmt 1 view .LVU4
+  49              		.loc 1 158 54 is_stmt 0 view .LVU5
+  50 000e 384A     		ldr	r2, .L11+8
+  51 0010 82FB0132 		smull	r3, r2, r2, r1
+  52 0014 CB17     		asrs	r3, r1, #31
+  53 0016 C3EBA203 		rsb	r3, r3, r2, asr #2
+  54 001a 03EB8303 		add	r3, r3, r3, lsl #2
+  55 001e A1EB4303 		sub	r3, r1, r3, lsl #1
+  56 0022 5BB2     		sxtb	r3, r3
+  57              		.loc 1 158 5 view .LVU6
+  58 0024 01AA     		add	r2, sp, #4
+  59 0026 0146     		mov	r1, r0
+  60              	.LVL1:
+  61              		.loc 1 158 5 view .LVU7
+  62 0028 3248     		ldr	r0, .L11+12
+  63              	.LVL2:
+  64              		.loc 1 158 5 view .LVU8
+  65 002a 00EBC300 		add	r0, r0, r3, lsl #3
+  66 002e FFF7FEFF 		bl	arm_mat_vec_mult_f32
+  67              	.LVL3:
+ 159:AHRS_Lib/ahrs.c ****     if(i > 9){
+  68              		.loc 1 159 5 is_stmt 1 view .LVU9
+  69              		.loc 1 159 7 is_stmt 0 view .LVU10
+  70 0032 092C     		cmp	r4, #9
+ARM GAS  /tmp/ccTI8A7w.s 			page 5
+
+
+  71 0034 11DD     		ble	.L2
+ 160:AHRS_Lib/ahrs.c ****         w[0] = -w[0];
+  72              		.loc 1 160 9 is_stmt 1 view .LVU11
+  73              		.loc 1 160 18 is_stmt 0 view .LVU12
+  74 0036 DDED017A 		vldr.32	s15, [sp, #4]
+  75              		.loc 1 160 16 view .LVU13
+  76 003a F1EE677A 		vneg.f32	s15, s15
+  77              		.loc 1 160 14 view .LVU14
+  78 003e CDED017A 		vstr.32	s15, [sp, #4]
+ 161:AHRS_Lib/ahrs.c ****         w[1] = -w[1];
+  79              		.loc 1 161 9 is_stmt 1 view .LVU15
+  80              		.loc 1 161 18 is_stmt 0 view .LVU16
+  81 0042 DDED027A 		vldr.32	s15, [sp, #8]
+  82              		.loc 1 161 16 view .LVU17
+  83 0046 F1EE677A 		vneg.f32	s15, s15
+  84              		.loc 1 161 14 view .LVU18
+  85 004a CDED027A 		vstr.32	s15, [sp, #8]
+ 162:AHRS_Lib/ahrs.c ****         w[2] = -w[2];
+  86              		.loc 1 162 9 is_stmt 1 view .LVU19
+  87              		.loc 1 162 18 is_stmt 0 view .LVU20
+  88 004e DDED037A 		vldr.32	s15, [sp, #12]
+  89              		.loc 1 162 16 view .LVU21
+  90 0052 F1EE677A 		vneg.f32	s15, s15
+  91              		.loc 1 162 14 view .LVU22
+  92 0056 CDED037A 		vstr.32	s15, [sp, #12]
+  93              	.L2:
+ 163:AHRS_Lib/ahrs.c ****     }
+ 164:AHRS_Lib/ahrs.c ****     if(fabsf(w[0]) <= 1e-5 || fabsf(w[1]) <= 1e-5 || fabsf(w[2]) <= 1e-5) return -1;
+  94              		.loc 1 164 5 is_stmt 1 view .LVU23
+  95              		.loc 1 164 15 is_stmt 0 view .LVU24
+  96 005a DDED016A 		vldr.32	s13, [sp, #4]
+  97              		.loc 1 164 8 view .LVU25
+  98 005e B0EEE67A 		vabs.f32	s14, s13
+  99 0062 B7EEC77A 		vcvt.f64.f32	d7, s14
+ 100              		.loc 1 164 7 view .LVU26
+ 101 0066 9FED205B 		vldr.64	d5, .L11
+ 102 006a B4EEC57B 		vcmpe.f64	d7, d5
+ 103 006e F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 104 0072 29D9     		bls	.L4
+ 105              		.loc 1 164 38 discriminator 2 view .LVU27
+ 106 0074 9DED026A 		vldr.32	s12, [sp, #8]
+ 107              		.loc 1 164 31 discriminator 2 view .LVU28
+ 108 0078 B0EEC67A 		vabs.f32	s14, s12
+ 109 007c B7EEC77A 		vcvt.f64.f32	d7, s14
+ 110              		.loc 1 164 28 discriminator 2 view .LVU29
+ 111 0080 B4EEC57B 		vcmpe.f64	d7, d5
+ 112 0084 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 113 0088 21D9     		bls	.L5
+ 114              		.loc 1 164 61 discriminator 4 view .LVU30
+ 115 008a DDED035A 		vldr.32	s11, [sp, #12]
+ 116              		.loc 1 164 54 discriminator 4 view .LVU31
+ 117 008e B0EEE57A 		vabs.f32	s14, s11
+ 118 0092 B7EEC77A 		vcvt.f64.f32	d7, s14
+ 119              		.loc 1 164 51 discriminator 4 view .LVU32
+ 120 0096 9FED144B 		vldr.64	d4, .L11
+ 121 009a B4EEC47B 		vcmpe.f64	d7, d4
+ 122 009e F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ARM GAS  /tmp/ccTI8A7w.s 			page 6
+
+
+ 123 00a2 17D9     		bls	.L6
+ 165:AHRS_Lib/ahrs.c **** 
+ 166:AHRS_Lib/ahrs.c ****     if(w[0] < 0) return 3;
+ 124              		.loc 1 166 5 is_stmt 1 view .LVU33
+ 125              		.loc 1 166 7 is_stmt 0 view .LVU34
+ 126 00a4 F5EEC06A 		vcmpe.f32	s13, #0
+ 127 00a8 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 128 00ac 15D4     		bmi	.L7
+ 167:AHRS_Lib/ahrs.c ****     if(w[1] < 0) return 1;
+ 129              		.loc 1 167 5 is_stmt 1 view .LVU35
+ 130              		.loc 1 167 7 is_stmt 0 view .LVU36
+ 131 00ae B5EEC06A 		vcmpe.f32	s12, #0
+ 132 00b2 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 133 00b6 12D4     		bmi	.L8
+ 168:AHRS_Lib/ahrs.c ****     if(w[2] < 0) return 2;
+ 134              		.loc 1 168 5 is_stmt 1 view .LVU37
+ 135              		.loc 1 168 7 is_stmt 0 view .LVU38
+ 136 00b8 F5EEC05A 		vcmpe.f32	s11, #0
+ 137 00bc F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 138 00c0 0FD4     		bmi	.L9
+ 169:AHRS_Lib/ahrs.c ****     return 0;
+ 139              		.loc 1 169 12 view .LVU39
+ 140 00c2 0020     		movs	r0, #0
+ 141              	.L3:
+ 170:AHRS_Lib/ahrs.c **** }
+ 142              		.loc 1 170 1 view .LVU40
+ 143 00c4 04B0     		add	sp, sp, #16
+ 144              	.LCFI2:
+ 145              		.cfi_remember_state
+ 146              		.cfi_def_cfa_offset 8
+ 147              		@ sp needed
+ 148 00c6 10BD     		pop	{r4, pc}
+ 149              	.LVL4:
+ 150              	.L4:
+ 151              	.LCFI3:
+ 152              		.cfi_restore_state
+ 164:AHRS_Lib/ahrs.c **** 
+ 153              		.loc 1 164 82 discriminator 5 view .LVU41
+ 154 00c8 4FF0FF30 		mov	r0, #-1
+ 155 00cc FAE7     		b	.L3
+ 156              	.L5:
+ 157 00ce 4FF0FF30 		mov	r0, #-1
+ 158 00d2 F7E7     		b	.L3
+ 159              	.L6:
+ 160 00d4 4FF0FF30 		mov	r0, #-1
+ 161 00d8 F4E7     		b	.L3
+ 162              	.L7:
+ 166:AHRS_Lib/ahrs.c ****     if(w[1] < 0) return 1;
+ 163              		.loc 1 166 25 discriminator 1 view .LVU42
+ 164 00da 0320     		movs	r0, #3
+ 165 00dc F2E7     		b	.L3
+ 166              	.L8:
+ 167:AHRS_Lib/ahrs.c ****     if(w[2] < 0) return 2;
+ 167              		.loc 1 167 25 discriminator 1 view .LVU43
+ 168 00de 0120     		movs	r0, #1
+ 169 00e0 F0E7     		b	.L3
+ 170              	.L9:
+ARM GAS  /tmp/ccTI8A7w.s 			page 7
+
+
+ 168:AHRS_Lib/ahrs.c ****     return 0;
+ 171              		.loc 1 168 25 discriminator 1 view .LVU44
+ 172 00e2 0220     		movs	r0, #2
+ 173 00e4 EEE7     		b	.L3
+ 174              	.L12:
+ 175 00e6 00BF     		.align	3
+ 176              	.L11:
+ 177 00e8 F168E388 		.word	-1998362383
+ 178 00ec B5F8E43E 		.word	1055193269
+ 179 00f0 67666666 		.word	1717986919
+ 180 00f4 00000000 		.word	_arm_matrix_mid_inverses
+ 181              		.cfi_endproc
+ 182              	.LFE897:
+ 184              		.section	.text.get_component,"ax",%progbits
+ 185              		.align	1
+ 186              		.global	get_component
+ 187              		.syntax unified
+ 188              		.thumb
+ 189              		.thumb_func
+ 191              	get_component:
+ 192              	.LVL5:
+ 193              	.LFB894:
+ 132:AHRS_Lib/ahrs.c ****     if(idx < 3){
+ 194              		.loc 1 132 1 is_stmt 1 view -0
+ 195              		.cfi_startproc
+ 196              		@ args = 0, pretend = 0, frame = 0
+ 197              		@ frame_needed = 0, uses_anonymous_args = 0
+ 198              		@ link register save eliminated.
+ 133:AHRS_Lib/ahrs.c ****         return _neighbor_umbrellas[idx].components[comp_idx];
+ 199              		.loc 1 133 5 view .LVU46
+ 133:AHRS_Lib/ahrs.c ****         return _neighbor_umbrellas[idx].components[comp_idx];
+ 200              		.loc 1 133 7 is_stmt 0 view .LVU47
+ 201 0000 0228     		cmp	r0, #2
+ 202 0002 1BDD     		ble	.L16
+ 136:AHRS_Lib/ahrs.c **** }
+ 203              		.loc 1 136 5 is_stmt 1 view .LVU48
+ 136:AHRS_Lib/ahrs.c **** }
+ 204              		.loc 1 136 37 is_stmt 0 view .LVU49
+ 205 0004 114B     		ldr	r3, .L17
+ 206 0006 83FB0023 		smull	r2, r3, r3, r0
+ 207 000a A3EBE073 		sub	r3, r3, r0, asr #31
+ 208 000e 03EB4303 		add	r3, r3, r3, lsl #1
+ 209 0012 C01A     		subs	r0, r0, r3
+ 210              	.LVL6:
+ 136:AHRS_Lib/ahrs.c **** }
+ 211              		.loc 1 136 37 view .LVU50
+ 212 0014 40B2     		sxtb	r0, r0
+ 136:AHRS_Lib/ahrs.c **** }
+ 213              		.loc 1 136 52 view .LVU51
+ 214 0016 00EB8000 		add	r0, r0, r0, lsl #2
+ 215 001a 0D4B     		ldr	r3, .L17+4
+ 216 001c 03EB4003 		add	r3, r3, r0, lsl #1
+ 217 0020 5856     		ldrsb	r0, [r3, r1]
+ 136:AHRS_Lib/ahrs.c **** }
+ 218              		.loc 1 136 63 view .LVU52
+ 219 0022 0A30     		adds	r0, r0, #10
+ 136:AHRS_Lib/ahrs.c **** }
+ARM GAS  /tmp/ccTI8A7w.s 			page 8
+
+
+ 220              		.loc 1 136 69 view .LVU53
+ 221 0024 0B4A     		ldr	r2, .L17+8
+ 222 0026 82FB0032 		smull	r3, r2, r2, r0
+ 223 002a C317     		asrs	r3, r0, #31
+ 224 002c C3EBE203 		rsb	r3, r3, r2, asr #3
+ 225 0030 03EB8303 		add	r3, r3, r3, lsl #2
+ 226 0034 A0EB8300 		sub	r0, r0, r3, lsl #2
+ 227 0038 C0B2     		uxtb	r0, r0
+ 137:AHRS_Lib/ahrs.c **** void AHRS_GridInit()
+ 228              		.loc 1 137 1 view .LVU54
+ 229 003a 7047     		bx	lr
+ 230              	.LVL7:
+ 231              	.L16:
+ 134:AHRS_Lib/ahrs.c ****     }
+ 232              		.loc 1 134 9 is_stmt 1 view .LVU55
+ 134:AHRS_Lib/ahrs.c ****     }
+ 233              		.loc 1 134 51 is_stmt 0 view .LVU56
+ 234 003c 00EB8000 		add	r0, r0, r0, lsl #2
+ 235              	.LVL8:
+ 134:AHRS_Lib/ahrs.c ****     }
+ 236              		.loc 1 134 51 view .LVU57
+ 237 0040 034B     		ldr	r3, .L17+4
+ 238 0042 03EB4003 		add	r3, r3, r0, lsl #1
+ 239 0046 585C     		ldrb	r0, [r3, r1]	@ zero_extendqisi2
+ 240 0048 7047     		bx	lr
+ 241              	.L18:
+ 242 004a 00BF     		.align	2
+ 243              	.L17:
+ 244 004c 56555555 		.word	1431655766
+ 245 0050 00000000 		.word	_neighbor_umbrellas
+ 246 0054 67666666 		.word	1717986919
+ 247              		.cfi_endproc
+ 248              	.LFE894:
+ 250              		.section	.text._grid_index,"ax",%progbits
+ 251              		.align	1
+ 252              		.syntax unified
+ 253              		.thumb
+ 254              		.thumb_func
+ 256              	_grid_index:
+ 257              	.LVL9:
+ 258              	.LFB898:
+ 171:AHRS_Lib/ahrs.c **** 
+ 172:AHRS_Lib/ahrs.c **** int8_t _grid_index(float* vec)
+ 173:AHRS_Lib/ahrs.c **** {
+ 259              		.loc 1 173 1 is_stmt 1 view -0
+ 260              		.cfi_startproc
+ 261              		@ args = 0, pretend = 0, frame = 24
+ 262              		@ frame_needed = 0, uses_anonymous_args = 0
+ 263              		.loc 1 173 1 is_stmt 0 view .LVU59
+ 264 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 265              	.LCFI4:
+ 266              		.cfi_def_cfa_offset 20
+ 267              		.cfi_offset 4, -20
+ 268              		.cfi_offset 5, -16
+ 269              		.cfi_offset 6, -12
+ 270              		.cfi_offset 7, -8
+ 271              		.cfi_offset 14, -4
+ARM GAS  /tmp/ccTI8A7w.s 			page 9
+
+
+ 272 0002 87B0     		sub	sp, sp, #28
+ 273              	.LCFI5:
+ 274              		.cfi_def_cfa_offset 48
+ 275 0004 0146     		mov	r1, r0
+ 276 0006 0746     		mov	r7, r0
+ 174:AHRS_Lib/ahrs.c ****     int8_t key = 0;
+ 277              		.loc 1 174 5 is_stmt 1 view .LVU60
+ 278              	.LVL10:
+ 175:AHRS_Lib/ahrs.c ****     int8_t balance = 0;
+ 279              		.loc 1 175 5 view .LVU61
+ 176:AHRS_Lib/ahrs.c ****     int8_t iter = 3;
+ 280              		.loc 1 176 5 view .LVU62
+ 177:AHRS_Lib/ahrs.c ****     float w[3] = {0.0f, 0.0f, 0.0f};
+ 281              		.loc 1 177 5 view .LVU63
+ 282              		.loc 1 177 11 is_stmt 0 view .LVU64
+ 283 0008 0023     		movs	r3, #0
+ 284 000a 0393     		str	r3, [sp, #12]	@ float
+ 285 000c 0493     		str	r3, [sp, #16]	@ float
+ 286 000e 0593     		str	r3, [sp, #20]	@ float
+ 178:AHRS_Lib/ahrs.c ****     arm_mat_vec_mult_f32(&_arm_matrix_inverses[0], vec, w);
+ 287              		.loc 1 178 5 is_stmt 1 view .LVU65
+ 288 0010 03AA     		add	r2, sp, #12
+ 289 0012 D148     		ldr	r0, .L73+8
+ 290              	.LVL11:
+ 291              		.loc 1 178 5 is_stmt 0 view .LVU66
+ 292 0014 FFF7FEFF 		bl	arm_mat_vec_mult_f32
+ 293              	.LVL12:
+ 179:AHRS_Lib/ahrs.c **** 
+ 180:AHRS_Lib/ahrs.c ****     for(iter = 0; iter < 3; iter++)
+ 294              		.loc 1 180 5 is_stmt 1 view .LVU67
+ 295              		.loc 1 180 14 is_stmt 0 view .LVU68
+ 296 0018 0023     		movs	r3, #0
+ 175:AHRS_Lib/ahrs.c ****     int8_t iter = 3;
+ 297              		.loc 1 175 12 view .LVU69
+ 298 001a 1A46     		mov	r2, r3
+ 174:AHRS_Lib/ahrs.c ****     int8_t balance = 0;
+ 299              		.loc 1 174 12 view .LVU70
+ 300 001c 9C46     		mov	ip, r3
+ 301              		.loc 1 180 5 view .LVU71
+ 302 001e 09E0     		b	.L20
+ 303              	.LVL13:
+ 304              	.L59:
+ 181:AHRS_Lib/ahrs.c ****     {
+ 182:AHRS_Lib/ahrs.c ****         if(fabsf(w[iter]) <= 1e-5){
+ 183:AHRS_Lib/ahrs.c ****             return -1;
+ 184:AHRS_Lib/ahrs.c ****         }else if(w[iter] > 0){
+ 185:AHRS_Lib/ahrs.c ****             key |= (1 << iter);
+ 186:AHRS_Lib/ahrs.c ****             balance++;
+ 187:AHRS_Lib/ahrs.c ****         }else{
+ 188:AHRS_Lib/ahrs.c ****             key &= ~(1 << iter);
+ 305              		.loc 1 188 13 is_stmt 1 view .LVU72
+ 306              		.loc 1 188 24 is_stmt 0 view .LVU73
+ 307 0020 0121     		movs	r1, #1
+ 308 0022 9940     		lsls	r1, r1, r3
+ 309              		.loc 1 188 17 view .LVU74
+ 310 0024 2CEA010C 		bic	ip, ip, r1
+ 311              	.LVL14:
+ARM GAS  /tmp/ccTI8A7w.s 			page 10
+
+
+ 312              		.loc 1 188 17 view .LVU75
+ 313 0028 4FFA8CFC 		sxtb	ip, ip
+ 314              	.LVL15:
+ 189:AHRS_Lib/ahrs.c ****             balance--;
+ 315              		.loc 1 189 13 is_stmt 1 view .LVU76
+ 316              		.loc 1 189 20 is_stmt 0 view .LVU77
+ 317 002c 013A     		subs	r2, r2, #1
+ 318              	.LVL16:
+ 319              		.loc 1 189 20 view .LVU78
+ 320 002e 52B2     		sxtb	r2, r2
+ 321              	.LVL17:
+ 322              	.L24:
+ 180:AHRS_Lib/ahrs.c ****     {
+ 323              		.loc 1 180 33 is_stmt 1 discriminator 2 view .LVU79
+ 324 0030 0133     		adds	r3, r3, #1
+ 325              	.LVL18:
+ 180:AHRS_Lib/ahrs.c ****     {
+ 326              		.loc 1 180 33 is_stmt 0 discriminator 2 view .LVU80
+ 327 0032 5BB2     		sxtb	r3, r3
+ 328              	.LVL19:
+ 329              	.L20:
+ 180:AHRS_Lib/ahrs.c ****     {
+ 330              		.loc 1 180 24 is_stmt 1 discriminator 1 view .LVU81
+ 331 0034 022B     		cmp	r3, #2
+ 332 0036 1EDC     		bgt	.L66
+ 182:AHRS_Lib/ahrs.c ****             return -1;
+ 333              		.loc 1 182 9 view .LVU82
+ 182:AHRS_Lib/ahrs.c ****             return -1;
+ 334              		.loc 1 182 19 is_stmt 0 view .LVU83
+ 335 0038 06A9     		add	r1, sp, #24
+ 336 003a 01EB8301 		add	r1, r1, r3, lsl #2
+ 337 003e 51ED036A 		vldr.32	s13, [r1, #-12]
+ 182:AHRS_Lib/ahrs.c ****             return -1;
+ 338              		.loc 1 182 12 view .LVU84
+ 339 0042 B0EEE67A 		vabs.f32	s14, s13
+ 340 0046 B7EEC77A 		vcvt.f64.f32	d7, s14
+ 182:AHRS_Lib/ahrs.c ****             return -1;
+ 341              		.loc 1 182 11 view .LVU85
+ 342 004a 9FEDC15B 		vldr.64	d5, .L73
+ 343 004e B4EEC57B 		vcmpe.f64	d7, d5
+ 344 0052 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 345 0056 40F28F81 		bls	.L45
+ 184:AHRS_Lib/ahrs.c ****             key |= (1 << iter);
+ 346              		.loc 1 184 15 is_stmt 1 view .LVU86
+ 184:AHRS_Lib/ahrs.c ****             key |= (1 << iter);
+ 347              		.loc 1 184 17 is_stmt 0 view .LVU87
+ 348 005a F5EEC06A 		vcmpe.f32	s13, #0
+ 349 005e F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 350 0062 DDDD     		ble	.L59
+ 185:AHRS_Lib/ahrs.c ****             balance++;
+ 351              		.loc 1 185 13 is_stmt 1 view .LVU88
+ 185:AHRS_Lib/ahrs.c ****             balance++;
+ 352              		.loc 1 185 23 is_stmt 0 view .LVU89
+ 353 0064 0121     		movs	r1, #1
+ 354 0066 9940     		lsls	r1, r1, r3
+ 185:AHRS_Lib/ahrs.c ****             balance++;
+ 355              		.loc 1 185 17 view .LVU90
+ARM GAS  /tmp/ccTI8A7w.s 			page 11
+
+
+ 356 0068 4CEA010C 		orr	ip, ip, r1
+ 357              	.LVL20:
+ 185:AHRS_Lib/ahrs.c ****             balance++;
+ 358              		.loc 1 185 17 view .LVU91
+ 359 006c 4FFA8CFC 		sxtb	ip, ip
+ 360              	.LVL21:
+ 186:AHRS_Lib/ahrs.c ****         }else{
+ 361              		.loc 1 186 13 is_stmt 1 view .LVU92
+ 186:AHRS_Lib/ahrs.c ****         }else{
+ 362              		.loc 1 186 20 is_stmt 0 view .LVU93
+ 363 0070 0132     		adds	r2, r2, #1
+ 364              	.LVL22:
+ 186:AHRS_Lib/ahrs.c ****         }else{
+ 365              		.loc 1 186 20 view .LVU94
+ 366 0072 52B2     		sxtb	r2, r2
+ 367              	.LVL23:
+ 186:AHRS_Lib/ahrs.c ****         }else{
+ 368              		.loc 1 186 20 view .LVU95
+ 369 0074 DCE7     		b	.L24
+ 370              	.L66:
+ 190:AHRS_Lib/ahrs.c ****         }
+ 191:AHRS_Lib/ahrs.c ****     }
+ 192:AHRS_Lib/ahrs.c ****     if(balance == 3)
+ 371              		.loc 1 192 5 is_stmt 1 view .LVU96
+ 372              		.loc 1 192 7 is_stmt 0 view .LVU97
+ 373 0076 032A     		cmp	r2, #3
+ 374 0078 00F08181 		beq	.L46
+ 193:AHRS_Lib/ahrs.c ****     {
+ 194:AHRS_Lib/ahrs.c ****         return 0;
+ 195:AHRS_Lib/ahrs.c ****     }else if(balance == -3)
+ 375              		.loc 1 195 11 is_stmt 1 view .LVU98
+ 376              		.loc 1 195 13 is_stmt 0 view .LVU99
+ 377 007c 12F1030F 		cmn	r2, #3
+ 378 0080 00F08181 		beq	.L47
+ 196:AHRS_Lib/ahrs.c ****     {
+ 197:AHRS_Lib/ahrs.c ****         return 10;
+ 198:AHRS_Lib/ahrs.c ****     }
+ 199:AHRS_Lib/ahrs.c ****     int8_t umbrella = _key_table[key];
+ 379              		.loc 1 199 5 is_stmt 1 view .LVU100
+ 380              		.loc 1 199 12 is_stmt 0 view .LVU101
+ 381 0084 B54B     		ldr	r3, .L73+12
+ 382              	.LVL24:
+ 383              		.loc 1 199 12 view .LVU102
+ 384 0086 13F90C40 		ldrsb	r4, [r3, ip]
+ 385              	.LVL25:
+ 200:AHRS_Lib/ahrs.c ****     if(balance == -1){
+ 386              		.loc 1 200 5 is_stmt 1 view .LVU103
+ 387              		.loc 1 200 7 is_stmt 0 view .LVU104
+ 388 008a B2F1FF3F 		cmp	r2, #-1
+ 389 008e 00F08780 		beq	.L67
+ 390              	.L26:
+ 201:AHRS_Lib/ahrs.c ****         w[0] = -w[0];
+ 202:AHRS_Lib/ahrs.c ****         w[1] = -w[1];
+ 203:AHRS_Lib/ahrs.c ****         w[2] = -w[2];
+ 204:AHRS_Lib/ahrs.c ****     }
+ 205:AHRS_Lib/ahrs.c ****     float u[3]={0.0f, 0.0f, 0.0f};
+ 391              		.loc 1 205 5 is_stmt 1 view .LVU105
+ARM GAS  /tmp/ccTI8A7w.s 			page 12
+
+
+ 392              		.loc 1 205 11 is_stmt 0 view .LVU106
+ 393 0092 0023     		movs	r3, #0
+ 394 0094 0093     		str	r3, [sp]	@ float
+ 395 0096 0193     		str	r3, [sp, #4]	@ float
+ 396 0098 0293     		str	r3, [sp, #8]	@ float
+ 206:AHRS_Lib/ahrs.c ****     if(umbrella % 3 == 0)
+ 397              		.loc 1 206 5 is_stmt 1 view .LVU107
+ 398              		.loc 1 206 21 is_stmt 0 view .LVU108
+ 399 009a B14B     		ldr	r3, .L73+16
+ 400 009c 83FB0423 		smull	r2, r3, r3, r4
+ 401              	.LVL26:
+ 402              		.loc 1 206 21 view .LVU109
+ 403 00a0 A3EBE473 		sub	r3, r3, r4, asr #31
+ 404 00a4 03EB4303 		add	r3, r3, r3, lsl #1
+ 405 00a8 E31A     		subs	r3, r4, r3
+ 406 00aa 5DB2     		sxtb	r5, r3
+ 407              		.loc 1 206 7 view .LVU110
+ 408 00ac 002D     		cmp	r5, #0
+ 409 00ae 40F08A80 		bne	.L27
+ 207:AHRS_Lib/ahrs.c ****     {
+ 208:AHRS_Lib/ahrs.c ****         u[0] = w[0];
+ 410              		.loc 1 208 9 is_stmt 1 view .LVU111
+ 411              		.loc 1 208 17 is_stmt 0 view .LVU112
+ 412 00b2 039B     		ldr	r3, [sp, #12]	@ float
+ 413              		.loc 1 208 14 view .LVU113
+ 414 00b4 0093     		str	r3, [sp]	@ float
+ 209:AHRS_Lib/ahrs.c ****         u[1] = w[1];
+ 415              		.loc 1 209 9 is_stmt 1 view .LVU114
+ 416              		.loc 1 209 17 is_stmt 0 view .LVU115
+ 417 00b6 049B     		ldr	r3, [sp, #16]	@ float
+ 418              		.loc 1 209 14 view .LVU116
+ 419 00b8 0193     		str	r3, [sp, #4]	@ float
+ 210:AHRS_Lib/ahrs.c ****         u[2] = -w[2];
+ 420              		.loc 1 210 9 is_stmt 1 view .LVU117
+ 421              		.loc 1 210 18 is_stmt 0 view .LVU118
+ 422 00ba DDED057A 		vldr.32	s15, [sp, #20]
+ 423              		.loc 1 210 16 view .LVU119
+ 424 00be F1EE677A 		vneg.f32	s15, s15
+ 425              		.loc 1 210 14 view .LVU120
+ 426 00c2 CDED027A 		vstr.32	s15, [sp, #8]
+ 427              	.L28:
+ 211:AHRS_Lib/ahrs.c ****     }else if(umbrella % 3 == 1)
+ 212:AHRS_Lib/ahrs.c ****     {
+ 213:AHRS_Lib/ahrs.c ****         u[0] = w[1];
+ 214:AHRS_Lib/ahrs.c ****         u[1] = w[2];
+ 215:AHRS_Lib/ahrs.c ****         u[2] = -w[0];
+ 216:AHRS_Lib/ahrs.c ****     }else if(umbrella % 3 == 2)
+ 217:AHRS_Lib/ahrs.c ****     {
+ 218:AHRS_Lib/ahrs.c ****         u[0] = w[2];
+ 219:AHRS_Lib/ahrs.c ****         u[1] = w[0];
+ 220:AHRS_Lib/ahrs.c ****         u[2] = -w[1];
+ 221:AHRS_Lib/ahrs.c ****     }
+ 222:AHRS_Lib/ahrs.c ****     if(u[1] > u[0])
+ 428              		.loc 1 222 5 is_stmt 1 view .LVU121
+ 429              		.loc 1 222 9 is_stmt 0 view .LVU122
+ 430 00c6 DDED017A 		vldr.32	s15, [sp, #4]
+ 431              		.loc 1 222 16 view .LVU123
+ARM GAS  /tmp/ccTI8A7w.s 			page 13
+
+
+ 432 00ca 9DED007A 		vldr.32	s14, [sp]
+ 433              		.loc 1 222 7 view .LVU124
+ 434 00ce F4EEC77A 		vcmpe.f32	s15, s14
+ 435 00d2 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 436 00d6 00F39180 		bgt	.L68
+ 223:AHRS_Lib/ahrs.c ****     {
+ 224:AHRS_Lib/ahrs.c ****         int8_t comp = get_component(umbrella, 1);
+ 225:AHRS_Lib/ahrs.c ****         arm_mat_vec_mult_f32(&_arm_matrix_inverses[comp % 10], vec, w);
+ 226:AHRS_Lib/ahrs.c ****         if(comp > 9)
+ 227:AHRS_Lib/ahrs.c ****         {
+ 228:AHRS_Lib/ahrs.c ****             w[0] = -w[0];
+ 229:AHRS_Lib/ahrs.c ****             w[1] = -w[1];
+ 230:AHRS_Lib/ahrs.c ****             w[2] = -w[2];
+ 231:AHRS_Lib/ahrs.c ****         }
+ 232:AHRS_Lib/ahrs.c ****         float x1 = w[_neighbor_umbrellas[umbrella % 3].v1_c1];
+ 233:AHRS_Lib/ahrs.c ****         float x2 = w[_neighbor_umbrellas[umbrella % 3].v2_c1];
+ 234:AHRS_Lib/ahrs.c ****         if(x1 <0){
+ 235:AHRS_Lib/ahrs.c ****             return get_component(umbrella, 2);
+ 236:AHRS_Lib/ahrs.c ****         }
+ 237:AHRS_Lib/ahrs.c ****         if(x2 <0){
+ 238:AHRS_Lib/ahrs.c ****             return get_component(umbrella, 0);
+ 239:AHRS_Lib/ahrs.c ****         }
+ 240:AHRS_Lib/ahrs.c ****         return comp;
+ 241:AHRS_Lib/ahrs.c ****     }
+ 242:AHRS_Lib/ahrs.c ****     else if(u[1] < u[0])
+ 437              		.loc 1 242 10 is_stmt 1 view .LVU125
+ 438              		.loc 1 242 12 is_stmt 0 view .LVU126
+ 439 00da F4EEC77A 		vcmpe.f32	s15, s14
+ 440 00de F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 441 00e2 00F1E280 		bmi	.L69
+ 243:AHRS_Lib/ahrs.c ****     {
+ 244:AHRS_Lib/ahrs.c ****         int8_t comp = get_component(umbrella, 4);
+ 245:AHRS_Lib/ahrs.c ****         arm_mat_vec_mult_f32(&_arm_matrix_inverses[comp % 10], vec, w);
+ 246:AHRS_Lib/ahrs.c ****         if(comp > 9)
+ 247:AHRS_Lib/ahrs.c ****         {
+ 248:AHRS_Lib/ahrs.c ****             w[0] = -w[0];
+ 249:AHRS_Lib/ahrs.c ****             w[1] = -w[1];
+ 250:AHRS_Lib/ahrs.c ****             w[2] = -w[2];
+ 251:AHRS_Lib/ahrs.c ****         }
+ 252:AHRS_Lib/ahrs.c ****         float x4 = w[_neighbor_umbrellas[umbrella % 3].v4_c4];
+ 253:AHRS_Lib/ahrs.c ****         float x0 = w[_neighbor_umbrellas[umbrella % 3].v0_c4];
+ 254:AHRS_Lib/ahrs.c ****         if(x4 <0){
+ 255:AHRS_Lib/ahrs.c ****             return get_component(umbrella, 0);
+ 256:AHRS_Lib/ahrs.c ****         }
+ 257:AHRS_Lib/ahrs.c ****         if(x0 <0){
+ 258:AHRS_Lib/ahrs.c ****             return get_component(umbrella, 3);
+ 259:AHRS_Lib/ahrs.c ****         }
+ 260:AHRS_Lib/ahrs.c ****         return comp;
+ 261:AHRS_Lib/ahrs.c ****     }else if(fabsf(u[0] - u[1]) <= 1e-5)
+ 442              		.loc 1 261 11 is_stmt 1 view .LVU127
+ 443              		.loc 1 261 25 is_stmt 0 view .LVU128
+ 444 00e6 37EE677A 		vsub.f32	s14, s14, s15
+ 445              		.loc 1 261 14 view .LVU129
+ 446 00ea B0EEC77A 		vabs.f32	s14, s14
+ 447 00ee B7EEC77A 		vcvt.f64.f32	d7, s14
+ 448              		.loc 1 261 13 view .LVU130
+ 449 00f2 9FED976B 		vldr.64	d6, .L73
+ARM GAS  /tmp/ccTI8A7w.s 			page 14
+
+
+ 450 00f6 B4EEC67B 		vcmpe.f64	d7, d6
+ 451 00fa F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 452 00fe 00F24481 		bhi	.L64
+ 453              	.LBB2:
+ 262:AHRS_Lib/ahrs.c ****     {
+ 263:AHRS_Lib/ahrs.c ****         int8_t comp = get_component(umbrella, 0);
+ 454              		.loc 1 263 9 is_stmt 1 view .LVU131
+ 455              		.loc 1 263 23 is_stmt 0 view .LVU132
+ 456 0102 0021     		movs	r1, #0
+ 457 0104 2046     		mov	r0, r4
+ 458 0106 FFF7FEFF 		bl	get_component
+ 459              	.LVL27:
+ 460              		.loc 1 263 16 discriminator 1 view .LVU133
+ 461 010a 46B2     		sxtb	r6, r0
+ 462              	.LVL28:
+ 264:AHRS_Lib/ahrs.c ****         arm_mat_vec_mult_f32(&_arm_matrix_inverses[comp % 10], vec, w);
+ 463              		.loc 1 264 9 is_stmt 1 view .LVU134
+ 464              		.loc 1 264 57 is_stmt 0 view .LVU135
+ 465 010c 954A     		ldr	r2, .L73+20
+ 466 010e 82FB0632 		smull	r3, r2, r2, r6
+ 467 0112 F317     		asrs	r3, r6, #31
+ 468 0114 C3EBA203 		rsb	r3, r3, r2, asr #2
+ 469 0118 03EB8303 		add	r3, r3, r3, lsl #2
+ 470 011c A6EB4303 		sub	r3, r6, r3, lsl #1
+ 471 0120 5BB2     		sxtb	r3, r3
+ 472              		.loc 1 264 9 view .LVU136
+ 473 0122 03AA     		add	r2, sp, #12
+ 474 0124 3946     		mov	r1, r7
+ 475 0126 8C48     		ldr	r0, .L73+8
+ 476 0128 00EBC300 		add	r0, r0, r3, lsl #3
+ 477 012c FFF7FEFF 		bl	arm_mat_vec_mult_f32
+ 478              	.LVL29:
+ 265:AHRS_Lib/ahrs.c ****         if(comp > 9)
+ 479              		.loc 1 265 9 is_stmt 1 view .LVU137
+ 480              		.loc 1 265 11 is_stmt 0 view .LVU138
+ 481 0130 092E     		cmp	r6, #9
+ 482 0132 11DD     		ble	.L43
+ 266:AHRS_Lib/ahrs.c ****         {
+ 267:AHRS_Lib/ahrs.c ****             w[0] = -w[0];
+ 483              		.loc 1 267 13 is_stmt 1 view .LVU139
+ 484              		.loc 1 267 22 is_stmt 0 view .LVU140
+ 485 0134 DDED037A 		vldr.32	s15, [sp, #12]
+ 486              		.loc 1 267 20 view .LVU141
+ 487 0138 F1EE677A 		vneg.f32	s15, s15
+ 488              		.loc 1 267 18 view .LVU142
+ 489 013c CDED037A 		vstr.32	s15, [sp, #12]
+ 268:AHRS_Lib/ahrs.c ****             w[1] = -w[1];
+ 490              		.loc 1 268 13 is_stmt 1 view .LVU143
+ 491              		.loc 1 268 22 is_stmt 0 view .LVU144
+ 492 0140 DDED047A 		vldr.32	s15, [sp, #16]
+ 493              		.loc 1 268 20 view .LVU145
+ 494 0144 F1EE677A 		vneg.f32	s15, s15
+ 495              		.loc 1 268 18 view .LVU146
+ 496 0148 CDED047A 		vstr.32	s15, [sp, #16]
+ 269:AHRS_Lib/ahrs.c ****             w[2] = -w[2];
+ 497              		.loc 1 269 13 is_stmt 1 view .LVU147
+ 498              		.loc 1 269 22 is_stmt 0 view .LVU148
+ARM GAS  /tmp/ccTI8A7w.s 			page 15
+
+
+ 499 014c DDED057A 		vldr.32	s15, [sp, #20]
+ 500              		.loc 1 269 20 view .LVU149
+ 501 0150 F1EE677A 		vneg.f32	s15, s15
+ 502              		.loc 1 269 18 view .LVU150
+ 503 0154 CDED057A 		vstr.32	s15, [sp, #20]
+ 504              	.L43:
+ 270:AHRS_Lib/ahrs.c ****         }
+ 271:AHRS_Lib/ahrs.c ****         float x0 = w[_neighbor_umbrellas[umbrella % 3].v0_c0];
+ 505              		.loc 1 271 9 is_stmt 1 view .LVU151
+ 506              		.loc 1 271 55 is_stmt 0 view .LVU152
+ 507 0158 05EB8503 		add	r3, r5, r5, lsl #2
+ 508 015c 824A     		ldr	r2, .L73+24
+ 509 015e 02EB4303 		add	r3, r2, r3, lsl #1
+ 510 0162 93F90530 		ldrsb	r3, [r3, #5]
+ 511              		.loc 1 271 15 view .LVU153
+ 512 0166 06AA     		add	r2, sp, #24
+ 513 0168 02EB8303 		add	r3, r2, r3, lsl #2
+ 514 016c 53ED036A 		vldr.32	s13, [r3, #-12]
+ 515              	.LVL30:
+ 272:AHRS_Lib/ahrs.c ****         if(fabsf(x0) < 1e-5) return -1;
+ 516              		.loc 1 272 9 is_stmt 1 view .LVU154
+ 517              		.loc 1 272 12 is_stmt 0 view .LVU155
+ 518 0170 B0EEE67A 		vabs.f32	s14, s13
+ 519 0174 B7EEC77A 		vcvt.f64.f32	d7, s14
+ 520              		.loc 1 272 11 view .LVU156
+ 521 0178 9FED755B 		vldr.64	d5, .L73
+ 522 017c B4EEC57B 		vcmpe.f64	d7, d5
+ 523 0180 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 524 0184 00F10481 		bmi	.L49
+ 273:AHRS_Lib/ahrs.c ****         else if(x0 < 0) return get_component(umbrella, u[0] < u[1] ? 3:2);
+ 525              		.loc 1 273 14 is_stmt 1 view .LVU157
+ 526              		.loc 1 273 16 is_stmt 0 view .LVU158
+ 527 0188 F5EEC06A 		vcmpe.f32	s13, #0
+ 528 018c F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 529 0190 40F1F680 		bpl	.L21
+ 530              		.loc 1 273 25 is_stmt 1 discriminator 1 view .LVU159
+ 531              		.loc 1 273 32 is_stmt 0 discriminator 5 view .LVU160
+ 532 0194 0221     		movs	r1, #2
+ 533 0196 2046     		mov	r0, r4
+ 534 0198 FFF7FEFF 		bl	get_component
+ 535              	.LVL31:
+ 536              		.loc 1 273 32 discriminator 6 view .LVU161
+ 537 019c 46B2     		sxtb	r6, r0
+ 538              	.LVL32:
+ 539              		.loc 1 273 32 view .LVU162
+ 540 019e EFE0     		b	.L21
+ 541              	.LVL33:
+ 542              	.L67:
+ 543              		.loc 1 273 32 view .LVU163
+ 544              	.LBE2:
+ 201:AHRS_Lib/ahrs.c ****         w[1] = -w[1];
+ 545              		.loc 1 201 9 is_stmt 1 view .LVU164
+ 201:AHRS_Lib/ahrs.c ****         w[1] = -w[1];
+ 546              		.loc 1 201 18 is_stmt 0 view .LVU165
+ 547 01a0 DDED037A 		vldr.32	s15, [sp, #12]
+ 201:AHRS_Lib/ahrs.c ****         w[1] = -w[1];
+ 548              		.loc 1 201 16 view .LVU166
+ARM GAS  /tmp/ccTI8A7w.s 			page 16
+
+
+ 549 01a4 F1EE677A 		vneg.f32	s15, s15
+ 201:AHRS_Lib/ahrs.c ****         w[1] = -w[1];
+ 550              		.loc 1 201 14 view .LVU167
+ 551 01a8 CDED037A 		vstr.32	s15, [sp, #12]
+ 202:AHRS_Lib/ahrs.c ****         w[2] = -w[2];
+ 552              		.loc 1 202 9 is_stmt 1 view .LVU168
+ 202:AHRS_Lib/ahrs.c ****         w[2] = -w[2];
+ 553              		.loc 1 202 18 is_stmt 0 view .LVU169
+ 554 01ac DDED047A 		vldr.32	s15, [sp, #16]
+ 202:AHRS_Lib/ahrs.c ****         w[2] = -w[2];
+ 555              		.loc 1 202 16 view .LVU170
+ 556 01b0 F1EE677A 		vneg.f32	s15, s15
+ 202:AHRS_Lib/ahrs.c ****         w[2] = -w[2];
+ 557              		.loc 1 202 14 view .LVU171
+ 558 01b4 CDED047A 		vstr.32	s15, [sp, #16]
+ 203:AHRS_Lib/ahrs.c ****     }
+ 559              		.loc 1 203 9 is_stmt 1 view .LVU172
+ 203:AHRS_Lib/ahrs.c ****     }
+ 560              		.loc 1 203 18 is_stmt 0 view .LVU173
+ 561 01b8 DDED057A 		vldr.32	s15, [sp, #20]
+ 203:AHRS_Lib/ahrs.c ****     }
+ 562              		.loc 1 203 16 view .LVU174
+ 563 01bc F1EE677A 		vneg.f32	s15, s15
+ 203:AHRS_Lib/ahrs.c ****     }
+ 564              		.loc 1 203 14 view .LVU175
+ 565 01c0 CDED057A 		vstr.32	s15, [sp, #20]
+ 566 01c4 65E7     		b	.L26
+ 567              	.LVL34:
+ 568              	.L27:
+ 211:AHRS_Lib/ahrs.c ****     {
+ 569              		.loc 1 211 11 is_stmt 1 view .LVU176
+ 211:AHRS_Lib/ahrs.c ****     {
+ 570              		.loc 1 211 13 is_stmt 0 view .LVU177
+ 571 01c6 012D     		cmp	r5, #1
+ 572 01c8 0DD0     		beq	.L70
+ 216:AHRS_Lib/ahrs.c ****     {
+ 573              		.loc 1 216 11 is_stmt 1 view .LVU178
+ 216:AHRS_Lib/ahrs.c ****     {
+ 574              		.loc 1 216 13 is_stmt 0 view .LVU179
+ 575 01ca 022D     		cmp	r5, #2
+ 576 01cc 7FF47BAF 		bne	.L28
+ 218:AHRS_Lib/ahrs.c ****         u[1] = w[0];
+ 577              		.loc 1 218 9 is_stmt 1 view .LVU180
+ 218:AHRS_Lib/ahrs.c ****         u[1] = w[0];
+ 578              		.loc 1 218 17 is_stmt 0 view .LVU181
+ 579 01d0 059B     		ldr	r3, [sp, #20]	@ float
+ 218:AHRS_Lib/ahrs.c ****         u[1] = w[0];
+ 580              		.loc 1 218 14 view .LVU182
+ 581 01d2 0093     		str	r3, [sp]	@ float
+ 219:AHRS_Lib/ahrs.c ****         u[2] = -w[1];
+ 582              		.loc 1 219 9 is_stmt 1 view .LVU183
+ 219:AHRS_Lib/ahrs.c ****         u[2] = -w[1];
+ 583              		.loc 1 219 17 is_stmt 0 view .LVU184
+ 584 01d4 039B     		ldr	r3, [sp, #12]	@ float
+ 219:AHRS_Lib/ahrs.c ****         u[2] = -w[1];
+ 585              		.loc 1 219 14 view .LVU185
+ 586 01d6 0193     		str	r3, [sp, #4]	@ float
+ARM GAS  /tmp/ccTI8A7w.s 			page 17
+
+
+ 220:AHRS_Lib/ahrs.c ****     }
+ 587              		.loc 1 220 9 is_stmt 1 view .LVU186
+ 220:AHRS_Lib/ahrs.c ****     }
+ 588              		.loc 1 220 18 is_stmt 0 view .LVU187
+ 589 01d8 DDED047A 		vldr.32	s15, [sp, #16]
+ 220:AHRS_Lib/ahrs.c ****     }
+ 590              		.loc 1 220 16 view .LVU188
+ 591 01dc F1EE677A 		vneg.f32	s15, s15
+ 220:AHRS_Lib/ahrs.c ****     }
+ 592              		.loc 1 220 14 view .LVU189
+ 593 01e0 CDED027A 		vstr.32	s15, [sp, #8]
+ 594 01e4 6FE7     		b	.L28
+ 595              	.L70:
+ 213:AHRS_Lib/ahrs.c ****         u[1] = w[2];
+ 596              		.loc 1 213 9 is_stmt 1 view .LVU190
+ 213:AHRS_Lib/ahrs.c ****         u[1] = w[2];
+ 597              		.loc 1 213 17 is_stmt 0 view .LVU191
+ 598 01e6 049B     		ldr	r3, [sp, #16]	@ float
+ 213:AHRS_Lib/ahrs.c ****         u[1] = w[2];
+ 599              		.loc 1 213 14 view .LVU192
+ 600 01e8 0093     		str	r3, [sp]	@ float
+ 214:AHRS_Lib/ahrs.c ****         u[2] = -w[0];
+ 601              		.loc 1 214 9 is_stmt 1 view .LVU193
+ 214:AHRS_Lib/ahrs.c ****         u[2] = -w[0];
+ 602              		.loc 1 214 17 is_stmt 0 view .LVU194
+ 603 01ea 059B     		ldr	r3, [sp, #20]	@ float
+ 214:AHRS_Lib/ahrs.c ****         u[2] = -w[0];
+ 604              		.loc 1 214 14 view .LVU195
+ 605 01ec 0193     		str	r3, [sp, #4]	@ float
+ 215:AHRS_Lib/ahrs.c ****     }else if(umbrella % 3 == 2)
+ 606              		.loc 1 215 9 is_stmt 1 view .LVU196
+ 215:AHRS_Lib/ahrs.c ****     }else if(umbrella % 3 == 2)
+ 607              		.loc 1 215 18 is_stmt 0 view .LVU197
+ 608 01ee DDED037A 		vldr.32	s15, [sp, #12]
+ 215:AHRS_Lib/ahrs.c ****     }else if(umbrella % 3 == 2)
+ 609              		.loc 1 215 16 view .LVU198
+ 610 01f2 F1EE677A 		vneg.f32	s15, s15
+ 215:AHRS_Lib/ahrs.c ****     }else if(umbrella % 3 == 2)
+ 611              		.loc 1 215 14 view .LVU199
+ 612 01f6 CDED027A 		vstr.32	s15, [sp, #8]
+ 613 01fa 64E7     		b	.L28
+ 614              	.L68:
+ 615              	.LBB3:
+ 224:AHRS_Lib/ahrs.c ****         arm_mat_vec_mult_f32(&_arm_matrix_inverses[comp % 10], vec, w);
+ 616              		.loc 1 224 9 is_stmt 1 view .LVU200
+ 224:AHRS_Lib/ahrs.c ****         arm_mat_vec_mult_f32(&_arm_matrix_inverses[comp % 10], vec, w);
+ 617              		.loc 1 224 23 is_stmt 0 view .LVU201
+ 618 01fc 0121     		movs	r1, #1
+ 619 01fe 2046     		mov	r0, r4
+ 620 0200 FFF7FEFF 		bl	get_component
+ 621              	.LVL35:
+ 224:AHRS_Lib/ahrs.c ****         arm_mat_vec_mult_f32(&_arm_matrix_inverses[comp % 10], vec, w);
+ 622              		.loc 1 224 16 discriminator 1 view .LVU202
+ 623 0204 46B2     		sxtb	r6, r0
+ 624              	.LVL36:
+ 225:AHRS_Lib/ahrs.c ****         if(comp > 9)
+ 625              		.loc 1 225 9 is_stmt 1 view .LVU203
+ARM GAS  /tmp/ccTI8A7w.s 			page 18
+
+
+ 225:AHRS_Lib/ahrs.c ****         if(comp > 9)
+ 626              		.loc 1 225 57 is_stmt 0 view .LVU204
+ 627 0206 574A     		ldr	r2, .L73+20
+ 628 0208 82FB0632 		smull	r3, r2, r2, r6
+ 629 020c F317     		asrs	r3, r6, #31
+ 630 020e C3EBA203 		rsb	r3, r3, r2, asr #2
+ 631 0212 03EB8303 		add	r3, r3, r3, lsl #2
+ 632 0216 A6EB4303 		sub	r3, r6, r3, lsl #1
+ 633 021a 5BB2     		sxtb	r3, r3
+ 225:AHRS_Lib/ahrs.c ****         if(comp > 9)
+ 634              		.loc 1 225 9 view .LVU205
+ 635 021c 03AA     		add	r2, sp, #12
+ 636 021e 3946     		mov	r1, r7
+ 637 0220 4D48     		ldr	r0, .L73+8
+ 638 0222 00EBC300 		add	r0, r0, r3, lsl #3
+ 639 0226 FFF7FEFF 		bl	arm_mat_vec_mult_f32
+ 640              	.LVL37:
+ 226:AHRS_Lib/ahrs.c ****         {
+ 641              		.loc 1 226 9 is_stmt 1 view .LVU206
+ 226:AHRS_Lib/ahrs.c ****         {
+ 642              		.loc 1 226 11 is_stmt 0 view .LVU207
+ 643 022a 092E     		cmp	r6, #9
+ 644 022c 11DD     		ble	.L32
+ 228:AHRS_Lib/ahrs.c ****             w[1] = -w[1];
+ 645              		.loc 1 228 13 is_stmt 1 view .LVU208
+ 228:AHRS_Lib/ahrs.c ****             w[1] = -w[1];
+ 646              		.loc 1 228 22 is_stmt 0 view .LVU209
+ 647 022e DDED037A 		vldr.32	s15, [sp, #12]
+ 228:AHRS_Lib/ahrs.c ****             w[1] = -w[1];
+ 648              		.loc 1 228 20 view .LVU210
+ 649 0232 F1EE677A 		vneg.f32	s15, s15
+ 228:AHRS_Lib/ahrs.c ****             w[1] = -w[1];
+ 650              		.loc 1 228 18 view .LVU211
+ 651 0236 CDED037A 		vstr.32	s15, [sp, #12]
+ 229:AHRS_Lib/ahrs.c ****             w[2] = -w[2];
+ 652              		.loc 1 229 13 is_stmt 1 view .LVU212
+ 229:AHRS_Lib/ahrs.c ****             w[2] = -w[2];
+ 653              		.loc 1 229 22 is_stmt 0 view .LVU213
+ 654 023a DDED047A 		vldr.32	s15, [sp, #16]
+ 229:AHRS_Lib/ahrs.c ****             w[2] = -w[2];
+ 655              		.loc 1 229 20 view .LVU214
+ 656 023e F1EE677A 		vneg.f32	s15, s15
+ 229:AHRS_Lib/ahrs.c ****             w[2] = -w[2];
+ 657              		.loc 1 229 18 view .LVU215
+ 658 0242 CDED047A 		vstr.32	s15, [sp, #16]
+ 230:AHRS_Lib/ahrs.c ****         }
+ 659              		.loc 1 230 13 is_stmt 1 view .LVU216
+ 230:AHRS_Lib/ahrs.c ****         }
+ 660              		.loc 1 230 22 is_stmt 0 view .LVU217
+ 661 0246 DDED057A 		vldr.32	s15, [sp, #20]
+ 230:AHRS_Lib/ahrs.c ****         }
+ 662              		.loc 1 230 20 view .LVU218
+ 663 024a F1EE677A 		vneg.f32	s15, s15
+ 230:AHRS_Lib/ahrs.c ****         }
+ 664              		.loc 1 230 18 view .LVU219
+ 665 024e CDED057A 		vstr.32	s15, [sp, #20]
+ 666              	.L32:
+ARM GAS  /tmp/ccTI8A7w.s 			page 19
+
+
+ 232:AHRS_Lib/ahrs.c ****         float x2 = w[_neighbor_umbrellas[umbrella % 3].v2_c1];
+ 667              		.loc 1 232 9 is_stmt 1 view .LVU220
+ 232:AHRS_Lib/ahrs.c ****         float x2 = w[_neighbor_umbrellas[umbrella % 3].v2_c1];
+ 668              		.loc 1 232 55 is_stmt 0 view .LVU221
+ 669 0252 454A     		ldr	r2, .L73+24
+ 670 0254 05EB8503 		add	r3, r5, r5, lsl #2
+ 671 0258 02EB4303 		add	r3, r2, r3, lsl #1
+ 672 025c 93F90630 		ldrsb	r3, [r3, #6]
+ 232:AHRS_Lib/ahrs.c ****         float x2 = w[_neighbor_umbrellas[umbrella % 3].v2_c1];
+ 673              		.loc 1 232 15 view .LVU222
+ 674 0260 06A9     		add	r1, sp, #24
+ 675 0262 01EB8303 		add	r3, r1, r3, lsl #2
+ 676 0266 53ED037A 		vldr.32	s15, [r3, #-12]
+ 677              	.LVL38:
+ 233:AHRS_Lib/ahrs.c ****         if(x1 <0){
+ 678              		.loc 1 233 9 is_stmt 1 view .LVU223
+ 233:AHRS_Lib/ahrs.c ****         if(x1 <0){
+ 679              		.loc 1 233 55 is_stmt 0 view .LVU224
+ 680 026a 05EB8503 		add	r3, r5, r5, lsl #2
+ 681 026e 02EB4302 		add	r2, r2, r3, lsl #1
+ 682 0272 92F90730 		ldrsb	r3, [r2, #7]
+ 233:AHRS_Lib/ahrs.c ****         if(x1 <0){
+ 683              		.loc 1 233 15 view .LVU225
+ 684 0276 01EB8303 		add	r3, r1, r3, lsl #2
+ 685 027a 13ED037A 		vldr.32	s14, [r3, #-12]
+ 686              	.LVL39:
+ 234:AHRS_Lib/ahrs.c ****             return get_component(umbrella, 2);
+ 687              		.loc 1 234 9 is_stmt 1 view .LVU226
+ 234:AHRS_Lib/ahrs.c ****             return get_component(umbrella, 2);
+ 688              		.loc 1 234 11 is_stmt 0 view .LVU227
+ 689 027e F5EEC07A 		vcmpe.f32	s15, #0
+ 690 0282 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 691 0286 0AD4     		bmi	.L71
+ 237:AHRS_Lib/ahrs.c ****             return get_component(umbrella, 0);
+ 692              		.loc 1 237 9 is_stmt 1 view .LVU228
+ 237:AHRS_Lib/ahrs.c ****             return get_component(umbrella, 0);
+ 693              		.loc 1 237 11 is_stmt 0 view .LVU229
+ 694 0288 B5EEC07A 		vcmpe.f32	s14, #0
+ 695 028c F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 696 0290 76D5     		bpl	.L21
+ 238:AHRS_Lib/ahrs.c ****         }
+ 697              		.loc 1 238 13 is_stmt 1 view .LVU230
+ 238:AHRS_Lib/ahrs.c ****         }
+ 698              		.loc 1 238 20 is_stmt 0 view .LVU231
+ 699 0292 0021     		movs	r1, #0
+ 700 0294 2046     		mov	r0, r4
+ 701 0296 FFF7FEFF 		bl	get_component
+ 702              	.LVL40:
+ 238:AHRS_Lib/ahrs.c ****         }
+ 703              		.loc 1 238 20 discriminator 1 view .LVU232
+ 704 029a 46B2     		sxtb	r6, r0
+ 705              	.LVL41:
+ 238:AHRS_Lib/ahrs.c ****         }
+ 706              		.loc 1 238 20 view .LVU233
+ 707 029c 70E0     		b	.L21
+ 708              	.LVL42:
+ 709              	.L71:
+ARM GAS  /tmp/ccTI8A7w.s 			page 20
+
+
+ 235:AHRS_Lib/ahrs.c ****         }
+ 710              		.loc 1 235 13 is_stmt 1 view .LVU234
+ 235:AHRS_Lib/ahrs.c ****         }
+ 711              		.loc 1 235 20 is_stmt 0 view .LVU235
+ 712 029e 0221     		movs	r1, #2
+ 713 02a0 2046     		mov	r0, r4
+ 714 02a2 FFF7FEFF 		bl	get_component
+ 715              	.LVL43:
+ 235:AHRS_Lib/ahrs.c ****         }
+ 716              		.loc 1 235 20 discriminator 1 view .LVU236
+ 717 02a6 46B2     		sxtb	r6, r0
+ 718              	.LVL44:
+ 235:AHRS_Lib/ahrs.c ****         }
+ 719              		.loc 1 235 20 view .LVU237
+ 720 02a8 6AE0     		b	.L21
+ 721              	.LVL45:
+ 722              	.L69:
+ 235:AHRS_Lib/ahrs.c ****         }
+ 723              		.loc 1 235 20 view .LVU238
+ 724              	.LBE3:
+ 725              	.LBB4:
+ 244:AHRS_Lib/ahrs.c ****         arm_mat_vec_mult_f32(&_arm_matrix_inverses[comp % 10], vec, w);
+ 726              		.loc 1 244 9 is_stmt 1 view .LVU239
+ 244:AHRS_Lib/ahrs.c ****         arm_mat_vec_mult_f32(&_arm_matrix_inverses[comp % 10], vec, w);
+ 727              		.loc 1 244 23 is_stmt 0 view .LVU240
+ 728 02aa 0421     		movs	r1, #4
+ 729 02ac 2046     		mov	r0, r4
+ 730 02ae FFF7FEFF 		bl	get_component
+ 731              	.LVL46:
+ 244:AHRS_Lib/ahrs.c ****         arm_mat_vec_mult_f32(&_arm_matrix_inverses[comp % 10], vec, w);
+ 732              		.loc 1 244 16 discriminator 1 view .LVU241
+ 733 02b2 46B2     		sxtb	r6, r0
+ 734              	.LVL47:
+ 245:AHRS_Lib/ahrs.c ****         if(comp > 9)
+ 735              		.loc 1 245 9 is_stmt 1 view .LVU242
+ 245:AHRS_Lib/ahrs.c ****         if(comp > 9)
+ 736              		.loc 1 245 57 is_stmt 0 view .LVU243
+ 737 02b4 2B4A     		ldr	r2, .L73+20
+ 738 02b6 82FB0632 		smull	r3, r2, r2, r6
+ 739 02ba F317     		asrs	r3, r6, #31
+ 740 02bc C3EBA203 		rsb	r3, r3, r2, asr #2
+ 741 02c0 03EB8303 		add	r3, r3, r3, lsl #2
+ 742 02c4 A6EB4303 		sub	r3, r6, r3, lsl #1
+ 743 02c8 5BB2     		sxtb	r3, r3
+ 245:AHRS_Lib/ahrs.c ****         if(comp > 9)
+ 744              		.loc 1 245 9 view .LVU244
+ 745 02ca 03AA     		add	r2, sp, #12
+ 746 02cc 3946     		mov	r1, r7
+ 747 02ce 2248     		ldr	r0, .L73+8
+ 748 02d0 00EBC300 		add	r0, r0, r3, lsl #3
+ 749 02d4 FFF7FEFF 		bl	arm_mat_vec_mult_f32
+ 750              	.LVL48:
+ 246:AHRS_Lib/ahrs.c ****         {
+ 751              		.loc 1 246 9 is_stmt 1 view .LVU245
+ 246:AHRS_Lib/ahrs.c ****         {
+ 752              		.loc 1 246 11 is_stmt 0 view .LVU246
+ 753 02d8 092E     		cmp	r6, #9
+ARM GAS  /tmp/ccTI8A7w.s 			page 21
+
+
+ 754 02da 11DD     		ble	.L38
+ 248:AHRS_Lib/ahrs.c ****             w[1] = -w[1];
+ 755              		.loc 1 248 13 is_stmt 1 view .LVU247
+ 248:AHRS_Lib/ahrs.c ****             w[1] = -w[1];
+ 756              		.loc 1 248 22 is_stmt 0 view .LVU248
+ 757 02dc DDED037A 		vldr.32	s15, [sp, #12]
+ 248:AHRS_Lib/ahrs.c ****             w[1] = -w[1];
+ 758              		.loc 1 248 20 view .LVU249
+ 759 02e0 F1EE677A 		vneg.f32	s15, s15
+ 248:AHRS_Lib/ahrs.c ****             w[1] = -w[1];
+ 760              		.loc 1 248 18 view .LVU250
+ 761 02e4 CDED037A 		vstr.32	s15, [sp, #12]
+ 249:AHRS_Lib/ahrs.c ****             w[2] = -w[2];
+ 762              		.loc 1 249 13 is_stmt 1 view .LVU251
+ 249:AHRS_Lib/ahrs.c ****             w[2] = -w[2];
+ 763              		.loc 1 249 22 is_stmt 0 view .LVU252
+ 764 02e8 DDED047A 		vldr.32	s15, [sp, #16]
+ 249:AHRS_Lib/ahrs.c ****             w[2] = -w[2];
+ 765              		.loc 1 249 20 view .LVU253
+ 766 02ec F1EE677A 		vneg.f32	s15, s15
+ 249:AHRS_Lib/ahrs.c ****             w[2] = -w[2];
+ 767              		.loc 1 249 18 view .LVU254
+ 768 02f0 CDED047A 		vstr.32	s15, [sp, #16]
+ 250:AHRS_Lib/ahrs.c ****         }
+ 769              		.loc 1 250 13 is_stmt 1 view .LVU255
+ 250:AHRS_Lib/ahrs.c ****         }
+ 770              		.loc 1 250 22 is_stmt 0 view .LVU256
+ 771 02f4 DDED057A 		vldr.32	s15, [sp, #20]
+ 250:AHRS_Lib/ahrs.c ****         }
+ 772              		.loc 1 250 20 view .LVU257
+ 773 02f8 F1EE677A 		vneg.f32	s15, s15
+ 250:AHRS_Lib/ahrs.c ****         }
+ 774              		.loc 1 250 18 view .LVU258
+ 775 02fc CDED057A 		vstr.32	s15, [sp, #20]
+ 776              	.L38:
+ 252:AHRS_Lib/ahrs.c ****         float x0 = w[_neighbor_umbrellas[umbrella % 3].v0_c4];
+ 777              		.loc 1 252 9 is_stmt 1 view .LVU259
+ 252:AHRS_Lib/ahrs.c ****         float x0 = w[_neighbor_umbrellas[umbrella % 3].v0_c4];
+ 778              		.loc 1 252 55 is_stmt 0 view .LVU260
+ 779 0300 194A     		ldr	r2, .L73+24
+ 780 0302 05EB8503 		add	r3, r5, r5, lsl #2
+ 781 0306 02EB4303 		add	r3, r2, r3, lsl #1
+ 782 030a 93F90830 		ldrsb	r3, [r3, #8]
+ 252:AHRS_Lib/ahrs.c ****         float x0 = w[_neighbor_umbrellas[umbrella % 3].v0_c4];
+ 783              		.loc 1 252 15 view .LVU261
+ 784 030e 06A9     		add	r1, sp, #24
+ 785 0310 01EB8303 		add	r3, r1, r3, lsl #2
+ 786 0314 53ED037A 		vldr.32	s15, [r3, #-12]
+ 787              	.LVL49:
+ 253:AHRS_Lib/ahrs.c ****         if(x4 <0){
+ 788              		.loc 1 253 9 is_stmt 1 view .LVU262
+ 253:AHRS_Lib/ahrs.c ****         if(x4 <0){
+ 789              		.loc 1 253 55 is_stmt 0 view .LVU263
+ 790 0318 05EB8503 		add	r3, r5, r5, lsl #2
+ 791 031c 02EB4302 		add	r2, r2, r3, lsl #1
+ 792 0320 92F90930 		ldrsb	r3, [r2, #9]
+ 253:AHRS_Lib/ahrs.c ****         if(x4 <0){
+ARM GAS  /tmp/ccTI8A7w.s 			page 22
+
+
+ 793              		.loc 1 253 15 view .LVU264
+ 794 0324 01EB8303 		add	r3, r1, r3, lsl #2
+ 795 0328 13ED037A 		vldr.32	s14, [r3, #-12]
+ 796              	.LVL50:
+ 254:AHRS_Lib/ahrs.c ****             return get_component(umbrella, 0);
+ 797              		.loc 1 254 9 is_stmt 1 view .LVU265
+ 254:AHRS_Lib/ahrs.c ****             return get_component(umbrella, 0);
+ 798              		.loc 1 254 11 is_stmt 0 view .LVU266
+ 799 032c F5EEC07A 		vcmpe.f32	s15, #0
+ 800 0330 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 801 0334 1AD4     		bmi	.L72
+ 257:AHRS_Lib/ahrs.c ****             return get_component(umbrella, 3);
+ 802              		.loc 1 257 9 is_stmt 1 view .LVU267
+ 257:AHRS_Lib/ahrs.c ****             return get_component(umbrella, 3);
+ 803              		.loc 1 257 11 is_stmt 0 view .LVU268
+ 804 0336 B5EEC07A 		vcmpe.f32	s14, #0
+ 805 033a F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 806 033e 1FD5     		bpl	.L21
+ 258:AHRS_Lib/ahrs.c ****         }
+ 807              		.loc 1 258 13 is_stmt 1 view .LVU269
+ 258:AHRS_Lib/ahrs.c ****         }
+ 808              		.loc 1 258 20 is_stmt 0 view .LVU270
+ 809 0340 0321     		movs	r1, #3
+ 810 0342 2046     		mov	r0, r4
+ 811 0344 FFF7FEFF 		bl	get_component
+ 812              	.LVL51:
+ 258:AHRS_Lib/ahrs.c ****         }
+ 813              		.loc 1 258 20 discriminator 1 view .LVU271
+ 814 0348 46B2     		sxtb	r6, r0
+ 815              	.LVL52:
+ 258:AHRS_Lib/ahrs.c ****         }
+ 816              		.loc 1 258 20 view .LVU272
+ 817 034a 19E0     		b	.L21
+ 818              	.L74:
+ 819 034c AFF30080 		.align	3
+ 820              	.L73:
+ 821 0350 F168E388 		.word	-1998362383
+ 822 0354 B5F8E43E 		.word	1055193269
+ 823 0358 00000000 		.word	_arm_matrix_inverses
+ 824 035c 00000000 		.word	_key_table
+ 825 0360 56555555 		.word	1431655766
+ 826 0364 67666666 		.word	1717986919
+ 827 0368 00000000 		.word	_neighbor_umbrellas
+ 828              	.LVL53:
+ 829              	.L72:
+ 255:AHRS_Lib/ahrs.c ****         }
+ 830              		.loc 1 255 13 is_stmt 1 view .LVU273
+ 255:AHRS_Lib/ahrs.c ****         }
+ 831              		.loc 1 255 20 is_stmt 0 view .LVU274
+ 832 036c 0021     		movs	r1, #0
+ 833 036e 2046     		mov	r0, r4
+ 834 0370 FFF7FEFF 		bl	get_component
+ 835              	.LVL54:
+ 255:AHRS_Lib/ahrs.c ****         }
+ 836              		.loc 1 255 20 discriminator 1 view .LVU275
+ 837 0374 46B2     		sxtb	r6, r0
+ 838              	.LVL55:
+ARM GAS  /tmp/ccTI8A7w.s 			page 23
+
+
+ 255:AHRS_Lib/ahrs.c ****         }
+ 839              		.loc 1 255 20 view .LVU276
+ 840 0376 03E0     		b	.L21
+ 841              	.LVL56:
+ 842              	.L45:
+ 255:AHRS_Lib/ahrs.c ****         }
+ 843              		.loc 1 255 20 view .LVU277
+ 844              	.LBE4:
+ 183:AHRS_Lib/ahrs.c ****         }else if(w[iter] > 0){
+ 845              		.loc 1 183 20 view .LVU278
+ 846 0378 4FF0FF36 		mov	r6, #-1
+ 847 037c 00E0     		b	.L21
+ 848              	.L46:
+ 194:AHRS_Lib/ahrs.c ****     }else if(balance == -3)
+ 849              		.loc 1 194 16 view .LVU279
+ 850 037e 0026     		movs	r6, #0
+ 851              	.LVL57:
+ 852              	.L21:
+ 274:AHRS_Lib/ahrs.c **** 
+ 275:AHRS_Lib/ahrs.c ****         return comp;
+ 276:AHRS_Lib/ahrs.c ****     }
+ 277:AHRS_Lib/ahrs.c ****     return -1;
+ 278:AHRS_Lib/ahrs.c **** }
+ 853              		.loc 1 278 1 view .LVU280
+ 854 0380 3046     		mov	r0, r6
+ 855 0382 07B0     		add	sp, sp, #28
+ 856              	.LCFI6:
+ 857              		.cfi_remember_state
+ 858              		.cfi_def_cfa_offset 20
+ 859              		@ sp needed
+ 860 0384 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 861              	.LVL58:
+ 862              	.L47:
+ 863              	.LCFI7:
+ 864              		.cfi_restore_state
+ 197:AHRS_Lib/ahrs.c ****     }
+ 865              		.loc 1 197 16 view .LVU281
+ 866 0386 0A26     		movs	r6, #10
+ 867 0388 FAE7     		b	.L21
+ 868              	.LVL59:
+ 869              	.L64:
+ 277:AHRS_Lib/ahrs.c **** }
+ 870              		.loc 1 277 12 view .LVU282
+ 871 038a 4FF0FF36 		mov	r6, #-1
+ 872 038e F7E7     		b	.L21
+ 873              	.LVL60:
+ 874              	.L49:
+ 875              	.LBB5:
+ 272:AHRS_Lib/ahrs.c ****         else if(x0 < 0) return get_component(umbrella, u[0] < u[1] ? 3:2);
+ 876              		.loc 1 272 37 discriminator 1 view .LVU283
+ 877 0390 4FF0FF36 		mov	r6, #-1
+ 878              	.LVL61:
+ 272:AHRS_Lib/ahrs.c ****         else if(x0 < 0) return get_component(umbrella, u[0] < u[1] ? 3:2);
+ 879              		.loc 1 272 37 discriminator 1 view .LVU284
+ 880 0394 F4E7     		b	.L21
+ 881              	.LBE5:
+ 882              		.cfi_endproc
+ARM GAS  /tmp/ccTI8A7w.s 			page 24
+
+
+ 883              	.LFE898:
+ 885 0396 00BF     		.section	.text.AHRS_GridInit,"ax",%progbits
+ 886              		.align	1
+ 887              		.global	AHRS_GridInit
+ 888              		.syntax unified
+ 889              		.thumb
+ 890              		.thumb_func
+ 892              	AHRS_GridInit:
+ 893              	.LFB895:
+ 139:AHRS_Lib/ahrs.c ****     for (uint8_t i = 0; i < NUM_INV_MATS; i++) {
+ 894              		.loc 1 139 1 is_stmt 1 view -0
+ 895              		.cfi_startproc
+ 896              		@ args = 0, pretend = 0, frame = 0
+ 897              		@ frame_needed = 0, uses_anonymous_args = 0
+ 898 0000 70B5     		push	{r4, r5, r6, lr}
+ 899              	.LCFI8:
+ 900              		.cfi_def_cfa_offset 16
+ 901              		.cfi_offset 4, -16
+ 902              		.cfi_offset 5, -12
+ 903              		.cfi_offset 6, -8
+ 904              		.cfi_offset 14, -4
+ 140:AHRS_Lib/ahrs.c ****         arm_mat_init_f32(&_arm_matrix_inverses[i], MAT_DIM, MAT_DIM, (float32_t*)_inverses + i * MA
+ 905              		.loc 1 140 5 view .LVU286
+ 906              	.LBB6:
+ 140:AHRS_Lib/ahrs.c ****         arm_mat_init_f32(&_arm_matrix_inverses[i], MAT_DIM, MAT_DIM, (float32_t*)_inverses + i * MA
+ 907              		.loc 1 140 10 view .LVU287
+ 908              	.LVL62:
+ 140:AHRS_Lib/ahrs.c ****         arm_mat_init_f32(&_arm_matrix_inverses[i], MAT_DIM, MAT_DIM, (float32_t*)_inverses + i * MA
+ 909              		.loc 1 140 18 is_stmt 0 view .LVU288
+ 910 0002 0024     		movs	r4, #0
+ 140:AHRS_Lib/ahrs.c ****         arm_mat_init_f32(&_arm_matrix_inverses[i], MAT_DIM, MAT_DIM, (float32_t*)_inverses + i * MA
+ 911              		.loc 1 140 5 view .LVU289
+ 912 0004 17E0     		b	.L76
+ 913              	.LVL63:
+ 914              	.L77:
+ 141:AHRS_Lib/ahrs.c ****         arm_mat_init_f32(&_arm_matrix_mid_inverses[i], MAT_DIM, MAT_DIM, (float32_t*)_mid_inverses 
+ 915              		.loc 1 141 9 is_stmt 1 view .LVU290
+ 141:AHRS_Lib/ahrs.c ****         arm_mat_init_f32(&_arm_matrix_mid_inverses[i], MAT_DIM, MAT_DIM, (float32_t*)_mid_inverses 
+ 916              		.loc 1 141 92 is_stmt 0 view .LVU291
+ 917 0006 E500     		lsls	r5, r4, #3
+ 918 0008 04EBC403 		add	r3, r4, r4, lsl #3
+ 919 000c 9E00     		lsls	r6, r3, #2
+ 141:AHRS_Lib/ahrs.c ****         arm_mat_init_f32(&_arm_matrix_mid_inverses[i], MAT_DIM, MAT_DIM, (float32_t*)_mid_inverses 
+ 920              		.loc 1 141 9 view .LVU292
+ 921 000e 0B4A     		ldr	r2, .L79
+ 922 0010 02EB8303 		add	r3, r2, r3, lsl #2
+ 923 0014 0322     		movs	r2, #3
+ 924 0016 1146     		mov	r1, r2
+ 925 0018 0948     		ldr	r0, .L79+4
+ 926 001a 00EBC400 		add	r0, r0, r4, lsl #3
+ 927 001e FFF7FEFF 		bl	arm_mat_init_f32
+ 928              	.LVL64:
+ 142:AHRS_Lib/ahrs.c ****     }
+ 929              		.loc 1 142 9 is_stmt 1 view .LVU293
+ 930 0022 084B     		ldr	r3, .L79+8
+ 931 0024 3344     		add	r3, r3, r6
+ 932 0026 0322     		movs	r2, #3
+ARM GAS  /tmp/ccTI8A7w.s 			page 25
+
+
+ 933 0028 1146     		mov	r1, r2
+ 934 002a 0748     		ldr	r0, .L79+12
+ 935 002c 2844     		add	r0, r0, r5
+ 936 002e FFF7FEFF 		bl	arm_mat_init_f32
+ 937              	.LVL65:
+ 140:AHRS_Lib/ahrs.c ****         arm_mat_init_f32(&_arm_matrix_inverses[i], MAT_DIM, MAT_DIM, (float32_t*)_inverses + i * MA
+ 938              		.loc 1 140 44 discriminator 3 view .LVU294
+ 939 0032 0134     		adds	r4, r4, #1
+ 940              	.LVL66:
+ 140:AHRS_Lib/ahrs.c ****         arm_mat_init_f32(&_arm_matrix_inverses[i], MAT_DIM, MAT_DIM, (float32_t*)_inverses + i * MA
+ 941              		.loc 1 140 44 is_stmt 0 discriminator 3 view .LVU295
+ 942 0034 E4B2     		uxtb	r4, r4
+ 943              	.LVL67:
+ 944              	.L76:
+ 140:AHRS_Lib/ahrs.c ****         arm_mat_init_f32(&_arm_matrix_inverses[i], MAT_DIM, MAT_DIM, (float32_t*)_inverses + i * MA
+ 945              		.loc 1 140 27 is_stmt 1 discriminator 1 view .LVU296
+ 946 0036 092C     		cmp	r4, #9
+ 947 0038 E5D9     		bls	.L77
+ 948              	.LBE6:
+ 144:AHRS_Lib/ahrs.c **** 
+ 949              		.loc 1 144 1 is_stmt 0 view .LVU297
+ 950 003a 70BD     		pop	{r4, r5, r6, pc}
+ 951              	.LVL68:
+ 952              	.L80:
+ 144:AHRS_Lib/ahrs.c **** 
+ 953              		.loc 1 144 1 view .LVU298
+ 954              		.align	2
+ 955              	.L79:
+ 956 003c 00000000 		.word	_inverses
+ 957 0040 00000000 		.word	_arm_matrix_inverses
+ 958 0044 00000000 		.word	_mid_inverses
+ 959 0048 00000000 		.word	_arm_matrix_mid_inverses
+ 960              		.cfi_endproc
+ 961              	.LFE895:
+ 963              		.section	.text.AHRS_SectionGrid,"ax",%progbits
+ 964              		.align	1
+ 965              		.global	AHRS_SectionGrid
+ 966              		.syntax unified
+ 967              		.thumb
+ 968              		.thumb_func
+ 970              	AHRS_SectionGrid:
+ 971              	.LVL69:
+ 972              	.LFB896:
+ 147:AHRS_Lib/ahrs.c ****     int8_t i = _grid_index(vec);
+ 973              		.loc 1 147 1 is_stmt 1 view -0
+ 974              		.cfi_startproc
+ 975              		@ args = 0, pretend = 0, frame = 0
+ 976              		@ frame_needed = 0, uses_anonymous_args = 0
+ 147:AHRS_Lib/ahrs.c ****     int8_t i = _grid_index(vec);
+ 977              		.loc 1 147 1 is_stmt 0 view .LVU300
+ 978 0000 38B5     		push	{r3, r4, r5, lr}
+ 979              	.LCFI9:
+ 980              		.cfi_def_cfa_offset 16
+ 981              		.cfi_offset 3, -16
+ 982              		.cfi_offset 4, -12
+ 983              		.cfi_offset 5, -8
+ 984              		.cfi_offset 14, -4
+ARM GAS  /tmp/ccTI8A7w.s 			page 26
+
+
+ 985 0002 0546     		mov	r5, r0
+ 148:AHRS_Lib/ahrs.c ****     if(i == -1) return -1;
+ 986              		.loc 1 148 5 is_stmt 1 view .LVU301
+ 148:AHRS_Lib/ahrs.c ****     if(i == -1) return -1;
+ 987              		.loc 1 148 16 is_stmt 0 view .LVU302
+ 988 0004 FFF7FEFF 		bl	_grid_index
+ 989              	.LVL70:
+ 148:AHRS_Lib/ahrs.c ****     if(i == -1) return -1;
+ 990              		.loc 1 148 16 view .LVU303
+ 991 0008 0446     		mov	r4, r0
+ 992              	.LVL71:
+ 149:AHRS_Lib/ahrs.c ****     int8_t j = _sub_grid_index(vec, i);
+ 993              		.loc 1 149 5 is_stmt 1 view .LVU304
+ 149:AHRS_Lib/ahrs.c ****     int8_t j = _sub_grid_index(vec, i);
+ 994              		.loc 1 149 7 is_stmt 0 view .LVU305
+ 995 000a B0F1FF3F 		cmp	r0, #-1
+ 996 000e 0AD0     		beq	.L82
+ 150:AHRS_Lib/ahrs.c ****     if(j == -1) return -1;
+ 997              		.loc 1 150 5 is_stmt 1 view .LVU306
+ 150:AHRS_Lib/ahrs.c ****     if(j == -1) return -1;
+ 998              		.loc 1 150 16 is_stmt 0 view .LVU307
+ 999 0010 0146     		mov	r1, r0
+ 1000 0012 2846     		mov	r0, r5
+ 1001              	.LVL72:
+ 150:AHRS_Lib/ahrs.c ****     if(j == -1) return -1;
+ 1002              		.loc 1 150 16 view .LVU308
+ 1003 0014 FFF7FEFF 		bl	_sub_grid_index
+ 1004              	.LVL73:
+ 151:AHRS_Lib/ahrs.c ****     return i * 4 + j;
+ 1005              		.loc 1 151 5 is_stmt 1 view .LVU309
+ 151:AHRS_Lib/ahrs.c ****     return i * 4 + j;
+ 1006              		.loc 1 151 7 is_stmt 0 view .LVU310
+ 1007 0018 B0F1FF3F 		cmp	r0, #-1
+ 1008 001c 05D0     		beq	.L83
+ 152:AHRS_Lib/ahrs.c **** }
+ 1009              		.loc 1 152 5 is_stmt 1 view .LVU311
+ 152:AHRS_Lib/ahrs.c **** }
+ 1010              		.loc 1 152 14 is_stmt 0 view .LVU312
+ 1011 001e A400     		lsls	r4, r4, #2
+ 1012 0020 E4B2     		uxtb	r4, r4
+ 152:AHRS_Lib/ahrs.c **** }
+ 1013              		.loc 1 152 18 view .LVU313
+ 1014 0022 0444     		add	r4, r4, r0
+ 1015 0024 64B2     		sxtb	r4, r4
+ 1016              	.LVL74:
+ 1017              	.L82:
+ 153:AHRS_Lib/ahrs.c **** 
+ 1018              		.loc 1 153 1 view .LVU314
+ 1019 0026 2046     		mov	r0, r4
+ 1020 0028 38BD     		pop	{r3, r4, r5, pc}
+ 1021              	.LVL75:
+ 1022              	.L83:
+ 151:AHRS_Lib/ahrs.c ****     return i * 4 + j;
+ 1023              		.loc 1 151 24 discriminator 1 view .LVU315
+ 1024 002a 0446     		mov	r4, r0
+ 1025 002c FBE7     		b	.L82
+ 1026              		.cfi_endproc
+ARM GAS  /tmp/ccTI8A7w.s 			page 27
+
+
+ 1027              	.LFE896:
+ 1029              		.section	.rodata._key_table,"a"
+ 1030              		.align	2
+ 1033              	_key_table:
+ 1034 0000 0A040500 		.ascii	"\012\004\005\000\003\002\001\000\000"
+ 1034      03020100 
+ 1034      00
+ 1035 0009 00       		.space	1
+ 1036              		.section	.rodata._neighbor_umbrellas,"a"
+ 1037              		.align	2
+ 1040              	_neighbor_umbrellas:
+ 1041 0000 0908070C 		.ascii	"\011\010\007\014\016"
+ 1041      0E
+ 1042 0005 01       		.byte	1
+ 1043 0006 02       		.byte	2
+ 1044 0007 00       		.byte	0
+ 1045 0008 00       		.byte	0
+ 1046 0009 02       		.byte	2
+ 1047 000a 01020405 		.ascii	"\001\002\004\005\003"
+ 1047      03
+ 1048 000f 00       		.byte	0
+ 1049 0010 00       		.byte	0
+ 1050 0011 02       		.byte	2
+ 1051 0012 02       		.byte	2
+ 1052 0013 00       		.byte	0
+ 1053 0014 100F0D12 		.ascii	"\020\017\015\022\021"
+ 1053      11
+ 1054 0019 02       		.byte	2
+ 1055 001a 02       		.byte	2
+ 1056 001b 00       		.byte	0
+ 1057 001c 02       		.byte	2
+ 1058 001d 01       		.byte	1
+ 1059              		.global	_arm_matrix_mid_inverses
+ 1060              		.section	.bss._arm_matrix_mid_inverses,"aw",%nobits
+ 1061              		.align	2
+ 1064              	_arm_matrix_mid_inverses:
+ 1065 0000 00000000 		.space	80
+ 1065      00000000 
+ 1065      00000000 
+ 1065      00000000 
+ 1065      00000000 
+ 1066              		.global	_arm_matrix_inverses
+ 1067              		.section	.bss._arm_matrix_inverses,"aw",%nobits
+ 1068              		.align	2
+ 1071              	_arm_matrix_inverses:
+ 1072 0000 00000000 		.space	80
+ 1072      00000000 
+ 1072      00000000 
+ 1072      00000000 
+ 1072      00000000 
+ 1073              		.section	.rodata._mid_inverses,"a"
+ 1074              		.align	2
+ 1077              	_mid_inverses:
+ 1078 0000 00000000 		.word	0
+ 1079 0004 0000803F 		.word	1065353216
+ 1080 0008 7A371EBF 		.word	-1088538758
+ 1081 000c 00000000 		.word	0
+ARM GAS  /tmp/ccTI8A7w.s 			page 28
+
+
+ 1082 0010 000080BF 		.word	-1082130432
+ 1083 0014 7A371EBF 		.word	-1088538758
+ 1084 0018 7A371EBF 		.word	-1088538758
+ 1085 001c 00000000 		.word	0
+ 1086 0020 0000803F 		.word	1065353216
+ 1087 0024 000080BF 		.word	-1082130432
+ 1088 0028 7A371E3F 		.word	1058944890
+ 1089 002c 00000000 		.word	0
+ 1090 0030 00000000 		.word	0
+ 1091 0034 000080BF 		.word	-1082130432
+ 1092 0038 7A371E3F 		.word	1058944890
+ 1093 003c 7A371E3F 		.word	1058944890
+ 1094 0040 00000000 		.word	0
+ 1095 0044 000080BF 		.word	-1082130432
+ 1096 0048 7A371EBF 		.word	-1088538758
+ 1097 004c 00000000 		.word	0
+ 1098 0050 000080BF 		.word	-1082130432
+ 1099 0054 0000803F 		.word	1065353216
+ 1100 0058 7A371EBF 		.word	-1088538758
+ 1101 005c 00000000 		.word	0
+ 1102 0060 7A371EBF 		.word	-1088538758
+ 1103 0064 00000000 		.word	0
+ 1104 0068 0000803F 		.word	1065353216
+ 1105 006c 000080BF 		.word	-1082130432
+ 1106 0070 7A371EBF 		.word	-1088538758
+ 1107 0074 00000000 		.word	0
+ 1108 0078 0000803F 		.word	1065353216
+ 1109 007c 7A371EBF 		.word	-1088538758
+ 1110 0080 00000000 		.word	0
+ 1111 0084 00000000 		.word	0
+ 1112 0088 0000803F 		.word	1065353216
+ 1113 008c 7A371EBF 		.word	-1088538758
+ 1114 0090 000080BF 		.word	-1082130432
+ 1115 0094 7A371EBF 		.word	-1088538758
+ 1116 0098 00000000 		.word	0
+ 1117 009c 7A371E3F 		.word	1058944890
+ 1118 00a0 00000000 		.word	0
+ 1119 00a4 0000803F 		.word	1065353216
+ 1120 00a8 7A371E3F 		.word	1058944890
+ 1121 00ac 00000000 		.word	0
+ 1122 00b0 000080BF 		.word	-1082130432
+ 1123 00b4 7A371EBF 		.word	-1088538758
+ 1124 00b8 00000000 		.word	0
+ 1125 00bc 000080BF 		.word	-1082130432
+ 1126 00c0 0000803F 		.word	1065353216
+ 1127 00c4 7A371E3F 		.word	1058944890
+ 1128 00c8 00000000 		.word	0
+ 1129 00cc 00000000 		.word	0
+ 1130 00d0 000080BF 		.word	-1082130432
+ 1131 00d4 7A371E3F 		.word	1058944890
+ 1132 00d8 00000000 		.word	0
+ 1133 00dc 000080BF 		.word	-1082130432
+ 1134 00e0 7A371EBF 		.word	-1088538758
+ 1135 00e4 00000000 		.word	0
+ 1136 00e8 0000803F 		.word	1065353216
+ 1137 00ec 7A371EBF 		.word	-1088538758
+ 1138 00f0 7A371E3F 		.word	1058944890
+ARM GAS  /tmp/ccTI8A7w.s 			page 29
+
+
+ 1139 00f4 00000000 		.word	0
+ 1140 00f8 0000803F 		.word	1065353216
+ 1141 00fc 0000803F 		.word	1065353216
+ 1142 0100 7A371EBF 		.word	-1088538758
+ 1143 0104 00000000 		.word	0
+ 1144 0108 00000000 		.word	0
+ 1145 010c 0000803F 		.word	1065353216
+ 1146 0110 7A371E3F 		.word	1058944890
+ 1147 0114 7A371EBF 		.word	-1088538758
+ 1148 0118 00000000 		.word	0
+ 1149 011c 000080BF 		.word	-1082130432
+ 1150 0120 0000803F 		.word	1065353216
+ 1151 0124 7A371E3F 		.word	1058944890
+ 1152 0128 00000000 		.word	0
+ 1153 012c 000080BF 		.word	-1082130432
+ 1154 0130 7A371E3F 		.word	1058944890
+ 1155 0134 00000000 		.word	0
+ 1156 0138 00000000 		.word	0
+ 1157 013c 000080BF 		.word	-1082130432
+ 1158 0140 7A371EBF 		.word	-1088538758
+ 1159 0144 00000000 		.word	0
+ 1160 0148 0000803F 		.word	1065353216
+ 1161 014c 7A371E3F 		.word	1058944890
+ 1162 0150 000080BF 		.word	-1082130432
+ 1163 0154 7A371EBF 		.word	-1088538758
+ 1164 0158 00000000 		.word	0
+ 1165 015c 7A371E3F 		.word	1058944890
+ 1166 0160 00000000 		.word	0
+ 1167 0164 000080BF 		.word	-1082130432
+ 1168              		.section	.rodata._inverses,"a"
+ 1169              		.align	2
+ 1172              	_inverses:
+ 1173 0000 7A379EBE 		.word	-1096927366
+ 1174 0004 0000003F 		.word	1056964608
+ 1175 0008 0C91433E 		.word	1044615436
+ 1176 000c 00000000 		.word	0
+ 1177 0010 00000000 		.word	0
+ 1178 0014 7A371EBF 		.word	-1088538758
+ 1179 0018 7A379EBE 		.word	-1096927366
+ 1180 001c 000000BF 		.word	-1090519040
+ 1181 0020 0C91433E 		.word	1044615436
+ 1182 0024 0C9143BE 		.word	-1102868212
+ 1183 0028 7A379E3E 		.word	1050556282
+ 1184 002c 000000BF 		.word	-1090519040
+ 1185 0030 000000BF 		.word	-1090519040
+ 1186 0034 0C9143BE 		.word	-1102868212
+ 1187 0038 7A379E3E 		.word	1050556282
+ 1188 003c 7A379E3E 		.word	1050556282
+ 1189 0040 000000BF 		.word	-1090519040
+ 1190 0044 0C9143BE 		.word	-1102868212
+ 1191 0048 7A371EBF 		.word	-1088538758
+ 1192 004c 00000000 		.word	0
+ 1193 0050 00000000 		.word	0
+ 1194 0054 0C91433E 		.word	1044615436
+ 1195 0058 7A379EBE 		.word	-1096927366
+ 1196 005c 000000BF 		.word	-1090519040
+ 1197 0060 0C91433E 		.word	1044615436
+ARM GAS  /tmp/ccTI8A7w.s 			page 30
+
+
+ 1198 0064 7A379EBE 		.word	-1096927366
+ 1199 0068 0000003F 		.word	1056964608
+ 1200 006c 000000BF 		.word	-1090519040
+ 1201 0070 0C91433E 		.word	1044615436
+ 1202 0074 7A379EBE 		.word	-1096927366
+ 1203 0078 00000000 		.word	0
+ 1204 007c 7A371EBF 		.word	-1088538758
+ 1205 0080 00000000 		.word	0
+ 1206 0084 0000003F 		.word	1056964608
+ 1207 0088 0C91433E 		.word	1044615436
+ 1208 008c 7A379EBE 		.word	-1096927366
+ 1209 0090 0C9143BE 		.word	-1102868212
+ 1210 0094 7A379EBE 		.word	-1096927366
+ 1211 0098 000000BF 		.word	-1090519040
+ 1212 009c 0C9143BE 		.word	-1102868212
+ 1213 00a0 7A379EBE 		.word	-1096927366
+ 1214 00a4 0000003F 		.word	1056964608
+ 1215 00a8 7A371E3F 		.word	1058944890
+ 1216 00ac 00000000 		.word	0
+ 1217 00b0 00000000 		.word	0
+ 1218 00b4 7A379EBE 		.word	-1096927366
+ 1219 00b8 000000BF 		.word	-1090519040
+ 1220 00bc 0C9143BE 		.word	-1102868212
+ 1221 00c0 0C91433E 		.word	1044615436
+ 1222 00c4 7A379E3E 		.word	1050556282
+ 1223 00c8 000000BF 		.word	-1090519040
+ 1224 00cc 0000003F 		.word	1056964608
+ 1225 00d0 0C9143BE 		.word	-1102868212
+ 1226 00d4 7A379E3E 		.word	1050556282
+ 1227 00d8 7A379E3E 		.word	1050556282
+ 1228 00dc 000000BF 		.word	-1090519040
+ 1229 00e0 0C91433E 		.word	1044615436
+ 1230 00e4 00000000 		.word	0
+ 1231 00e8 00000000 		.word	0
+ 1232 00ec 7A371EBF 		.word	-1088538758
+ 1233 00f0 7A379E3E 		.word	1050556282
+ 1234 00f4 0000003F 		.word	1056964608
+ 1235 00f8 0C91433E 		.word	1044615436
+ 1236 00fc 0C91433E 		.word	1044615436
+ 1237 0100 7A379EBE 		.word	-1096927366
+ 1238 0104 000000BF 		.word	-1090519040
+ 1239 0108 0000003F 		.word	1056964608
+ 1240 010c 0C91433E 		.word	1044615436
+ 1241 0110 7A379E3E 		.word	1050556282
+ 1242 0114 7A379EBE 		.word	-1096927366
+ 1243 0118 0000003F 		.word	1056964608
+ 1244 011c 0C9143BE 		.word	-1102868212
+ 1245 0120 0000003F 		.word	1056964608
+ 1246 0124 0C9143BE 		.word	-1102868212
+ 1247 0128 7A379EBE 		.word	-1096927366
+ 1248 012c 00000000 		.word	0
+ 1249 0130 7A371E3F 		.word	1058944890
+ 1250 0134 00000000 		.word	0
+ 1251 0138 000000BF 		.word	-1090519040
+ 1252 013c 0C9143BE 		.word	-1102868212
+ 1253 0140 7A379EBE 		.word	-1096927366
+ 1254 0144 7A379E3E 		.word	1050556282
+ARM GAS  /tmp/ccTI8A7w.s 			page 31
+
+
+ 1255 0148 0000003F 		.word	1056964608
+ 1256 014c 0C9143BE 		.word	-1102868212
+ 1257 0150 000000BF 		.word	-1090519040
+ 1258 0154 0C91433E 		.word	1044615436
+ 1259 0158 7A379E3E 		.word	1050556282
+ 1260 015c 0C9143BE 		.word	-1102868212
+ 1261 0160 7A379EBE 		.word	-1096927366
+ 1262 0164 000000BF 		.word	-1090519040
+ 1263              		.text
+ 1264              	.Letext0:
+ 1265              		.file 2 "/usr/arm-none-eabi/include/machine/_default_types.h"
+ 1266              		.file 3 "/usr/arm-none-eabi/include/sys/_stdint.h"
+ 1267              		.file 4 "Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_ll_rcc.h"
+ 1268              		.file 5 "Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_ll_dma.h"
+ 1269              		.file 6 "Drivers/CMSIS_DSP/Include/arm_math_types.h"
+ 1270              		.file 7 "Drivers/CMSIS_DSP/Include/dsp/matrix_functions.h"
+ 1271              		.file 8 "AHRS_Lib/ahrs.h"
+ARM GAS  /tmp/ccTI8A7w.s 			page 32
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 ahrs.c
+     /tmp/ccTI8A7w.s:20     .text._sub_grid_index:00000000 $t
+     /tmp/ccTI8A7w.s:25     .text._sub_grid_index:00000000 _sub_grid_index
+     /tmp/ccTI8A7w.s:177    .text._sub_grid_index:000000e8 $d
+     /tmp/ccTI8A7w.s:1064   .bss._arm_matrix_mid_inverses:00000000 _arm_matrix_mid_inverses
+     /tmp/ccTI8A7w.s:185    .text.get_component:00000000 $t
+     /tmp/ccTI8A7w.s:191    .text.get_component:00000000 get_component
+     /tmp/ccTI8A7w.s:244    .text.get_component:0000004c $d
+     /tmp/ccTI8A7w.s:1040   .rodata._neighbor_umbrellas:00000000 _neighbor_umbrellas
+     /tmp/ccTI8A7w.s:251    .text._grid_index:00000000 $t
+     /tmp/ccTI8A7w.s:256    .text._grid_index:00000000 _grid_index
+     /tmp/ccTI8A7w.s:821    .text._grid_index:00000350 $d
+     /tmp/ccTI8A7w.s:1071   .bss._arm_matrix_inverses:00000000 _arm_matrix_inverses
+     /tmp/ccTI8A7w.s:1033   .rodata._key_table:00000000 _key_table
+     /tmp/ccTI8A7w.s:832    .text._grid_index:0000036c $t
+     /tmp/ccTI8A7w.s:886    .text.AHRS_GridInit:00000000 $t
+     /tmp/ccTI8A7w.s:892    .text.AHRS_GridInit:00000000 AHRS_GridInit
+     /tmp/ccTI8A7w.s:956    .text.AHRS_GridInit:0000003c $d
+     /tmp/ccTI8A7w.s:1172   .rodata._inverses:00000000 _inverses
+     /tmp/ccTI8A7w.s:1077   .rodata._mid_inverses:00000000 _mid_inverses
+     /tmp/ccTI8A7w.s:964    .text.AHRS_SectionGrid:00000000 $t
+     /tmp/ccTI8A7w.s:970    .text.AHRS_SectionGrid:00000000 AHRS_SectionGrid
+     /tmp/ccTI8A7w.s:1030   .rodata._key_table:00000000 $d
+     /tmp/ccTI8A7w.s:1037   .rodata._neighbor_umbrellas:00000000 $d
+     /tmp/ccTI8A7w.s:1061   .bss._arm_matrix_mid_inverses:00000000 $d
+     /tmp/ccTI8A7w.s:1068   .bss._arm_matrix_inverses:00000000 $d
+     /tmp/ccTI8A7w.s:1074   .rodata._mid_inverses:00000000 $d
+     /tmp/ccTI8A7w.s:1169   .rodata._inverses:00000000 $d
+
+UNDEFINED SYMBOLS
+arm_mat_vec_mult_f32
+arm_mat_init_f32

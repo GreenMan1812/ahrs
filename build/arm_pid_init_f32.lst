@@ -1,0 +1,172 @@
+ARM GAS  /tmp/ccRd7yyg.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"arm_pid_init_f32.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c"
+  19              		.section	.text.arm_pid_init_f32,"ax",%progbits
+  20              		.align	1
+  21              		.global	arm_pid_init_f32
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	arm_pid_init_f32:
+  27              	.LVL0:
+  28              	.LFB127:
+   1:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c **** ﻿/* ----------------------------------------------------------------------
+   2:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****  * Project:      CMSIS DSP Library
+   3:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****  * Title:        arm_pid_init_f32.c
+   4:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****  * Description:  Floating-point PID Control initialization function
+   5:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****  *
+   6:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****  * $Date:        23 April 2021
+   7:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****  * $Revision:    V1.9.0
+   8:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****  *
+   9:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****  * Target Processor: Cortex-M and Cortex-A cores
+  10:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****  * -------------------------------------------------------------------- */
+  11:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c **** 
+  12:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c **** /*
+  13:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****  * Copyright (C) 2010-2021 ARM Limited or its affiliates. All rights reserved.
+  14:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****  *
+  15:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****  * SPDX-License-Identifier: Apache-2.0
+  16:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****  *
+  17:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+  18:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****  * not use this file except in compliance with the License.
+  19:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****  * You may obtain a copy of the License at
+  20:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****  *
+  21:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****  * www.apache.org/licenses/LICENSE-2.0
+  22:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****  *
+  23:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****  * Unless required by applicable law or agreed to in writing, software
+  24:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  25:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  26:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****  * See the License for the specific language governing permissions and
+  27:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****  * limitations under the License.
+  28:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****  */
+  29:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c **** #include "arm_compiler_specific.h"
+  30:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c **** 
+ARM GAS  /tmp/ccRd7yyg.s 			page 2
+
+
+  31:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c **** 
+  32:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c **** #include "dsp/controller_functions.h"
+  33:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c **** 
+  34:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c **** /**
+  35:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****   @addtogroup PID
+  36:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****   @{
+  37:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****  */
+  38:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c **** 
+  39:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c **** /**
+  40:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****   @brief         Initialization function for the floating-point PID Control.
+  41:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****   @param[in,out] S               points to an instance of the PID structure
+  42:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****   @param[in]     resetStateFlag
+  43:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****                    - value = 0: no change in state
+  44:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****                    - value = 1: reset state
+  45:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c **** 
+  46:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****   @par           Details
+  47:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****                    The <code>resetStateFlag</code> specifies whether to set state to zero or not. \
+  48:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****                    The function computes the structure fields: <code>A0</code>, <code>A1</code> <co
+  49:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****                    using the proportional gain( \c Kp), integral gain( \c Ki) and derivative gain( 
+  50:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****                    also sets the state variables to all zeros.
+  51:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****  */
+  52:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c **** 
+  53:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c **** ARM_DSP_ATTRIBUTE void arm_pid_init_f32(
+  54:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****   arm_pid_instance_f32 * S,
+  55:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****   int32_t resetStateFlag)
+  56:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c **** {
+  29              		.loc 1 56 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  57:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****   /* Derived coefficient A0 */
+  58:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****   S->A0 = S->Kp + S->Ki + S->Kd;
+  34              		.loc 1 58 3 view .LVU1
+  35              		.loc 1 58 12 is_stmt 0 view .LVU2
+  36 0000 D0ED067A 		vldr.32	s15, [r0, #24]
+  37              		.loc 1 58 20 view .LVU3
+  38 0004 90ED077A 		vldr.32	s14, [r0, #28]
+  39              		.loc 1 58 17 view .LVU4
+  40 0008 37EE877A 		vadd.f32	s14, s15, s14
+  41              		.loc 1 58 28 view .LVU5
+  42 000c D0ED086A 		vldr.32	s13, [r0, #32]
+  43              		.loc 1 58 25 view .LVU6
+  44 0010 37EE267A 		vadd.f32	s14, s14, s13
+  45              		.loc 1 58 9 view .LVU7
+  46 0014 80ED007A 		vstr.32	s14, [r0]
+  59:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c **** 
+  60:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****   /* Derived coefficient A1 */
+  61:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****   S->A1 = (-S->Kp) - ((float32_t) 2.0f * S->Kd);
+  47              		.loc 1 61 3 is_stmt 1 view .LVU8
+  48              		.loc 1 61 12 is_stmt 0 view .LVU9
+  49 0018 F1EE677A 		vneg.f32	s15, s15
+  50              		.loc 1 61 40 view .LVU10
+  51 001c 36EEA67A 		vadd.f32	s14, s13, s13
+  52              		.loc 1 61 20 view .LVU11
+  53 0020 77EEC77A 		vsub.f32	s15, s15, s14
+  54              		.loc 1 61 9 view .LVU12
+ARM GAS  /tmp/ccRd7yyg.s 			page 3
+
+
+  55 0024 C0ED017A 		vstr.32	s15, [r0, #4]
+  62:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c **** 
+  63:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****   /* Derived coefficient A2 */
+  64:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****   S->A2 = S->Kd;
+  56              		.loc 1 64 3 is_stmt 1 view .LVU13
+  57              		.loc 1 64 9 is_stmt 0 view .LVU14
+  58 0028 C0ED026A 		vstr.32	s13, [r0, #8]
+  65:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c **** 
+  66:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****   /* Check whether state needs reset or not */
+  67:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****   if (resetStateFlag)
+  59              		.loc 1 67 3 is_stmt 1 view .LVU15
+  60              		.loc 1 67 6 is_stmt 0 view .LVU16
+  61 002c 01B9     		cbnz	r1, .L3
+  62              	.L1:
+  68:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****   {
+  69:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****     /* Reset state to zero, The size will be always 3 samples */
+  70:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****     memset(S->state, 0, 3U * sizeof(float32_t));
+  71:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****   }
+  72:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c **** 
+  73:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c **** }
+  63              		.loc 1 73 1 view .LVU17
+  64 002e 7047     		bx	lr
+  65              	.L3:
+  70:Drivers/CMSIS_DSP/Source/ControllerFunctions/arm_pid_init_f32.c ****   }
+  66              		.loc 1 70 5 is_stmt 1 view .LVU18
+  67 0030 0023     		movs	r3, #0
+  68 0032 C360     		str	r3, [r0, #12]	@ unaligned
+  69 0034 0361     		str	r3, [r0, #16]	@ unaligned
+  70 0036 4361     		str	r3, [r0, #20]	@ unaligned
+  71              		.loc 1 73 1 is_stmt 0 view .LVU19
+  72 0038 F9E7     		b	.L1
+  73              		.cfi_endproc
+  74              	.LFE127:
+  76              		.text
+  77              	.Letext0:
+  78              		.file 2 "/usr/arm-none-eabi/include/machine/_default_types.h"
+  79              		.file 3 "/usr/arm-none-eabi/include/sys/_stdint.h"
+  80              		.file 4 "Drivers/CMSIS_DSP/Include/arm_math_types.h"
+  81              		.file 5 "Drivers/CMSIS_DSP/Include/dsp/controller_functions.h"
+  82              		.file 6 "/usr/arm-none-eabi/include/string.h"
+ARM GAS  /tmp/ccRd7yyg.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 arm_pid_init_f32.c
+     /tmp/ccRd7yyg.s:20     .text.arm_pid_init_f32:00000000 $t
+     /tmp/ccRd7yyg.s:26     .text.arm_pid_init_f32:00000000 arm_pid_init_f32
+
+NO UNDEFINED SYMBOLS

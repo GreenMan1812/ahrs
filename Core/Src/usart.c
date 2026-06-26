@@ -19,6 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "usart.h"
+#include <stdint.h>
 
 
 
@@ -36,14 +37,14 @@
 __attribute__((aligned(4))) uint8_t usart_tx_buffer[USART_DmaBuffSize];
 __attribute__((aligned(4))) uint8_t usart_rx_buffer[USART_DmaBuffSize];
 volatile uint16_t usart_lenOfmess = 0;
-volatile start_message;
+volatile uint8_t start_message;
 volatile uint8_t USART_req;
 volatile uint16_t USART_req_size;
 volatile uint16_t USART_req_start_index= 0;
 void circ_memcpy(uint8_t* buff_start, uint8_t* arr_for_save, uint32_t data_start_index, uint32_t data_size, uint32_t buff_len){
 	for (uint32_t i = 0; i < data_size; i++) {
     	arr_for_save[i] = buff_start[(data_start_index + i) % buff_len];
-	}	
+	}
 }
 void Usart_Init(){
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIODEN;
@@ -61,17 +62,17 @@ void Usart_Init(){
 	// USART3->CR1 &= ~USART_CR1_UE;
 
 	//USART3->BRR = 0x0341;
-	USART3 ->BRR = 0x3B; 
+	USART3 ->BRR = 0x3B;
 	USART3->CR1 |= USART_CR1_RE | USART_CR1_TE //| USART_CR1_OVER8
 			| USART_CR1_RTOIE;  // Приём, передача, USART вкл.
 
 	USART3->CR2 = 0;                                  // 1 стоп-бит
-	USART3->RTOR |= 33; 
+	USART3->RTOR |= 33;
 	// USART3->CR2 |= USART_CR2_RTOEN;
 
 	USART3->CR3 = USART_CR3_DMAT | USART_CR3_DMAR;                           // | USART_CR3_DMAT;
 
-	// USART RX CONFIG -------------------------------------------------------------------------- // 
+	// USART RX CONFIG -------------------------------------------------------------------------- //
 	Dma_Disable(DMA1_Stream3);
 	DMA1->LIFCR |= DMA_LIFCR_CTCIF3 | DMA_LIFCR_CHTIF3 | DMA_LIFCR_CTEIF3
 				| DMA_LIFCR_CDMEIF3 | DMA_LIFCR_CFEIF3;
@@ -82,7 +83,7 @@ void Usart_Init(){
 	//			DMA_SxCR_CIRC;
 
 	DMA1_Stream3->PAR = (uint32_t) &(USART3->TDR); // TX
-	// USART RX CONFIG -------------------------------------------------------------------------- // 
+	// USART RX CONFIG -------------------------------------------------------------------------- //
 	Dma_Disable(DMA1_Stream1);
 	DMA1->LIFCR |= DMA_LIFCR_CTCIF1 | DMA_LIFCR_CHTIF1 | DMA_LIFCR_CTEIF1 |
 				   DMA_LIFCR_CDMEIF1 | DMA_LIFCR_CFEIF1;
@@ -96,8 +97,8 @@ void Usart_Init(){
 						DMA1_Stream1->PAR = (uint32_t)&(USART3->RDR); // RX
 	// USART3->CR2 |= USART_CR2_STOP_0;
 	USART3->CR1 |= USART_CR1_UE;
-	USART3->CR2 |= USART_CR2_RTOEN;// 
-	
+	USART3->CR2 |= USART_CR2_RTOEN;//
+
 	NVIC_EnableIRQ(DMA1_Stream3_IRQn);
 	NVIC_EnableIRQ(DMA1_Stream1_IRQn);
 	// NVIC_EnableIRQ(USART3_IRQn); // Включаем прерывание
@@ -118,7 +119,7 @@ void USART3_IRQHandler(void)
 {
     if ((USART3->ISR & USART_ISR_RTOF) != 0) {
         USART3->ICR = USART_ICR_RTOCF;
-		
+
         // Получаем количество принятых байт через DMA (если используется)
 		USART_req_tail = USART_DmaBuffSize - DMA1_Stream1->NDTR;
 		// addElement(&USART_req_tail, 1);
@@ -144,7 +145,7 @@ void addElement(uint8_t *data, uint16_t buffSize){
 	fifoBuff[TAIL].buffSize = buffSize;
 	fifoBuff[TAIL].data = data;
 	tail+=1;
-	// if(tail < it) Led_On(); 
+	// if(tail < it) Led_On();
 	if(lockUsartDma == 0) {
 		lockUsartDma = 1;
 		Dma_Start(DMA1_Stream3,fifoBuff[IT].data, fifoBuff[IT].buffSize);

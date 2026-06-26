@@ -1,0 +1,289 @@
+ARM GAS  /tmp/ccJ0YGCV.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"arm_add_f32.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c"
+  19              		.section	.text.arm_add_f32,"ax",%progbits
+  20              		.align	1
+  21              		.global	arm_add_f32
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	arm_add_f32:
+  27              	.LVL0:
+  28              	.LFB116:
+   1:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** ﻿/* ----------------------------------------------------------------------
+   2:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****  * Project:      CMSIS DSP Library
+   3:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****  * Title:        arm_add_f32.c
+   4:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****  * Description:  Floating-point vector addition
+   5:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****  *
+   6:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****  * $Date:        23 April 2021
+   7:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****  * $Revision:    V1.9.0
+   8:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****  *
+   9:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****  * Target Processor: Cortex-M and Cortex-A cores
+  10:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****  * -------------------------------------------------------------------- */
+  11:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+  12:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** /*
+  13:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****  * Copyright (C) 2010-2021 ARM Limited or its affiliates. All rights reserved.
+  14:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****  *
+  15:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****  * SPDX-License-Identifier: Apache-2.0
+  16:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****  *
+  17:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+  18:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****  * not use this file except in compliance with the License.
+  19:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****  * You may obtain a copy of the License at
+  20:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****  *
+  21:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****  * www.apache.org/licenses/LICENSE-2.0
+  22:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****  *
+  23:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****  * Unless required by applicable law or agreed to in writing, software
+  24:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  25:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  26:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****  * See the License for the specific language governing permissions and
+  27:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****  * limitations under the License.
+  28:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****  */
+  29:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** #include "arm_compiler_specific.h"
+  30:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+ARM GAS  /tmp/ccJ0YGCV.s 			page 2
+
+
+  31:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+  32:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** #include "dsp/basic_math_functions.h"
+  33:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+  34:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** /**
+  35:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****   @ingroup groupMath
+  36:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****  */
+  37:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+  38:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** /**
+  39:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****   @defgroup BasicAdd Vector Addition
+  40:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+  41:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****   Element-by-element addition of two vectors.
+  42:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+  43:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****   <pre>
+  44:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****       pDst[n] = pSrcA[n] + pSrcB[n],   0 <= n < blockSize.
+  45:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****   </pre>
+  46:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+  47:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****   There are separate functions for floating-point, Q7, Q15, and Q31 data types.
+  48:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****  */
+  49:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+  50:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** /**
+  51:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****   @addtogroup BasicAdd
+  52:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****   @{
+  53:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****  */
+  54:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+  55:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** /**
+  56:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****   @brief         Floating-point vector addition.
+  57:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****   @param[in]     pSrcA      points to first input vector
+  58:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****   @param[in]     pSrcB      points to second input vector
+  59:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****   @param[out]    pDst       points to output vector
+  60:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****   @param[in]     blockSize  number of samples in each vector
+  61:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****  */
+  62:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+  63:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** #if defined(ARM_MATH_MVEF) && !defined(ARM_MATH_AUTOVECTORIZE)
+  64:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+  65:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** #include "arm_helium_utils.h"
+  66:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+  67:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** ARM_DSP_ATTRIBUTE void arm_add_f32(
+  68:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****   const float32_t * pSrcA,
+  69:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****   const float32_t * pSrcB,
+  70:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****         float32_t * pDst,
+  71:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****         uint32_t blockSize)
+  72:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** {
+  73:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     uint32_t blkCnt;                               /* Loop counter */
+  74:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+  75:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     f32x4_t vec1;
+  76:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     f32x4_t vec2;
+  77:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     f32x4_t res;
+  78:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+  79:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     /* Compute 4 outputs at a time */
+  80:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     blkCnt = blockSize >> 2U;
+  81:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+  82:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     while (blkCnt > 0U)
+  83:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     {
+  84:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****         /* C = A + B */
+  85:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+  86:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****         /* Add and then store the results in the destination buffer. */
+  87:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****         vec1 = vld1q(pSrcA);
+ARM GAS  /tmp/ccJ0YGCV.s 			page 3
+
+
+  88:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****         vec2 = vld1q(pSrcB);
+  89:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****         res = vaddq(vec1, vec2);
+  90:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****         vst1q(pDst, res);
+  91:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+  92:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****         /* Increment pointers */
+  93:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****         pSrcA += 4;
+  94:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****         pSrcB += 4; 
+  95:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****         pDst += 4;
+  96:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****         
+  97:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****         /* Decrement the loop counter */
+  98:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****         blkCnt--;
+  99:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     }
+ 100:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+ 101:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     /* Tail */
+ 102:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     blkCnt = blockSize & 0x3;
+ 103:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+ 104:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     if (blkCnt > 0U)
+ 105:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     {
+ 106:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****       /* C = A + B */
+ 107:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****       mve_pred16_t p0 = vctp32q(blkCnt);
+ 108:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****       vec1 = vld1q(pSrcA);
+ 109:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****       vec2 = vld1q(pSrcB);
+ 110:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****       vstrwq_p(pDst, vaddq(vec1,vec2), p0);
+ 111:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     }
+ 112:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+ 113:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** }
+ 114:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+ 115:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** #else
+ 116:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** ARM_DSP_ATTRIBUTE void arm_add_f32(
+ 117:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****   const float32_t * pSrcA,
+ 118:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****   const float32_t * pSrcB,
+ 119:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****         float32_t * pDst,
+ 120:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****         uint32_t blockSize)
+ 121:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** {
+  29              		.loc 1 121 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+ 122:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****         uint32_t blkCnt;                               /* Loop counter */
+  34              		.loc 1 122 9 view .LVU1
+ 123:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+ 124:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** #if defined(ARM_MATH_NEON)
+ 125:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     f32x4_t vec1;
+ 126:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     f32x4_t vec2;
+ 127:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     f32x4_t res;
+ 128:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+ 129:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     /* Compute 4 outputs at a time */
+ 130:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     blkCnt = blockSize >> 2U;
+ 131:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+ 132:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     while (blkCnt > 0U)
+ 133:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     {
+ 134:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****         /* C = A + B */
+ 135:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+ 136:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     	/* Add and then store the results in the destination buffer. */
+ 137:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****         vec1 = vld1q_f32(pSrcA);
+ 138:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****         vec2 = vld1q_f32(pSrcB);
+ARM GAS  /tmp/ccJ0YGCV.s 			page 4
+
+
+ 139:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****         res = vaddq_f32(vec1, vec2);
+ 140:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****         vst1q_f32(pDst, res);
+ 141:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+ 142:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****         /* Increment pointers */
+ 143:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****         pSrcA += 4;
+ 144:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****         pSrcB += 4; 
+ 145:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****         pDst += 4;
+ 146:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****         
+ 147:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****         /* Decrement the loop counter */
+ 148:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****         blkCnt--;
+ 149:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     }
+ 150:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+ 151:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     /* Tail */
+ 152:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     blkCnt = blockSize & 0x3;
+ 153:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+ 154:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** #else
+ 155:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** #if defined (ARM_MATH_LOOPUNROLL) && !defined(ARM_MATH_AUTOVECTORIZE)
+ 156:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+ 157:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****   /* Loop unrolling: Compute 4 outputs at a time */
+ 158:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****   blkCnt = blockSize >> 2U;
+ 159:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+ 160:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****   while (blkCnt > 0U)
+ 161:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****   {
+ 162:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     /* C = A + B */
+ 163:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+ 164:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     /* Add and store result in destination buffer. */
+ 165:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     *pDst++ = (*pSrcA++) + (*pSrcB++);
+ 166:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     *pDst++ = (*pSrcA++) + (*pSrcB++);
+ 167:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     *pDst++ = (*pSrcA++) + (*pSrcB++);
+ 168:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     *pDst++ = (*pSrcA++) + (*pSrcB++);
+ 169:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+ 170:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     /* Decrement loop counter */
+ 171:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     blkCnt--;
+ 172:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****   }
+ 173:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+ 174:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****   /* Loop unrolling: Compute remaining outputs */
+ 175:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****   blkCnt = blockSize % 0x4U;
+ 176:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+ 177:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** #else
+ 178:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+ 179:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****   /* Initialize blkCnt with number of samples */
+ 180:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****   blkCnt = blockSize;
+  35              		.loc 1 180 3 view .LVU2
+ 181:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+ 182:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** #endif /* #if defined (ARM_MATH_LOOPUNROLL) */
+ 183:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** #endif /* #if defined(ARM_MATH_NEON) */
+ 184:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+ 185:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****   while (blkCnt > 0U)
+  36              		.loc 1 185 3 view .LVU3
+  37              		.loc 1 185 9 is_stmt 0 view .LVU4
+  38 0000 08E0     		b	.L2
+  39              	.LVL1:
+  40              	.L3:
+ 186:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****   {
+ 187:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     /* C = A + B */
+ 188:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+ 189:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     /* Add and store result in destination buffer. */
+ARM GAS  /tmp/ccJ0YGCV.s 			page 5
+
+
+ 190:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     *pDst++ = (*pSrcA++) + (*pSrcB++);
+  41              		.loc 1 190 5 is_stmt 1 view .LVU5
+  42              		.loc 1 190 16 is_stmt 0 view .LVU6
+  43 0002 F0EC017A 		vldmia.32	r0!, {s15}
+  44              	.LVL2:
+  45              		.loc 1 190 29 view .LVU7
+  46 0006 B1EC017A 		vldmia.32	r1!, {s14}
+  47              	.LVL3:
+  48              		.loc 1 190 26 view .LVU8
+  49 000a 77EE877A 		vadd.f32	s15, s15, s14
+  50              		.loc 1 190 13 view .LVU9
+  51 000e E2EC017A 		vstmia.32	r2!, {s15}
+  52              	.LVL4:
+ 191:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+ 192:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     /* Decrement loop counter */
+ 193:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****     blkCnt--;
+  53              		.loc 1 193 5 is_stmt 1 view .LVU10
+  54              		.loc 1 193 11 is_stmt 0 view .LVU11
+  55 0012 013B     		subs	r3, r3, #1
+  56              	.LVL5:
+  57              	.L2:
+ 185:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****   {
+  58              		.loc 1 185 17 is_stmt 1 view .LVU12
+  59 0014 002B     		cmp	r3, #0
+  60 0016 F4D1     		bne	.L3
+ 194:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c ****   }
+ 195:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** 
+ 196:Drivers/CMSIS_DSP/Source/BasicMathFunctions/arm_add_f32.c **** }
+  61              		.loc 1 196 1 is_stmt 0 view .LVU13
+  62 0018 7047     		bx	lr
+  63              		.cfi_endproc
+  64              	.LFE116:
+  66              		.text
+  67              	.Letext0:
+  68              		.file 2 "/usr/arm-none-eabi/include/machine/_default_types.h"
+  69              		.file 3 "/usr/arm-none-eabi/include/sys/_stdint.h"
+  70              		.file 4 "Drivers/CMSIS_DSP/Include/arm_math_types.h"
+ARM GAS  /tmp/ccJ0YGCV.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 arm_add_f32.c
+     /tmp/ccJ0YGCV.s:20     .text.arm_add_f32:00000000 $t
+     /tmp/ccJ0YGCV.s:26     .text.arm_add_f32:00000000 arm_add_f32
+
+NO UNDEFINED SYMBOLS

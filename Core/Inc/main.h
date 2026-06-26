@@ -40,6 +40,8 @@ extern "C" {
 #include "stm32f7xx_ll_dma.h"
 #include "stm32f7xx_ll_usart.h"
 #include "stm32f7xx_ll_gpio.h"
+#define ARM_MATH_CM7
+#include "arm_math.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
