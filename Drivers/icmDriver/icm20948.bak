@@ -1,0 +1,478 @@
+/*
+ * icm20948.c
+ *
+ *  Created on: May 6, 2026
+ *      Author: frees
+ */
+
+
+/*
+ * mpu9250_Driver.c
+ *
+ *  Created on: Apr 23, 2026
+ *      Author: frees
+ */
+
+
+#include "icm20948.h"
+#define TX_DMA_SPI DMA2_Stream3
+#define RX_DMA_SPI DMA2_Stream2
+#define Mpu_Enable()		GPIOA->BSRR=GPIO_BSRR_BR3;
+#define Mpu_Disable()		GPIOA->BSRR=GPIO_BSRR_BS3;
+#define Bmm_Enable()		GPIOC->BSRR=GPIO_BSRR_BR9;
+#define Bmm_Disable()		GPIOC->BSRR=GPIO_BSRR_BS9;
+#define Base_Gyro_Scale (float)131.0f
+#define Base_Acce_Scale (float)2.0f
+uint32_t txCount = 0;
+uint32_t is_icm_data_read = 0;
+// PRIVATE FOO
+	typedef struct{
+		uint8_t accel_byte;
+		float accel_scale;
+		uint8_t gyro_byte; 
+		float gyro_scale;  
+	}mpuConfig_t;
+	mpuConfig_t mpuConfig;
+	void delay();
+	void test_config();
+	uint8_t SPI1_SendByte(uint8_t byte);
+	uint8_t SPI1_Read(uint8_t reg_addr);
+	uint8_t SPI1_Write(uint8_t dev_addr, uint8_t reg_addr, uint8_t data);
+	uint8_t BMM_ReadReg(uint8_t reg);
+	void Select_Bank(uint8_t);
+
+//
+typedef enum{
+	Data_Transmit,
+	Mpu_Config,
+}DmaStatus_t;
+DmaStatus_t Dma_State = Mpu_Config;
+volatile uint8_t tx_end = 0;
+volatile uint8_t rx_end = 0;
+uint8_t is_dma_transmit(){
+	if(tx_end && rx_end){
+		tx_end = 0; rx_end = 0;
+		return 1;
+	}
+	else{
+		return 0;
+	}
+}
+uint32_t mpuPresc = 0;
+#define SPI_DmaBuffSize (uint8_t)24
+__attribute__((aligned(4))) uint8_t mpu9250_tx_buffer[SPI_DmaBuffSize];
+__attribute__((aligned(4))) uint8_t mpu9250_rx_buffer[SPI_DmaBuffSize]={0, 0, 0, 0};
+
+__attribute__((aligned(4))) uint8_t debug_string[32];
+volatile uint8_t debug_count = 0;
+//static void add_to_debug_string(uint8_t data){
+//	debug_string[debug_count++] = data;
+//}
+//static void print_debug_string(){
+//	addElement(debug_string, debug_count);
+//	debug_count = 0;
+//}
+//static void reser_debug_string(uint8_t data){
+//	for(uint8_t i = 0; i < 32; i++){ debug_string[i] = 0;}
+//}
+
+void Spi_Dma_Write(uint8_t reg, uint8_t data){
+	rx_end = 0; tx_end=0;
+	Dma_State = Mpu_Config;
+	debug_string[0] = reg;
+	debug_string[1] = data;
+	Mpu_Enable();
+	Dma_Start(TX_DMA_SPI, debug_string, 2);
+	Dma_Start(RX_DMA_SPI, debug_string, 2);
+	while(!is_dma_transmit()){
+		__NOP();
+	}
+	Dma_State = Data_Transmit;
+	Mpu_Disable();
+}
+uint8_t Spi_Dma_Read(uint8_t reg){
+	rx_end = 0; tx_end=0;
+	Dma_State = Mpu_Config;
+
+	debug_string[0] = reg | 0x80;
+	debug_string[1] = 0;
+
+	Mpu_Enable();
+	Dma_Start(TX_DMA_SPI, debug_string, 2);
+	Dma_Start(RX_DMA_SPI, debug_string, 2);
+	while(!is_dma_transmit()){
+		__NOP();
+	}
+
+	Dma_State = Data_Transmit;
+	Mpu_Disable();
+	return debug_string[1];
+}
+
+
+
+mpuData_t raw_data;
+
+
+void mpu9250_init(){
+
+	SET_BIT(RCC->AHB1ENR, RCC_AHB1ENR_GPIOAEN);
+	SET_BIT(RCC->AHB1ENR, RCC_AHB1ENR_GPIODEN);
+
+	uint32_t Gpio_Moder_Msk = GPIO_MODER_MODER3_Msk | GPIO_MODER_MODER5_Msk | GPIO_MODER_MODER6_Msk;
+	uint32_t Gpio_Moder     = GPIO_MODER_MODER5_1	| GPIO_MODER_MODER6_1 | GPIO_MODER_MODER3_0;
+	MODIFY_REG(GPIOA->MODER, Gpio_Moder_Msk, Gpio_Moder);
+	MODIFY_REG(GPIOD->MODER, GPIO_MODER_MODER7_Msk, GPIO_MODER_MODER7_1);
+
+	uint32_t Gpio_Arf_0 = (AF05<<GPIO_AFRL_AFRL5_Pos)| (AF05<<GPIO_AFRL_AFRL6_Pos);
+	uint32_t Gpio_Arf_Msk  = GPIO_AFRL_AFRL5_Msk | GPIO_AFRL_AFRL6_Msk;
+	MODIFY_REG(GPIOA->AFR[0], Gpio_Arf_Msk, Gpio_Arf_0);
+	MODIFY_REG(GPIOD->AFR[0], GPIO_AFRL_AFRL7_Msk, (AF05<<GPIO_AFRL_AFRL7_Pos));
+
+	SET_BIT(RCC->APB2ENR,  RCC_APB2ENR_SPI1EN);
+	uint32_t Spi_Cr1 = 0;
+	uint32_t Spi_Cr2 = 0;
+	Spi_Cr1 = SPI_CR1_MSTR | SPI_CR1_SSM | SPI_CR1_SSI  |  SPI_BAUDRATEPRESCALER_DIV128;
+		//				|SPI_CR1_CPOL | SPI_CR1_CPHA;
+	Spi_Cr2 = SPI_DATAWIDTH_8BIT | SPI_CR2_FRXTH;
+	WRITE_REG(SPI1->CR1, Spi_Cr1);
+	WRITE_REG(SPI1->CR2, Spi_Cr2);
+
+
+	/*---------------------------------------------------*/
+		/*---------------------------------------------------*/
+		/*---------------------------------------------------*/
+		/*---------------------------------------------------*/
+		// TX_DMA_INIT Stream DMA2_Stream3
+
+	SET_BIT(RCC->AHB1ENR, RCC_AHB1ENR_DMA2EN);
+	Dma_Disable(DMA2_Stream3);
+	Dma_Disable(DMA2_Stream2);
+
+	uint32_t Dma2_Lifcr = DMA_LIFCR_CTCIF3  | DMA_LIFCR_CHTIF3 | DMA_LIFCR_CTEIF3 |
+			   	   	   	  DMA_LIFCR_CDMEIF3 | DMA_LIFCR_CFEIF3 |
+			              DMA_LIFCR_CTCIF2  | DMA_LIFCR_CHTIF2 | DMA_LIFCR_CTEIF2 |
+				          DMA_LIFCR_CDMEIF2 | DMA_LIFCR_CFEIF2;
+	SET_BIT(DMA2->LIFCR, Dma2_Lifcr);
+
+	uint32_t  Dma2_Stream3_Cr = (DMA_CHSEL(3)) | DMA_SxCR_PL_0 |
+	 	 	 	 	 	 	 	 DMA_SxCR_MINC | DMA_SxCR_TCIE |
+								 DMA_SxCR_DIR_0;
+	CLEAR_REG(DMA2_Stream3->CR);
+	SET_BIT(DMA2_Stream3->CR, Dma2_Stream3_Cr);
+
+
+	uint32_t  Dma2_Stream2_Cr = (DMA_CHSEL(3)) | DMA_SxCR_PL_0 |
+			 	 	 	 	 	 DMA_SxCR_MINC | DMA_SxCR_TCIE;
+	CLEAR_REG(DMA2_Stream2->CR);
+	SET_BIT(DMA2_Stream2->CR, Dma2_Stream2_Cr);
+		// RX_DMA_INIT Stream DMA2_Stream2
+
+
+	DMA2_Stream3->PAR = (uint32_t)&(SPI1->DR);
+	DMA2_Stream2->PAR = (uint32_t)&(SPI1->DR); // rx
+
+	NVIC_EnableIRQ(DMA2_Stream2_IRQn);
+	NVIC_EnableIRQ(DMA2_Stream3_IRQn);
+	NVIC_SetPriority(DMA2_Stream2_IRQn, 0);
+	NVIC_SetPriority(DMA2_Stream3_IRQn, 0);
+	for(uint8_t i = 0; i < SPI_DmaBuffSize; i++){
+		mpu9250_tx_buffer[i] = 0;
+		mpu9250_rx_buffer[i] = 0;
+	}
+	raw_data.byte_data[0] = '#';
+	raw_data.byte_data[1] = '#';
+	raw_data.byte_data[2] = '#';
+	raw_data.byte_data[3] = '#';
+
+	Mpu_Disable();
+	SET_BIT(RCC->APB1ENR, RCC_APB1ENR_TIM2EN);
+	CLEAR_REG(TIM2->CR1);
+	CLEAR_REG(TIM2->CR2);
+
+
+
+
+	RCC->APB1ENR |= RCC_APB1ENR_TIM7EN;
+  	TIM7->PSC = 10799;           					// Делитель 96: 96 MHz / 96 => 1 тик 1e-4 s. =>
+  	TIM7->ARR = 9;          					// 10 тиков: 1e-4 * 1e1 = 1e-3 c
+  	TIM7->SR = ~TIM_SR_UIF;             // Сброс флага обновления
+  	TIM7->DIER |= TIM_DIER_UIE;         // Разрешить прерывание по переполнению
+  	TIM7->CR1 |= TIM_CR1_CEN;
+  	NVIC_EnableIRQ(TIM7_IRQn);
+  	NVIC_SetPriority(TIM7_IRQn, 5);
+}
+uint16_t timerCount = 0;
+void delay_ms(uint16_t ms )
+{
+	timerCount = ms;
+
+    HAL_GPIO_TogglePin(LD1_GPIO_Port, LD1_Pin);
+	TIM7->CR1 |= TIM_CR1_CEN;
+	NVIC_EnableIRQ(TIM7_IRQn);
+	while (timerCount){
+		__NOP();
+	}
+	NVIC_DisableIRQ(TIM7_IRQn);
+
+
+    HAL_GPIO_TogglePin(LD1_GPIO_Port, LD1_Pin);
+	//TIM3->SR &= ~TIM_SR_UIF
+}
+void TIM7_IRQHandler(void) {
+    if (TIM7->SR & TIM_SR_UIF) {
+        TIM7->SR = ~TIM_SR_UIF;
+				timerCount--;
+			//
+    }
+}
+
+
+void Select_Bank(uint8_t bank){
+	Spi_Dma_Write(0x7F, bank<<4);
+	delay_ms(5);
+}
+
+
+void mpu9250_Start(){
+	mpuConfig.accel_byte = 0;	
+	mpuConfig.gyro_byte  = 0;	
+	mpuConfig.accel_scale = 1.0f / 16384.0f;
+	mpuConfig.gyro_scale = 1.0f / 131.0f;
+    HAL_GPIO_TogglePin(LD3_GPIO_Port, LD3_Pin);
+	Spi1_Enable();
+	SET_BIT(SPI1->CR2, SPI_CR2_TXDMAEN | SPI_CR2_RXDMAEN);
+	Select_Bank(0);
+	delay_ms(5);
+	uint8_t temp = 0x00;
+	// Шаг 1.2: Сброс устройства
+	temp = Spi_Dma_Read(B0_PWR_MGMT_1);
+	temp |= 0x80;
+	Spi_Dma_Write(B0_PWR_MGMT_1, 0x80);
+	delay_ms(500);
+
+			// Шаг 2: Пробуждение устройства
+    temp = 0x01;
+	Spi_Dma_Write(B0_PWR_MGMT_1, temp);
+	delay_ms(300);
+
+
+	// Шаг 3: Выбор часов (бит 1)
+	temp = 0x01;
+	Spi_Dma_Write(B0_PWR_MGMT_1, temp);
+	delay_ms(100);
+
+	    // Шаг 4: SPI интерфейс
+	temp = 0x10;
+	Spi_Dma_Write(B0_USER_CTRL, temp);
+	delay_ms(10);
+
+	Select_Bank(2);
+	uint8_t accel_config = Spi_Dma_Read(B2_ACCEL_CONFIG);
+	MODIFY_REG(accel_config, 0 | (3 << 1), 0 << 1);
+	Spi_Dma_Write(B2_ACCEL_CONFIG, accel_config);
+	uint8_t gyro_config = Spi_Dma_Read(B2_GYRO_CONFIG_1);
+	MODIFY_REG(gyro_config, 0 | (3 << 1), 3 << 1);
+	Spi_Dma_Write(B2_GYRO_CONFIG_1, gyro_config);
+
+
+
+
+	    // Шаг 5: Отключить LPF гироскопа
+	Select_Bank(2);
+	delay_ms(5);
+	temp = 0x01;
+	Spi_Dma_Write(B2_GYRO_CONFIG_1, temp);
+	delay_ms(10);
+
+
+
+	// Шаг 6: Шкала гироскопа
+	Spi_Dma_Write(B2_GYRO_CONFIG_1, 0x01);
+	delay_ms(5);
+
+	    // Шаг 7: Отключить LPF акселерометра
+	temp = 0x00;
+	Spi_Dma_Write(B2_ACCEL_CONFIG, 0x01);
+	delay_ms(5);
+
+	    // Шаг 8: Шкала акселерометра
+	Spi_Dma_Write(B2_ACCEL_CONFIG, 0x01);
+	delay_ms(5);
+
+	    // ========== НАСТРОЙКА МАГНИТОМЕТРА ==========
+	Spi_Dma_Write(B2_ODR_ALIGN_EN, 1);   // выравнивание ODR
+	delay_ms(5);
+
+	Select_Bank(0);
+	delay_ms(5);
+
+	temp = Spi_Dma_Read(B0_USER_CTRL); // сброс I2C Master
+	temp |= (1 << 1);
+	Spi_Dma_Write(B0_USER_CTRL, temp);
+    delay_ms(100);                      // было HAL_Delay(100)
+
+    temp = Spi_Dma_Read(B0_USER_CTRL); // включить I2C Master
+	temp |= (1 << 5);
+	Spi_Dma_Write(B0_USER_CTRL, temp);
+	delay_ms(10);                       // было HAL_Delay(10)
+
+	Select_Bank(3);
+	delay_ms(5);
+	Spi_Dma_Write(B3_I2C_MST_CTRL, 0x07); // частота I2C
+	delay_ms(10);
+
+	Select_Bank(0);
+	delay_ms(5);
+	Spi_Dma_Write(B0_LP_CONFIG, (1 << 6)); // duty cycle mode
+	delay_ms(100);
+
+	Select_Bank(3);
+	delay_ms(5);
+	Spi_Dma_Write(B3_I2C_MST_ODR_CONFIG, 0x03); // ODR 137 Гц
+	delay_ms(10);
+
+	    // Сброс магнита (CNTL3 = 0x01)
+	Spi_Dma_Write(B3_I2C_SLV0_ADDR, MAG_SLAVE_ADDR);
+	Spi_Dma_Write(B3_I2C_SLV0_REG, MAG_CNTL3);
+	Spi_Dma_Write(B3_I2C_SLV0_DO, 0x01);
+	Spi_Dma_Write(B3_I2C_SLV0_CTRL, 0x80 | 0x01);
+	delay_ms(50);
+
+	    // Непрерывный режим 4 (CNTL2 = 0x08)
+	Spi_Dma_Write(B3_I2C_SLV0_ADDR, MAG_SLAVE_ADDR);
+	Spi_Dma_Write(B3_I2C_SLV0_REG, MAG_CNTL2);
+	Spi_Dma_Write(B3_I2C_SLV0_DO, (1 << 3));
+	Spi_Dma_Write(B3_I2C_SLV0_CTRL, 0x80 | 0x01);
+    delay_ms(50);
+
+	    // Автоматическое чтение 9 байт начиная с регистра 0x10
+	Spi_Dma_Write(B3_I2C_SLV0_ADDR, MAG_SLAVE_ADDR | 0x80);
+	Spi_Dma_Write(B3_I2C_SLV0_REG, 0x10);
+	Spi_Dma_Write(B3_I2C_SLV0_CTRL, 0x80 | 9);
+	delay_ms(100);
+
+
+	Select_Bank(0);
+	Spi_Dma_Write(B0_USER_CTRL, 0x20);   // установить I2C_MST_EN = 1
+	delay_ms(100);                        // дать время на первый цикл
+	    // Возврат в Bank 0 и чтение WHO_AM_I
+	Select_Bank(0);
+	delay_ms(5);
+	uint8_t status = Spi_Dma_Read(B0_WHO_AM_I);
+	delay_ms(100);
+
+
+	
+
+    HAL_GPIO_TogglePin(LD3_GPIO_Port, LD3_Pin);
+//	icm20948_update_gyro_config();
+//	icm20948_update_accel_config();
+
+
+
+	Spi1_Disable();
+	SET_BIT(SPI1->CR1, SPI_BAUDRATEPRESCALER_DIV16);
+	Spi1_Enable();
+	SET_BIT(SPI1->CR2, SPI_CR2_TXDMAEN | SPI_CR2_RXDMAEN);
+	mpu9250_tx_buffer[0] = 0x80 | B0_ACCEL_XOUT_H;
+
+
+
+	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
+	TIM2->PSC   = 10799;
+	TIM2->ARR   = 5;
+	//TIM2->CR1 |= TIM_CR1_CEN;
+	CLEAR_BIT(TIM2->SR, TIM_SR_UIF);// 1e3 тиков: 1e-6 * 1e3 = 1e-3 c
+	SET_BIT(TIM2->DIER, TIM_DIER_UIE);
+	NVIC_EnableIRQ(TIM2_IRQn);
+	//test_config();s
+	// SET_BIT(TIM2->CR1, TIM_CR1_CEN);
+	//Led_Off();
+
+}
+
+void icm20948_update_gyro_config(){
+	//CLEAR_BIT(TIM2->CR1, TIM_CR1_CEN);
+	// while(!is_dma_transmit()){
+
+	// }
+	Select_Bank(2);
+	uint8_t temp = Spi_Dma_Read(B2_GYRO_CONFIG_1);
+	temp &= (3 << 1);
+	temp |= (mpuConfig.gyro_byte << 1);
+	mpuConfig.gyro_scale =  (float)(1 << mpuConfig.gyro_byte) /  Base_Gyro_Scale;
+	Spi_Dma_Write(B2_GYRO_CONFIG_1, temp);
+	//SET_BIT(TIM2->CR1, TIM_CR1_CEN);
+}
+
+
+void icm20948_update_accel_config(){
+	//CLEAR_BIT(TIM2->CR1, TIM_CR1_CEN);
+	//while(!is_dma_transmit()){
+
+	//}
+	Select_Bank(2);
+	uint8_t temp = Spi_Dma_Read(B2_ACCEL_CONFIG);
+	temp &= (3 << 1);
+	temp |= (mpuConfig.accel_byte << 1);
+	mpuConfig.accel_scale =  (float)(1 << mpuConfig.accel_byte) / 16384.0f;
+	Spi_Dma_Write(B2_ACCEL_CONFIG, temp);
+	SET_BIT(TIM2->CR1, TIM_CR1_CEN);
+}
+
+
+void TIM2_IRQHandler(void) {
+    if (TIM2->SR & TIM_SR_UIF) {
+        TIM2->SR = ~TIM_SR_UIF;
+			Mpu_Enable();
+			is_icm_data_read = 0;
+			Dma_Start(TX_DMA_SPI, mpu9250_tx_buffer, SPI_DmaBuffSize);
+			Dma_Start(RX_DMA_SPI, mpu9250_rx_buffer, SPI_DmaBuffSize);
+			txCount+=1;
+			raw_data.time = txCount;
+    }
+}
+#define isHofl(byte) (byte & 0x08)
+
+void DMA2_Stream2_IRQHandler(void) {
+    if (DMA2->LISR & DMA_LISR_TCIF2) {        // Transfer Complete
+        DMA2->LIFCR |= DMA_LIFCR_CTCIF2;
+//				while (SPI1->SR & SPI_SR_BSY){__NOP();}
+//					__DSB(); __ISB();  // Барьеры, чтобы процессор не переставил инструкции
+        if(Dma_State == Mpu_Config){
+					rx_end=1;
+				}
+				else{
+				Mpu_Disable();
+				raw_data.ax = LE_CONVERTER(mpu9250_rx_buffer[1], mpu9250_rx_buffer[2])  * mpuConfig.accel_scale;
+				raw_data.ay = LE_CONVERTER(mpu9250_rx_buffer[3], mpu9250_rx_buffer[4])  * mpuConfig.accel_scale;
+				raw_data.az = LE_CONVERTER(mpu9250_rx_buffer[5], mpu9250_rx_buffer[6])  * mpuConfig.accel_scale;
+				raw_data.gx = LE_CONVERTER(mpu9250_rx_buffer[7], mpu9250_rx_buffer[8])  * mpuConfig.gyro_scale;
+				raw_data.gy = LE_CONVERTER(mpu9250_rx_buffer[9], mpu9250_rx_buffer[10]) * mpuConfig.gyro_scale;
+				raw_data.gz = LE_CONVERTER(mpu9250_rx_buffer[11], mpu9250_rx_buffer[12])* mpuConfig.gyro_scale;
+				raw_data.mx = MAG_CONVERTER(mpu9250_rx_buffer[17], mpu9250_rx_buffer[16]);
+				raw_data.my = MAG_CONVERTER(mpu9250_rx_buffer[19], mpu9250_rx_buffer[18]);
+				raw_data.mz = MAG_CONVERTER(mpu9250_rx_buffer[21], mpu9250_rx_buffer[20]);
+				// raw_data.time = 0UL | mpu9250_rx_buffer[23];
+				rx_end=1;
+				// if(!mpu9250_rx_buffer[15]){
+				// 	raw_data.mx = 0.0f;
+				// 	raw_data.my = 0.0f;
+				// 	raw_data.mz = 0.0f;
+				// }
+				if((txCount % mpuPresc == 0 & mpu9250_rx_buffer[15] && mpu9250_rx_buffer[23]))
+				{
+					is_icm_data_read = 0;
+					addElement(raw_data.byte_data, sizeof(raw_data));
+    				HAL_GPIO_TogglePin(LD1_GPIO_Port,LD1_Pin);
+				}
+			}
+    }
+}
+void DMA2_Stream3_IRQHandler(void) {
+    if (DMA2->LISR & DMA_LISR_TCIF3) {        // Transfer Complete
+        DMA2->LIFCR |= DMA_LIFCR_CTCIF3;
+				tx_end = 1;
+    }
+}
